@@ -12,6 +12,8 @@
 
 ## 网页
 
+线上地址：<https://aweimc.github.io/VMCT-CE_Website/>
+
 纯静态，无后端。数据写在 `site/data/catalog.js`（`window.VMCT_DATA`），因此可直接以静态文件托管，不暴露服务器本地文件。
 
 特性：
@@ -29,6 +31,10 @@ cd site
 python -m http.server 8080
 # 浏览器打开 http://localhost:8080
 ```
+
+### 部署
+
+推送到 `main` 分支即触发 `.github/workflows/deploy.yml`，把 `site/` 作为 GitHub Pages 制品发布（Source 为 GitHub Actions）。首次部署前需在仓库 Settings → Pages 中把 Source 设为 **GitHub Actions**，否则 `configure-pages` 会报 404 导致失败。
 
 ## 重新同步数据
 
