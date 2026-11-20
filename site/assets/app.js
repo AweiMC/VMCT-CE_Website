@@ -35,9 +35,53 @@
     var raw = ICONS[loader];
     return raw ? '<span class="loader-ico" title="' + esc(loader) + '">' + raw + '</span>' : '';
   }
+  // A media slot reserves a fixed-ratio box up front. The renderer never
+  // changes the box size — a later SYNC only swaps the image source/target.
+  function mediaSlot(slot, variant) {
+    slot = slot || { slot: 'cover', target: null, source: '', state: 'pending', alt: '', w: 400, h: 300 };
+    var ready = slot.state === 'ready' && slot.target;
+    var style = ready ? "background-image:url('" + esc(slot.target) + "')" : '';
+    var cls = 'media-slot ' + (variant === 'cover' ? 'media-slot-cover' : 'media-slot-body') +
+      (ready ? ' is-ready' : ' is-pending');
+    var label = ready ? '' : '<span class="media-slot-mark">NO SIGNAL<br><small>IMG // ' + esc(slot.slot.toUpperCase()) + '</small></span>';
+    return '<div class="' + cls + '" data-img-slot="' + esc(slot.slot) + '" data-img-state="' + slot.state + '"' +
+      ' data-img-target="' + esc(slot.target || '') + '" data-img-source="' + esc(slot.source || '') + '"' +
+      ' style="' + style + '" role="img" aria-label="' + esc(slot.alt || slot.slot) + '">' + label + '</div>';
+  }
+  function coverOf(item) {
+    return (item.media || []).find(function (m) { return m.role === 'cover'; }) || null;
+  }
+  // Hydrate placeholder figures emitted by the normalizer into fixed-ratio
+  // media boxes. Boxes are sized by CSS var(--slot-w/h); only the fill changes.
+  function hydrateMedia() {
+    main.querySelectorAll('figure.img-slot').forEach(function (fig) {
+      var target = fig.getAttribute('data-img-target') || '';
+      var statev = fig.getAttribute('data-img-state');
+      var source = fig.getAttribute('data-img-source') || '';
+      var ready = statev === 'ready' && target;
+      fig.classList.add('media-slot', 'media-slot-body', ready ? 'is-ready' : 'is-pending');
+      if (ready) {
+        var stale = fig.querySelector('.img-slot-mark');
+        if (stale) stale.remove();
+        fig.style.backgroundImage = 'url("' + target + '")';
+        M.mediaReveal(fig);
+      } else {
+        var old = fig.querySelector('.img-slot-mark');
+        if (old) old.remove();
+        var mark = document.createElement('span');
+        mark.className = 'media-slot-mark';
+        mark.innerHTML = 'NO SIGNAL<br><small>IMG // ' + esc((fig.getAttribute('data-img-slot') || '').toUpperCase()) + '</small>';
+        fig.appendChild(mark);
+      }
+      fig.setAttribute('role', 'img');
+      fig.setAttribute('aria-label', fig.querySelector('img') ? fig.querySelector('img').alt : (source || '图片占位'));
+    });
+  }
   function iconFor(item) {
-    return item.icon ? '<img class="card-icon" src="' + esc(item.icon) + '" alt="" loading="lazy">' :
-      '<div class="card-icon" style="display:grid;place-items:center;color:var(--ink-3);font:700 26px var(--display)">VM</div>';
+    var s = coverOf(item);
+    var slot = mediaSlot(s, 'cover');
+    // keep the card-icon class so existing hover rules keep working
+    return slot.replace('class="media-slot ', 'class="card-icon media-slot ');
   }
   function allItems() { return DATA.items; }
   function byId(id) { return DATA.items.find(function (x) { return x.id === id; }); }
@@ -271,7 +315,7 @@
       '<div class="detail">' +
         '<div class="detail-main">' +
           '<div class="detail-hero"><div class="detail-hd">' +
-            (it.icon ? '<img class="detail-icon" src="' + esc(it.icon) + '" alt="">' : '<div class="detail-icon" style="display:grid;place-items:center;font:700 34px var(--display);color:var(--ink-3)">VM</div>') +
+            mediaSlot(coverOf(it), 'cover').replace('class="media-slot ', 'class="detail-icon media-slot ') +
             '<div><h1>' + esc(it.title) + '</h1>' + (it.originalName ? '<div class="detail-original">' + esc(it.originalName) + '</div>' : '') +
             '<div class="detail-tags">' + tags + '</div></div>' +
           '</div>' + (it.description ? '<p class="detail-desc">' + esc(it.description) + '</p>' : '') + '</div>' +
@@ -305,7 +349,8 @@
     var h = location.hash.replace(/^#\/?/, '');
     if (!h) return { kind: 'home' };
     var parts = h.split('/');
-    if (parts[0] === 'detail' && parts[1]) return { kind: 'detail', id: decodeURIComponent(parts[1]) };
+    if (parts[0] === 'detail' && parts.length > 1)
+      return { kind: 'detail', id: decodeURIComponent(parts.slice(1).join('/')) };
     if (KIND_META[parts[0]]) return { kind: parts[0] };
     return { kind: 'home' };
   }
@@ -323,6 +368,11 @@
     else if (r.kind === 'detail') html = viewDetail(r.id);
     else html = viewCatalog(r.kind);
     main.innerHTML = '<div class="view">' + html + '</div>';
+    hydrateMedia();
+    if (r.kind === 'detail') {
+      var hero = main.querySelector('.detail-hero');
+      M.detailIntro(hero);
+    }
     renderTabs();
     bindView();
     document.getElementById('footerStat').textContent =

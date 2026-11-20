@@ -46,6 +46,23 @@ python scripts/normalize_data.py --repo <上游仓库目录> --site site
 
 脚本只读取上游仓库中 `src/pages` 的内容与 `database/download-seeds.json`，输出的 JSON 仅包含仓库相对路径，不含任何本机绝对路径。
 
+### 图片占位与后续同步
+
+每条档案在数据里带 `media` 数组，每个槽位记录：
+
+| 字段 | 含义 |
+| --- | --- |
+| `slot` | 槽位 ID（`cover` / `body-01`…） |
+| `role` | `cover`（封面）或 `body`（正文图） |
+| `target` | 本地目标路径（已缓存时） |
+| `source` | 原始图片 URL，供后续 SYNC 重新拉取 |
+| `state` | `ready`（已缓存）或 `pending`（待填充） |
+| `w` / `h` | 占位尺寸比例，锁定布局 |
+
+渲染层据此预留固定比例的占位盒：已就绪显示图片，未就绪显示带槽位编号的斜纹骨架。后续同步只需把图片写到 `target` 并把对应槽位的 `state` 改为 `ready`、`target` 指向该文件，重新生成 `catalog.*` 即可——盒子尺寸不变，布局不受影响。缓存目录：`site/assets/icons/`（封面）、`site/assets/media/`（正文图）、`site/assets/imgs/`（仓库内图片）。
+
+如需跳过远程下载（只生成占位元数据）：加 `--no-cache`。
+
 ## 同步比对工具
 
 位于 `tools/VMCT-Sync/`，Java 17，无 Maven / Gradle 依赖。

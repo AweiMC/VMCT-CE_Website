@@ -216,12 +216,53 @@
     addEventListener('keydown', finish, true);
   }
 
+  /* ---------- one-shot reveals ---------------------------------------- */
+  // Hard-cut reveal for a media slot that has just become ready.
+  function mediaReveal(el) {
+    if (!el || reduced()) return;
+    el.classList.remove('is-revealing');
+    void el.offsetWidth;              // restart animation
+    el.classList.add('is-revealing');
+    setTimeout(function () { el.classList.remove('is-revealing'); }, 400);
+  }
+
+  // Detail entry: crosshair then four quadrants clear in a fixed [0,1,3,2]
+  // order. Layer lives inside the target panel and removes itself.
+  function detailIntro(host) {
+    if (!host || reduced()) return;
+    var layer = document.createElement('div');
+    layer.className = 'detail-reveal';
+    var order = [0, 1, 3, 2];          // TL -> TR -> BR -> BL
+    var quads = [];
+    for (var i = 0; i < 4; i++) {
+      var q = document.createElement('i');
+      q.className = 'quad';
+      layer.appendChild(q); quads.push(q);
+    }
+    var cross = document.createElement('div');
+    cross.className = 'cross mar-cross';
+    cross.innerHTML = '<i class="h"></i><i class="v"></i><i class="d"></i>';
+    layer.appendChild(cross);
+    host.appendChild(layer);
+
+    var STEP = 0.08, AT = [0.5, 0.58, 0.66, 0.74];  // head then 3 steps
+    order.forEach(function (idx, rank) {
+      quads[idx].style.animationDelay = AT[rank].toFixed(4) + 's';
+    });
+    cross.style.animation = 'vt-out 0s .62s both';  // cross leaves with 2nd tile
+    function done() { if (layer.parentNode) layer.remove(); }
+    setTimeout(done, AT[3] * 1000 + 120);
+    setTimeout(done, 1500);            // watchdog
+  }
+
   window.VMMotion = {
     initDotField: initDotField,
     bgTeardown: bgTeardown,
     viewTransition: viewTransition,
     scopedTransition: scopedTransition,
     boot: boot,
+    mediaReveal: mediaReveal,
+    detailIntro: detailIntro,
     mosaicOrder: mosaicOrder,
     reduced: reduced
   };

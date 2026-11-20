@@ -61,6 +61,13 @@ LOADER_LABELS = {
 COMPONENT_RE = re.compile(r"<\s*/?\s*(DownloadLayout|DocLayout|DownloadLinks|DocSupport|DonateLayout|JoinGroupCard)[^>]*>", re.I)
 DOWNLOAD_SLOT = "\n\n<!--DOWNLOAD_SLOT-->\n\n"
 
+# image placeholder slots. A slot always carries: where it goes (slot id),
+# what should replace it (target/source), how big it is (w/h) and sync state.
+IMG_TAG_RE = re.compile(r'<img\s+([^>]*?)/?>', re.I)
+ATTR_RE = re.compile(r'([\w-]+)\s*=\s*"([^"]*)"')
+DEFAULT_BODY_RATIO = (16, 9)   # fallback aspect when source has no size hint
+COVER_RATIO = (4, 3)
+
 
 def parse_date(raw):
     if not raw:
@@ -151,17 +158,97 @@ def convert_admonions(md_text):
     return md_text
 
 
-def clean_body(raw, site_root, repo_root):
+def _cache_image(src, target, proxies=True):
+    """Best-effort download of a remote image into site assets. Returns bool."""
+    try:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if target.exists() and target.stat().st_size > 256:
+            return True
+        req = urllib.request.Request(src, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=12) as resp:
+            data = resp.read(3_000_000)
+        if len(data) > 256:
+            target.write_bytes(data)
+            return True
+    except Exception:
+        pass
+    return False
+
+
+def _ext_of(url):
+    m = re.search(r"\.(png|jpe?g|webp|gif|ico|svg)(?:\?|$)", url, re.I)
+    return "." + m.group(1).lower() if m else ".img"
+
+
+def build_body_slots(body_html, item_slug, site_root, repo_root, do_cache):
+    """Rewrite <img> tags into placeholder figures and return (html, slots).
+
+    Each slot records slot-id, local target, original source, aspect ratio and
+    a sync state so a later SYNC can fill it without touching layout.
+    """
+    slots = []
+    counter = [0]
+
+    def repl(m):
+        attrs = dict(ATTR_RE.findall(m.group(1)))
+        src = attrs.get("src", "")
+        if not src:
+            return m.group(0)
+        counter[0] += 1
+        sid = "body-%02d" % counter[0]
+        alt = attrs.get("alt", "")
+        # size hint from "=400x" captions already stripped; use alt digits if any
+        mw = re.search(r"(\d{2,4})", alt)
+        w = int(mw.group(1)) if mw else DEFAULT_BODY_RATIO[0] * 40
+        h = DEFAULT_BODY_RATIO[1] * 40
+        target_rel, source = None, src
+        ready = False
+
+        if src.startswith("/imgs/"):
+            rel = src[1:]
+            src_file = repo_root / "public" / rel
+            dst = site_root / "assets" / rel
+            if src_file.exists():
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                if not dst.exists() or dst.stat().st_size != src_file.stat().st_size:
+                    shutil.copy2(src_file, dst)
+                target_rel = "assets/" + rel
+                ready = True
+        elif src.startswith("http"):
+            ext = _ext_of(src)
+            target_rel = "assets/media/%s__%s%s" % (item_slug.replace("/", "__"), sid, ext)
+            if do_cache:
+                ready = _cache_image(src, site_root / target_rel)
+
+        slot = {
+            "slot": sid,
+            "role": "body",
+            "target": target_rel,
+            "source": source,
+            "alt": alt,
+            "state": "ready" if ready else "pending",
+            "w": w, "h": h,
+        }
+        slots.append(slot)
+        # placeholder figure: fixed ratio box; renderer fills when state=ready
+        return ('<figure class="img-slot" data-img-slot="%s" data-img-state="%s" '
+                'data-img-target="%s" data-img-source="%s" style="--slot-w:%d;--slot-h:%d"'
+                '><span class="img-slot-mark">IMG // %s</span></figure>'
+                % (sid, slot["state"], target_rel or "", source, w, h, sid.upper()))
+
+    html = IMG_TAG_RE.sub(repl, body_html)
+    return html, slots
+
+
+def clean_body(raw, site_root, repo_root, item_slug, do_cache=True):
     body = raw or ""
     body = COMPONENT_RE.sub(lambda m: DOWNLOAD_SLOT if m.group(1).lower() == "downloadlinks" else "", body)
     body = convert_admonions(body)
-    # image captions like "![图片 =400x](...)" -> normal markdown image
     body = re.sub(r"!\[([^\]]*?)\s*=\s*\d+x([^\]]*)\]", r"![\1\2]", body)
-    # strip any stray Vue interpolation
     body = re.sub(r"\{\{[^}]*\}\}", "", body)
     body_html = markdown.markdown(body, extensions=["extra", "sane_lists", "toc", "tables"])
-    body_html = re.sub(r'<img\s+src="(/imgs/[^"]+)"', lambda m: '<img src="%s"' % localize_path(m.group(1), repo_root, site_root), body_html)
-    return body_html.strip()
+    body_html, slots = build_body_slots(body_html, item_slug, site_root, repo_root, do_cache)
+    return body_html.strip(), slots
 
 
 def infer_kind(rel):
@@ -209,7 +296,7 @@ def read_downloads(repo_root):
         return {}
 
 
-def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool):
+def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool, do_cache: bool = True):
     downloads = read_downloads(repo_root)
     pages_root = repo_root / "src" / "pages"
 
@@ -234,6 +321,18 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool):
             status_type = str(status or "").lower()
 
         icon = localize_path(meta.get("icon"), repo_root, site_root)
+        # cover slot — always present so the layout never shifts after SYNC
+        cover_source = str(meta.get("icon") or "") if icon else ""
+        cover_target = icon if str(icon).startswith("assets/") else None
+        cover = {
+            "slot": "cover", "role": "cover",
+            "target": cover_target, "source": cover_source,
+            "alt": str(meta.get("title") or ""),
+            "state": "ready" if icon else "pending",
+            "w": COVER_RATIO[0] * 100, "h": COVER_RATIO[1] * 100,
+        }
+        body_html, body_slots = clean_body(body, site_root, repo_root, item_slug, do_cache)
+        media = [cover] + body_slots
         dl_list = downloads.get(item_slug, [])
         for dl in dl_list:
             if isinstance(dl, dict) and dl.get("icon"):
@@ -260,7 +359,8 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool):
             "featured": bool(meta.get("featured")),
             "sidebar": meta.get("sidebar", True) is not False,
             "path": "src/pages/" + rel,
-            "bodyHtml": clean_body(body, site_root, repo_root),
+            "media": media,
+            "bodyHtml": body_html,
         }
         # child pages (fc5-wiki, sb4/secret, rad/secret) get a parent pointer
         if "/" in item_slug:
@@ -341,6 +441,17 @@ def cache_remote_icons(items, out_dir):
                 item["icon"] = "assets/icons/" + target.name
         except Exception:
             pass
+    # keep the cover slot in sync with the final (possibly cached) icon path
+    for item in items:
+        icon = item.get("icon")
+        for slot in item.get("media", []):
+            if slot.get("role") == "cover":
+                if icon and str(icon).startswith("assets/"):
+                    slot["target"] = icon
+                    slot["state"] = "ready"
+                else:
+                    slot["target"] = None
+                    slot["state"] = "pending"
     print("icons cached:", len([i for i in items if str(i.get("icon", "")).startswith("assets/icons/")]))
 
 
@@ -349,9 +460,10 @@ def main():
     ap.add_argument("--repo", required=True, help="path to source repository checkout")
     ap.add_argument("--site", required=True, help="path to static site directory")
     ap.add_argument("--source-url", default="https://github.com/VM-Chinese-translate-group/vmct-website-v4")
-    ap.add_argument("--no-icons", action="store_true")
+    ap.add_argument("--no-icons", action="store_true", help="skip caching cover icons")
+    ap.add_argument("--no-cache", action="store_true", help="skip caching body images (leave slots pending)")
     args = ap.parse_args()
-    build(Path(args.repo).resolve(), Path(args.site).resolve(), args.source_url, not args.no_icons)
+    build(Path(args.repo).resolve(), Path(args.site).resolve(), args.source_url, not args.no_icons, not args.no_cache)
 
 
 if __name__ == "__main__":
