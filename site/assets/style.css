@@ -281,9 +281,11 @@ figure.img-slot.media-slot.is-ready { background-color: var(--bg); }
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 32px), calc(100% - 32px) 100%, 0 100%);
 }
 .cards.grid .card { flex-direction: column; }
-/* cover image stays a clean rectangle — only the card itself is cut */
+/* cover image stays a clean rectangle — only the card itself is cut.
+   Use background-color (NOT the shorthand): the shorthand would reset
+   background-position to 0% 0% and break .media-slot's centered sizing. */
 .card-icon {
-  width: 68px; height: 68px; flex: 0 0 68px; background: var(--bg); border: 1px solid var(--line-2);
+  width: 68px; height: 68px; flex: 0 0 68px; background-color: var(--bg); border: 1px solid var(--line-2);
   object-fit: cover; image-rendering: auto;
 }
 .tag svg, .card-foot .tag svg { transition: transform .3s ease; }
@@ -323,7 +325,7 @@ figure.img-slot.media-slot.is-ready { background-color: var(--bg); }
 @keyframes quad-out { to { opacity: 0; } }
 .detail-hero::before { content: ''; position: absolute; right: -1px; top: -1px; width: 60px; height: 60px; border-left: 1px solid var(--accent); border-bottom: 1px solid var(--accent); clip-path: polygon(100% 0, 100% 100%, 0 100%); opacity: .5; }
 .detail-hd { display: flex; gap: 22px; align-items: flex-start; }
-.detail-icon { width: 96px; height: 96px; flex: 0 0 96px; background: var(--bg); border: 1px solid var(--line-2); object-fit: cover; }
+.detail-icon { width: 96px; height: 96px; flex: 0 0 96px; background-color: var(--bg); border: 1px solid var(--line-2); object-fit: cover; }
 .detail-hd h1 { margin: 2px 0 4px; font: 700 clamp(22px, 3vw, 34px)/1.1 var(--display); letter-spacing: .03em; color: var(--ink); text-transform: uppercase; }
 .detail-original { font: 400 12px var(--mono); color: var(--ink-3); }
 .detail-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }

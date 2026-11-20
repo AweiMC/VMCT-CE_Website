@@ -487,10 +487,11 @@
     }
     if (e.key === 'Escape') { searchEl.value = ''; state.q = ''; render(); }
   });
-  addEventListener('hashchange', function () {
-    var r = parseHash();
-    if (r.kind !== state.kind || r.kind === 'detail') render();
-  });
+  // The hash actually changed, so the view must re-render. Comparing against
+  // state.kind is wrong here: entering a detail page keeps the previous kind,
+  // so navigating back to that same kind would (wrongly) skip the render and
+  // leave the detail page up until a second click.
+  addEventListener('hashchange', function () { render(); });
   document.getElementById('menuToggle').addEventListener('click', function () {
     var t = document.getElementById('tabs'), open = t.classList.toggle('open');
     this.setAttribute('aria-expanded', open ? 'true' : 'false');
