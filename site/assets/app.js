@@ -338,9 +338,10 @@
     M.scopedTransition(listCol, updateScoped);
   }
 
-  // Bind card clicks after a scoped repaint (cards are the only replaced nodes).
+  // Bind all detail cards: both catalog rows and home featured cards share
+  // the same data-detail contract, so bind them from one place.
   function bindListRegion() {
-    main.querySelectorAll('.list-col [data-detail]').forEach(function (el) {
+    main.querySelectorAll('[data-detail]').forEach(function (el) {
       el.addEventListener('click', function (e) {
         if (e.target.closest('a')) return;
         navigate('#/detail/' + encodeURIComponent(el.dataset.detail));
