@@ -429,6 +429,12 @@
     var t = document.getElementById('tabs'), open = t.classList.toggle('open');
     this.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
+  var footerToggle = document.getElementById('footerToggle');
+  footerToggle.addEventListener('click', function () {
+    var more = document.getElementById('footerMore');
+    var open = more.classList.toggle('open');
+    this.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
 
   function clock() {
     var d = new Date();
