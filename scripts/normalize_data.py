@@ -158,29 +158,7 @@ def convert_admonions(md_text):
     return md_text
 
 
-def _cache_image(src, target, proxies=True):
-    """Best-effort download of a remote image into site assets. Returns bool."""
-    try:
-        target.parent.mkdir(parents=True, exist_ok=True)
-        if target.exists() and target.stat().st_size > 256:
-            return True
-        req = urllib.request.Request(src, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=12) as resp:
-            data = resp.read(3_000_000)
-        if len(data) > 256:
-            target.write_bytes(data)
-            return True
-    except Exception:
-        pass
-    return False
-
-
-def _ext_of(url):
-    m = re.search(r"\.(png|jpe?g|webp|gif|ico|svg)(?:\?|$)", url, re.I)
-    return "." + m.group(1).lower() if m else ".img"
-
-
-def build_body_slots(body_html, item_slug, site_root, repo_root, do_cache):
+def build_body_slots(body_html, item_slug, site_root, repo_root):
     """Rewrite <img> tags into placeholder figures and return (html, slots).
 
     Each slot records slot-id, local target, original source, aspect ratio and
@@ -205,6 +183,8 @@ def build_body_slots(body_html, item_slug, site_root, repo_root, do_cache):
         ready = False
 
         if src.startswith("/imgs/"):
+            # Repo-owned asset: copy locally (part of the upstream source, no
+            # extra download) so the site stays self-contained for these.
             rel = src[1:]
             src_file = repo_root / "public" / rel
             dst = site_root / "assets" / rel
@@ -215,18 +195,23 @@ def build_body_slots(body_html, item_slug, site_root, repo_root, do_cache):
                 target_rel = "assets/" + rel
                 ready = True
         elif src.startswith("http"):
-            ext = _ext_of(src)
-            target_rel = "assets/media/%s__%s%s" % (item_slug.replace("/", "__"), sid, ext)
-            if do_cache:
-                ready = _cache_image(src, site_root / target_rel)
+            # Remote image: keep ONLY the sizing hint + original URL. The image
+            # bytes are served by the upstream site on demand (remote state),
+            # so no bandwidth or disk is spent caching whole files at build.
+            target_rel = src
+            source = src
 
+        if target_rel and str(target_rel).startswith("http"):
+            statev = "remote"   # served by upstream site; no local bytes cached
+        else:
+            statev = "ready" if ready else "pending"
         slot = {
             "slot": sid,
             "role": "body",
             "target": target_rel,
             "source": source,
             "alt": alt,
-            "state": "ready" if ready else "pending",
+            "state": statev,
             "w": w, "h": h,
         }
         slots.append(slot)
@@ -240,14 +225,14 @@ def build_body_slots(body_html, item_slug, site_root, repo_root, do_cache):
     return html, slots
 
 
-def clean_body(raw, site_root, repo_root, item_slug, do_cache=True):
+def clean_body(raw, site_root, repo_root, item_slug):
     body = raw or ""
     body = COMPONENT_RE.sub(lambda m: DOWNLOAD_SLOT if m.group(1).lower() == "downloadlinks" else "", body)
     body = convert_admonions(body)
     body = re.sub(r"!\[([^\]]*?)\s*=\s*\d+x([^\]]*)\]", r"![\1\2]", body)
     body = re.sub(r"\{\{[^}]*\}\}", "", body)
     body_html = markdown.markdown(body, extensions=["extra", "sane_lists", "toc", "tables"])
-    body_html, slots = build_body_slots(body_html, item_slug, site_root, repo_root, do_cache)
+    body_html, slots = build_body_slots(body_html, item_slug, site_root, repo_root)
     return body_html.strip(), slots
 
 
@@ -296,7 +281,7 @@ def read_downloads(repo_root):
         return {}
 
 
-def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool, do_cache: bool = True):
+def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool):
     downloads = read_downloads(repo_root)
     pages_root = repo_root / "src" / "pages"
 
@@ -331,7 +316,7 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool, do_
             "state": "ready" if icon else "pending",
             "w": COVER_RATIO[0] * 100, "h": COVER_RATIO[1] * 100,
         }
-        body_html, body_slots = clean_body(body, site_root, repo_root, item_slug, do_cache)
+        body_html, body_slots = clean_body(body, site_root, repo_root, item_slug)
         media = [cover] + body_slots
         dl_list = downloads.get(item_slug, [])
         for dl in dl_list:
@@ -461,9 +446,10 @@ def main():
     ap.add_argument("--site", required=True, help="path to static site directory")
     ap.add_argument("--source-url", default="https://github.com/VM-Chinese-translate-group/vmct-website-v4")
     ap.add_argument("--no-icons", action="store_true", help="skip caching cover icons")
-    ap.add_argument("--no-cache", action="store_true", help="skip caching body images (leave slots pending)")
     args = ap.parse_args()
-    build(Path(args.repo).resolve(), Path(args.site).resolve(), args.source_url, not args.no_icons, not args.no_cache)
+    # Body images are never downloaded: only sizing hints + upstream URLs are
+    # recorded; the browser loads them from the original site on demand.
+    build(Path(args.repo).resolve(), Path(args.site).resolve(), args.source_url, not args.no_icons)
 
 
 if __name__ == "__main__":

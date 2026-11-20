@@ -54,14 +54,16 @@ python scripts/normalize_data.py --repo <上游仓库目录> --site site
 | --- | --- |
 | `slot` | 槽位 ID（`cover` / `body-01`…） |
 | `role` | `cover`（封面）或 `body`（正文图） |
-| `target` | 本地目标路径（已缓存时） |
-| `source` | 原始图片 URL，供后续 SYNC 重新拉取 |
-| `state` | `ready`（已缓存）或 `pending`（待填充） |
+| `target` | 本地路径（`ready`）或原始图片 URL（`remote`） |
+| `source` | 原始图片 URL |
+| `state` | `ready`（本地文件）、`remote`（由原站按需提供）、`pending`（无图占位） |
 | `w` / `h` | 占位尺寸比例，锁定布局 |
 
-渲染层据此预留固定比例的占位盒：已就绪显示图片，未就绪显示带槽位编号的斜纹骨架。后续同步只需把图片写到 `target` 并把对应槽位的 `state` 改为 `ready`、`target` 指向该文件，重新生成 `catalog.*` 即可——盒子尺寸不变，布局不受影响。缓存目录：`site/assets/icons/`（封面）、`site/assets/media/`（正文图）、`site/assets/imgs/`（仓库内图片）。
+渲染层据此预留固定比例的占位盒：本地图与外链图都直接显示，无图时显示带槽位编号的斜纹骨架。盒子尺寸由 `w/h` 锁定，图片是否加载都不影响布局。
 
-如需跳过远程下载（只生成占位元数据）：加 `--no-cache`。
+正文远程图**不下载到本地**：只记录尺寸比例与原始 URL（`state: remote`），图片字节由原站按需提供，避免构建时下载整图占用带宽与磁盘。仓库自带的 `/imgs/` 资源属源仓库内容，仍复制到 `site/assets/imgs/`；封面缩略图缓存于 `site/assets/icons/`。
+
+如需跳过封面图标缓存：加 `--no-icons`。
 
 ## 同步比对工具
 

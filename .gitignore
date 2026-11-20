@@ -9,6 +9,9 @@ _ref_site/
 tools/VMCT-Sync/out/
 tools/VMCT-Sync/*.tsv
 
+# remote body images are served via upstream URLs, never cached locally
+site/assets/media/
+
 # python
 __pycache__/
 *.pyc

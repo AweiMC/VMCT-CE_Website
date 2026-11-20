@@ -40,11 +40,14 @@
   // changes the box size — a later SYNC only swaps the image source/target.
   function mediaSlot(slot, variant) {
     slot = slot || { slot: 'cover', target: null, source: '', state: 'pending', alt: '', w: 400, h: 300 };
-    var ready = slot.state === 'ready' && slot.target;
-    var style = ready ? "background-image:url('" + esc(slot.target) + "')" : '';
+    var isRemote = slot.state === 'remote' && (slot.target || slot.source);
+    var isReady = slot.state === 'ready' && slot.target;
+    var hasImage = isReady || isRemote;
+    var imageUrl = isReady ? slot.target : (isRemote ? (slot.target || slot.source) : '');
+    var style = hasImage ? "background-image:url('" + esc(imageUrl) + "')" : '';
     var cls = 'media-slot ' + (variant === 'cover' ? 'media-slot-cover' : 'media-slot-body') +
-      (ready ? ' is-ready' : ' is-pending');
-    var label = ready ? '' : '<span class="media-slot-mark">NO SIGNAL<br><small>IMG // ' + esc(slot.slot.toUpperCase()) + '</small></span>';
+      (hasImage ? ' is-ready' : ' is-pending');
+    var label = hasImage ? '' : '<span class="media-slot-mark">NO SIGNAL<br><small>IMG // ' + esc(slot.slot.toUpperCase()) + '</small></span>';
     return '<div class="' + cls + '" data-img-slot="' + esc(slot.slot) + '" data-img-state="' + slot.state + '"' +
       ' data-img-target="' + esc(slot.target || '') + '" data-img-source="' + esc(slot.source || '') + '"' +
       ' style="' + style + '" role="img" aria-label="' + esc(slot.alt || slot.slot) + '">' + label + '</div>';
@@ -59,12 +62,16 @@
       var target = fig.getAttribute('data-img-target') || '';
       var statev = fig.getAttribute('data-img-state');
       var source = fig.getAttribute('data-img-source') || '';
-      var ready = statev === 'ready' && target;
-      fig.classList.add('media-slot', 'media-slot-body', ready ? 'is-ready' : 'is-pending');
-      if (ready) {
+      // remote: upstream URL is shown directly (no local bytes); ready: local file
+      var isRemote = statev === 'remote' && (target || source);
+      var isReady = statev === 'ready' && target;
+      var hasImage = isReady || isRemote;
+      var imageUrl = isReady ? target : (isRemote ? (target || source) : '');
+      fig.classList.add('media-slot', 'media-slot-body', hasImage ? 'is-ready' : 'is-pending');
+      if (hasImage) {
         var stale = fig.querySelector('.img-slot-mark');
         if (stale) stale.remove();
-        fig.style.backgroundImage = 'url("' + target + '")';
+        fig.style.backgroundImage = 'url("' + imageUrl + '")';
         M.mediaReveal(fig);
       } else {
         var old = fig.querySelector('.img-slot-mark');
