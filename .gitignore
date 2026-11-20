@@ -1,0 +1,18 @@
+# upstream checkout / analysis / build scratch (never committed)
+_source_repo/
+_tmp_frames/
+_shots/
+_ref_site/
+*.b64
+
+# java build output
+tools/VMCT-Sync/out/
+tools/VMCT-Sync/*.tsv
+
+# python
+__pycache__/
+*.pyc
+
+# os
+.DS_Store
+Thumbs.db

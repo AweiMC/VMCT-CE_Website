@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="VM 中文翻译组社区资料站 · 整合包 / 地图 / 资料库">
+<meta name="theme-color" content="#0B0D0B">
+<title>VMCT // 社区资料终端</title>
+<link rel="stylesheet" href="assets/font.css">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="mar-root" data-view="home">
+
+<!-- one-shot boot sequence: never blocks input, always self-removes -->
+<div id="bootHost" class="boot-host" aria-hidden="true">
+  <div class="boot-scan"></div>
+  <div class="boot-center">
+    <div class="boot-mark">VMCT</div>
+    <div class="boot-sub">COMMUNITY ARCHIVE TERMINAL</div>
+    <div class="boot-cross mar-cross"><i class="h"></i><i class="v"></i><i class="d"></i></div>
+  </div>
+  <div class="boot-log" id="bootLog"></div>
+  <div class="boot-progress"><i id="bootProgress"></i></div>
+  <div class="boot-corner tl"></div><div class="boot-corner tr"></div>
+  <div class="boot-corner bl"></div><div class="boot-corner br"></div>
+  <div class="boot-coord">X:001 Y:028 Z:114 // SECTOR-VM</div>
+</div>
+
+<canvas id="dotField" aria-hidden="true"></canvas>
+
+<div class="app-shell">
+  <!-- top bar -->
+  <header class="topbar">
+    <a class="brand" href="#/home" data-nav>
+      <span class="brand-mark">VM<span class="brand-dot">.</span></span>
+      <span class="brand-text"><b>VMCT</b><small>社区资料终端 // ARCHIVE</small></span>
+    </a>
+    <nav class="tabs" id="tabs" aria-label="主导航"></nav>
+    <div class="topbar-right">
+      <label class="search-box">
+        <span class="search-icon" aria-hidden="true"></span>
+        <input id="globalSearch" type="search" placeholder="检索档案 / SEARCH ARCHIVE" autocomplete="off" aria-label="搜索">
+        <kbd>/</kbd>
+      </label>
+      <div class="sys-clock" id="sysClock">--:--:--</div>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单" aria-expanded="false"><span></span><span></span><span></span></button>
+  </header>
+
+  <main id="main" tabindex="-1"></main>
+
+  <footer class="footer">
+    <div class="footer-l"><span class="plate">VMCT // COMMUNITY BUILD</span><span class="dim">数据同步自上游公开仓库 · 静态镜像</span></div>
+    <div class="footer-r mar-data" id="footerStat"></div>
+  </footer>
+</div>
+
+<script src="data/catalog.js"></script>
+<script src="assets/loader-icons.js"></script>
+<script src="assets/motion.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

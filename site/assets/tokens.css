@@ -1,0 +1,126 @@
+/* ==========================================================================
+ * Marathon / Graphic Realism — design tokens
+ * Self-contained. No external fonts, images or network requests.
+ * Pair with references/design-language.md. Namespace: --mar-*, .mar-*
+ * ========================================================================== */
+
+:root {
+  /* one neutral dark base, one accent. No light/dark variants. */
+  --mar-bg-void: #0B0D0B;
+  --mar-bg-deep: #0B0D0B;
+  --mar-bg-panel: #272733;
+  --mar-bg-overlay: #2E2F38;
+  --mar-ink-primary: #DFDEE0;
+  --mar-ink-secondary: rgba(223, 222, 224, .72);
+  --mar-ink-tertiary: rgba(223, 222, 224, .45);
+  --mar-line-faint: #272733;
+  --mar-line-strong: #2E2F38;
+  --mar-wash: rgba(223, 222, 224, .08);
+  --mar-wash-strong: rgba(223, 222, 224, .14);
+  --mar-accent: #C0FE04;
+  --mar-accent-ink: #0B0D0B;      /* measured, see design-language.md §1 */
+  --mar-accent-text: #C0FE04;
+  --mar-wash-accent: rgba(192, 254, 4, .14);
+  --mar-signal: #FF003C;          /* semantic error, never follows accent */
+  --mar-run-mature: #8F96B2;
+
+  --mar-font-ui: Inter, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --mar-font-mono: "JetBrains Mono", "SF Mono", "Fira Code", Consolas, "Liberation Mono", monospace;
+  --mar-font-display: var(--mar-font-mono);
+
+  --mar-unit: 8px;
+  --mar-grid: 24px;               /* dot-field lattice */
+  --mar-mark: calc(var(--mar-grid) * .34);   /* 8.16px */
+}
+
+/* Accent switch: set these five together, inlined on <body> so they win over
+   any stylesheet layer. Pick accent-ink by measured contrast (black or white). */
+[data-accent="05C938"] { --mar-accent: #05C938; --mar-accent-ink: #0B0D0B; --mar-wash-accent: rgba(5,201,56,.14); }
+[data-accent="E60B10"] { --mar-accent: #E60B10; --mar-accent-ink: #FFFFFF; --mar-wash-accent: rgba(230,11,16,.14); }
+[data-accent="E7337C"] { --mar-accent: #E7337C; --mar-accent-ink: #0B0D0B; --mar-wash-accent: rgba(231,51,124,.14); }
+[data-accent="E5710C"] { --mar-accent: #E5710C; --mar-accent-ink: #0B0D0B; --mar-wash-accent: rgba(229,113,12,.14); }
+[data-accent="C272E9"] { --mar-accent: #C272E9; --mar-accent-ink: #0B0D0B; --mar-wash-accent: rgba(194,114,233,.14); }
+[data-accent="81E8B1"] { --mar-accent: #81E8B1; --mar-accent-ink: #0B0D0B; --mar-wash-accent: rgba(129,232,177,.14); }
+
+.mar-root {
+  background: var(--mar-bg-void);
+  color: var(--mar-ink-primary);
+  font-family: var(--mar-font-ui);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.mar-root *, .mar-root *::before, .mar-root *::after { border-radius: 0 !important; }
+.mar-root ::selection { background: var(--mar-accent); color: var(--mar-accent-ink); }
+
+/* ---- editorial type scale (4 / 8 / 16 grid) ---------------------------- */
+.mar-display { font: 700 32px/1.05 var(--mar-font-display); letter-spacing: .08em; text-transform: uppercase; }
+.mar-h1 { font: 700 24px/1.15 var(--mar-font-display); letter-spacing: .08em; text-transform: uppercase; }
+.mar-h2 { font: 700 18px/1.2 var(--mar-font-display); letter-spacing: .08em; text-transform: uppercase; }
+.mar-h3 { font: 700 14px/1.3 var(--mar-font-display); letter-spacing: .08em; text-transform: uppercase; }
+.mar-body { font: 400 14px/1.5 var(--mar-font-ui); }
+.mar-small { font: 400 13px/1.45 var(--mar-font-ui); color: var(--mar-ink-secondary); }
+.mar-data { font: 400 12px/1.4 var(--mar-font-mono); letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+.mar-plate { font: 400 11px/1.3 var(--mar-font-display); letter-spacing: .12em; text-transform: uppercase; color: var(--mar-ink-tertiary); }
+.mar-dim { color: var(--mar-ink-tertiary); }
+
+/* ---- surfaces ---------------------------------------------------------- */
+.mar-panel { background: var(--mar-bg-panel); border: 1px solid var(--mar-line-faint); padding: 24px; }
+.mar-overlay { background: var(--mar-bg-overlay); border: 1px solid var(--mar-line-strong); }
+.mar-rule { height: 1px; background: var(--mar-line-strong); border: 0; }
+.mar-frame { position: relative; }        /* FUI geometry lives INSIDE its own box */
+
+/* ---- FUI geometry: pure CSS, no bitmaps -------------------------------- */
+.mar-corner { position: absolute; width: 26px; height: 26px; border: 1.5px solid var(--mar-accent); opacity: .75; pointer-events: none; }
+.mar-corner.tl { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.mar-corner.tr { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+.mar-corner.bl { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+.mar-corner.br { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+
+.mar-cross { position: relative; width: 60px; height: 60px; pointer-events: none; }
+.mar-cross i { position: absolute; display: block; background: var(--mar-accent); }
+.mar-cross .h { left: 0; top: 50%; width: 100%; height: 1.5px; }
+.mar-cross .v { top: 0; left: 50%; height: 100%; width: 1.5px; }
+.mar-cross .d { top: calc(50% - 5px); left: calc(50% - 5px); width: 10px; height: 10px; transform: rotate(45deg); }
+
+.mar-status { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 8px; border-bottom: 1px solid var(--mar-line-strong); }
+.mar-status .label { font: 700 14px var(--mar-font-display); letter-spacing: .08em; text-transform: uppercase; }
+.mar-status .state { font: 400 11px var(--mar-font-mono); letter-spacing: .12em; color: var(--mar-accent-text); }
+
+.mar-data-plate { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; padding: 12px 0; border-top: 1px solid var(--mar-line-faint); }
+.mar-data-plate dt { font: 400 11px var(--mar-font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--mar-ink-tertiary); }
+.mar-data-plate dd { margin: 0; font: 400 12px var(--mar-font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- interactive: accent only on the two lit states ------------------- */
+.mar-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px;
+  background: transparent; color: var(--mar-ink-primary); border: 1px solid var(--mar-line-strong);
+  font: 700 12px var(--mar-font-display); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+.mar-btn:hover { background: var(--mar-accent); color: var(--mar-accent-ink); border-color: var(--mar-accent); }
+.mar-btn:focus-visible { outline: 1px solid var(--mar-accent); outline-offset: 2px; }
+.mar-btn[aria-pressed="true"] { background: var(--mar-accent); color: var(--mar-accent-ink); border-color: var(--mar-accent); }
+
+.mar-row { display: block; padding: 8px 12px; color: var(--mar-ink-primary); text-decoration: none; }
+.mar-row:hover:not(.selected) { background: transparent; }        /* kill the 8% hover wash */
+.mar-row.selected { background: var(--mar-accent); color: var(--mar-accent-ink); }
+
+.mar-field { background: var(--mar-bg-panel); border: 1px solid var(--mar-line-strong);
+  color: var(--mar-ink-primary); padding: 12px; font: 400 13px var(--mar-font-ui); width: 100%; }
+.mar-field:focus { border-color: var(--mar-accent); outline: none; }
+
+.mar-swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.mar-sw { aspect-ratio: 366 / 237; border: 1px solid var(--mar-line-strong); cursor: pointer; padding: 0; }
+.mar-sw[aria-pressed="true"] { outline: 2px solid var(--mar-accent); outline-offset: 2px; }
+
+/* ---- one-shot overlays ------------------------------------------------- */
+@keyframes mar-tile-out { to { opacity: 0; } }
+.mar-mosaic { position: absolute; inset: 0; z-index: 40; display: grid; pointer-events: none; }
+.mar-tile { background: var(--mar-bg-void); animation: mar-tile-out 0s linear both; }
+@keyframes mar-reveal { from { clip-path: inset(0 50% 0 50%); } to { clip-path: inset(0 0 0 0); } }
+.mar-note { animation: mar-reveal .18s ease-out both; }
+.mar-note-details { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows .2s, opacity .2s; }
+.mar-note[aria-expanded="true"] .mar-note-details { grid-template-rows: 1fr; opacity: 1; }
+.mar-note-details > div { min-height: 0; overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mar-mosaic, .mar-intro, .mar-boot-host { display: none !important; }
+  .mar-note, .mar-note-details { animation: none !important; transition: none !important; }
+}
