@@ -176,6 +176,8 @@ main { flex: 1; width: 100%; outline: none; }
 .catalog-title .count { font: 400 11px var(--mono); color: var(--ink-3); letter-spacing: .1em; }
 
 .catalog-layout { display: grid; grid-template-columns: 232px 1fr; gap: 24px; padding: 24px 0 60px; align-items: start; }
+/* kinds with no facets (wiki chapters, community pages) drop the rail */
+.catalog-layout.no-rail { grid-template-columns: minmax(0, 1fr); }
 
 /* filter rail */
 .filter-rail { position: sticky; top: calc(var(--header-h) + 16px); display: flex; flex-direction: column; gap: 12px; }
@@ -311,6 +313,21 @@ figure.img-slot.media-slot.is-ready { background-color: var(--bg); }
 .empty .cross { margin: 0 auto 20px; width: 48px; height: 48px; }
 .empty h3 { font: 700 18px var(--display); letter-spacing: .1em; color: var(--ink-2); margin: 0 0 8px; }
 .empty p { font: 400 12px var(--mono); color: var(--ink-3); margin: 0; }
+
+/* ---------- document index (wiki chapters) ----------------------------
+   A wiki is one upstream doc split into chapters: no cover, no status.
+   Rows carry a section number and a text excerpt instead of card chrome. */
+.cards.doc-list { gap: 6px; }
+.doc-row { align-items: center; gap: 18px; padding: 14px 18px; }
+.doc-num {
+  flex: 0 0 40px; text-align: right;
+  font: 400 12px var(--mono); letter-spacing: .08em; color: var(--ink-3);
+}
+.doc-row:first-child .doc-num { color: var(--accent); }
+.doc-row .card-desc { margin-top: 5px; -webkit-line-clamp: 2; }
+.doc-go { margin-left: auto; flex: 0 0 auto; font: 400 14px var(--mono); color: var(--ink-3); transition: color .3s ease, transform .3s ease; }
+.doc-row:hover .doc-go { color: var(--accent); transform: translate(2px, -2px); }
+.doc-row:hover .card-title { color: var(--accent); }
 
 /* ---------- detail page ------------------------------------------------ */
 .detail-back { display: inline-flex; align-items: center; gap: 8px; padding: 22px 0 0; font: 400 11px var(--mono); letter-spacing: .1em; color: var(--ink-3); text-transform: uppercase; }

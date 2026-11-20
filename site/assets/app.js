@@ -32,6 +32,26 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
+  // Plain text of an item's body, cached. Used for search matches and for a
+  // real excerpt when an entry carries no frontmatter description.
+  var TEXT_CACHE = Object.create(null);
+  function plainText(it) {
+    if (TEXT_CACHE[it.id] === undefined) {
+      var d = document.createElement('div');
+      d.innerHTML = it.bodyHtml || '';
+      // drop the "IMG // BODY-01" placeholder captions — they are chrome,
+      // not prose, and would otherwise open every excerpt
+      d.querySelectorAll('.img-slot-mark').forEach(function (n) { n.remove(); });
+      TEXT_CACHE[it.id] = (d.textContent || '').replace(/\s+/g, ' ').trim();
+    }
+    return TEXT_CACHE[it.id];
+  }
+  function excerptOf(it, max) {
+    if (it.description) return it.description;
+    var t = plainText(it);
+    if (!t) return '';
+    return t.length > max ? t.slice(0, max) + '…' : t;
+  }
   function loaderSvg(loader) {
     var raw = ICONS[loader];
     return raw ? '<span class="loader-ico" title="' + esc(loader) + '">' + raw + '</span>' : '';
@@ -87,6 +107,7 @@
   }
   function iconFor(item) {
     var s = coverOf(item);
+    if (!s || !((s.state === 'ready' && s.target) || (s.state === 'remote' && (s.target || s.source)))) return '';
     var slot = mediaSlot(s, 'cover');
     // keep the card-icon class so existing hover rules keep working
     return slot.replace('class="media-slot ', 'class="card-icon media-slot ');
@@ -159,7 +180,8 @@
   function itemMatches(it) {
     if (state.q) {
       var q = state.q.toLowerCase();
-      var hay = (it.title + ' ' + it.originalName + ' ' + it.description + ' ' + it.authors.join(' ')).toLowerCase();
+      var hay = (it.title + ' ' + it.originalName + ' ' + it.description + ' ' +
+        it.authors.join(' ') + ' ' + plainText(it)).toLowerCase();
       if (hay.indexOf(q) < 0) return false;
     }
     if (state.loader && it.loader !== state.loader) return false;
@@ -190,49 +212,107 @@
       '<span class="box"></span>' + nameHtml +
       '<span class="fcount">' + count + '</span></div>';
   }
+  // The rail only exists when there is something to filter on. Kinds whose
+  // records carry no compatibility metadata (wiki chapters, community pages)
+  // render a plain single-column list instead of an empty sidebar.
   function filterRail(kindItems) {
     var versions = facetCounts(kindItems, 'minecraft');
     var loaders = facetCounts(kindItems, 'loader');
     var statuses = facetCounts(kindItems, 'status');
-    var verOpts = Object.keys(versions).sort(function (a, b) { return b.localeCompare(a, undefined, { numeric: true }); })
-      .slice(0, 12).map(function (v) { return optRow(v, v, versions[v], 'version', state.version === v); }).join('');
-    var loaderOpts = Object.keys(loaders).sort().map(function (v) {
-      var label = DATA.loaderLabels[v] || v;
-      var ico = ICONS[v] ? '<span class="fopt-ico">' + ICONS[v] + '</span>' : '';
-      return optRow(v, label, loaders[v], 'loader', state.loader === v, ico);
-    }).join('');
-    var statusOpts = Object.keys(statuses).map(function (v) {
-      var lbl = DATA.statusLabels[v] || v;
-      return optRow(v, lbl, statuses[v], 'status', state.status === v);
-    }).join('');
-    return '<aside class="filter-rail">' +
-      '<div class="filter-group"><h3>游戏版本 <span class="caret">−</span><span class="plate">VERSION</span></h3><div class="filter-body">' +
-        '<input class="filter-search" placeholder="搜索版本…" data-filter-search="version">' + verOpts + '</div></div>' +
-      '<div class="filter-group"><h3>加载器 <span class="plate">LOADER</span></h3><div class="filter-body">' + loaderOpts + '</div></div>' +
-      '<div class="filter-group"><h3>状态 <span class="plate">STATUS</span></h3><div class="filter-body">' + statusOpts + '</div></div>' +
+    var groups = [];
+    if (Object.keys(versions).length) {
+      var verOpts = Object.keys(versions).sort(function (a, b) { return b.localeCompare(a, undefined, { numeric: true }); })
+        .slice(0, 12).map(function (v) { return optRow(v, v, versions[v], 'version', state.version === v); }).join('');
+      groups.push('<div class="filter-group"><h3>游戏版本 <span class="caret">−</span><span class="plate">VERSION</span></h3><div class="filter-body">' +
+        '<input class="filter-search" placeholder="搜索版本…" data-filter-search="version">' + verOpts + '</div></div>');
+    }
+    if (Object.keys(loaders).length) {
+      var loaderOpts = Object.keys(loaders).sort().map(function (v) {
+        var label = DATA.loaderLabels[v] || v;
+        var ico = ICONS[v] ? '<span class="fopt-ico">' + ICONS[v] + '</span>' : '';
+        return optRow(v, label, loaders[v], 'loader', state.loader === v, ico);
+      }).join('');
+      groups.push('<div class="filter-group"><h3>加载器 <span class="plate">LOADER</span></h3><div class="filter-body">' + loaderOpts + '</div></div>');
+    }
+    if (Object.keys(statuses).length) {
+      var statusOpts = Object.keys(statuses).map(function (v) {
+        var lbl = DATA.statusLabels[v] || v;
+        return optRow(v, lbl, statuses[v], 'status', state.status === v);
+      }).join('');
+      groups.push('<div class="filter-group"><h3>状态 <span class="plate">STATUS</span></h3><div class="filter-body">' + statusOpts + '</div></div>');
+    }
+    if (!groups.length) return '';
+    return '<aside class="filter-rail">' + groups.join('') +
       '<button class="btn" id="clearFilters" style="justify-content:center"' + (state.loader || state.status || state.version || state.q ? '' : ' hidden') + '>清除筛选 ✕</button>' +
       '</aside>';
   }
+  // Only render what the record actually has: a wiki chapter has no status,
+  // date or links, and empty placeholders ("未标注" / "待定" / "↗ 0") are noise.
   function cardHtml(it) {
-    var tags = '<span class="tag' + (it.status === 'maintaining' ? ' accent' : '') + (it.status === 'stopped' ? ' stopped' : '') + '">' + esc(it.statusLabel) + '</span>';
+    var tags = '';
+    if (it.status) tags += '<span class="tag' + (it.status === 'maintaining' ? ' accent' : '') + (it.status === 'stopped' ? ' stopped' : '') + '">' + esc(it.statusLabel) + '</span>';
     if (it.loader) tags += '<span class="tag">' + loaderSvg(it.loader) + esc(it.loaderLabel || it.loader) + '</span>';
     if (it.minecraft) tags += '<span class="tag">MC ' + esc(it.minecraft) + '</span>';
-    var date = it.updateDate ? esc(it.updateDate) : '待定';
-    return '<article class="card" data-detail="' + esc(it.id) + '">' + iconFor(it) +
+    var meta = '';
+    var bits = [];
+    if (it.updateDate) bits.push('<span>◷ ' + esc(it.updateDate) + '</span>');
+    if (it.links.length + it.downloads.length) bits.push('<span>↗ ' + (it.links.length + it.downloads.length) + '</span>');
+    if (bits.length) meta = '<div class="card-meta">' + bits.join('') + '</div>';
+    var desc = excerptOf(it, 120);
+    var cover = iconFor(it);
+    return '<article class="card" data-detail="' + esc(it.id) + '">' + cover +
       '<div class="card-body"><div class="card-head"><h3 class="card-title">' + esc(it.title) + '</h3></div>' +
       (it.originalName ? '<div class="card-author">原题 <b>' + esc(it.originalName) + '</b></div>' : '') +
-      '<p class="card-desc">' + esc(it.description || '暂无简介') + '</p>' +
-      '<div class="card-foot">' + tags + '<div class="card-meta"><span>◷ ' + date + '</span><span>↗ ' + (it.links.length + it.downloads.length) + '</span></div></div>' +
+      (desc ? '<p class="card-desc">' + esc(desc) + '</p>' : '') +
+      ((tags || meta) ? '<div class="card-foot">' + tags + meta + '</div>' : '') +
       '</div></article>';
   }
+  // A wiki entry is a chapter of one upstream document, not a packaged mod:
+  // no cover, no status, no date. Render it as a numbered document index —
+  // parent page first as the overview, then chapters with a text excerpt.
+  function docRow(it, num) {
+    var excerpt = excerptOf(it, 160);
+    return '<article class="card doc-row" data-detail="' + esc(it.id) + '">' +
+      '<span class="doc-num">' + (num || '§') + '</span>' +
+      '<div class="card-body"><div class="card-head"><h3 class="card-title">' + esc(it.title) + '</h3></div>' +
+      (excerpt ? '<p class="card-desc">' + esc(excerpt) + '</p>' : '') +
+      '</div><span class="doc-go" aria-hidden="true">↗</span></article>';
+  }
+  // Root = the page the other listed pages point at as their parent. Judging
+  // by a missing `parent` field does not work: the wiki's own index page
+  // (modpacks/fc5-wiki) has a parent of "modpacks".
+  function docListHtml(list) {
+    var ids = list.map(function (i) { return i.id; });
+    var root = list.filter(function (i) { return list.some(function (k) { return k.parent === i.id; }); });
+    var rootIds = root.map(function (i) { return i.id; });
+    var kids = list.filter(function (i) { return rootIds.indexOf(i.id) < 0 && ids.indexOf(i.parent) >= 0; });
+    var strays = list.filter(function (i) {
+      return rootIds.indexOf(i.id) < 0 && kids.indexOf(i) < 0;
+    });
+    var n = 0;
+    var num = function () { return String(++n).padStart(2, '0'); };
+    return '<div class="cards doc-list">' +
+      root.map(function (i) { return docRow(i, '§'); }).join('') +
+      kids.map(function (i) { return docRow(i, num()); }).join('') +
+      strays.map(function (i) { return docRow(i, num()); }).join('') +
+      '</div>';
+  }
+
   // Render just the cards/empty region of the list column.
   function cardsRegion(kind) {
     var kindItems = allItems().filter(function (i) { return i.kind === kind; });
+    // the document index keeps upstream order (root page, then chapters)
+    if (kind === 'wiki') {
+      var docs = kindItems.filter(itemMatches);
+      return docs.length ? docListHtml(docs) : emptyRegion();
+    }
     var list = sorted(kindItems.filter(itemMatches));
+    if (!list.length) return emptyRegion();
     var gridCls = state.view === 'grid' ? ' grid' : '';
-    return list.length
-      ? '<div class="cards' + gridCls + '">' + list.map(cardHtml).join('') + '</div>'
-      : '<div class="empty"><div class="cross mar-cross"><i class="h"></i><i class="v"></i><i class="d"></i></div><h3>无匹配档案</h3><p>调整筛选条件或清除检索词</p></div>';
+    return '<div class="cards' + gridCls + '">' + list.map(cardHtml).join('') + '</div>';
+  }
+  function emptyRegion() {
+    return '<div class="empty"><div class="cross mar-cross"><i class="h"></i><i class="v"></i><i class="d"></i></div><h3>无匹配档案</h3><p>调整筛选条件或清除检索词</p></div>';
   }
 
   // Scoped refresh: repaint only the list column, keep toolbar/filter rail intact.
@@ -260,28 +340,41 @@
 
   function viewCatalog(kind) {
     var kindItems = allItems().filter(function (i) { return i.kind === kind; });
-    var list = sorted(kindItems.filter(itemMatches));
     var meta = KIND_META[kind] || { label: kind, num: '--', desc: '' };
-    var gridCls = state.view === 'grid' ? ' grid' : '';
+    var rail = filterRail(kindItems);
+    // Only offer sorts that mean something for this kind: a wiki chapter has
+    // neither a date nor a status, so those options would be dead controls.
+    // Also heal state.sort when arriving from a kind that had that option.
+    var hasDate = kindItems.some(function (i) { return !!i.updateDate; });
+    var hasStatus = kindItems.some(function (i) { return !!i.status; });
+    if (state.sort === 'status' && !hasStatus) state.sort = hasDate ? 'updated' : 'title';
+    if (state.sort === 'updated' && !hasDate) state.sort = 'title';
+    var list = sorted(kindItems.filter(itemMatches));
+    var sortSel = '';
+    if (kind !== 'wiki') {
+      var sortOpts = '';
+      if (hasDate) sortOpts += '<option value="updated"' + (state.sort === 'updated' ? ' selected' : '') + '>排序：更新时间</option>';
+      sortOpts += '<option value="title"' + (state.sort === 'title' ? ' selected' : '') + '>排序：标题</option>';
+      if (hasStatus) sortOpts += '<option value="status"' + (state.sort === 'status' ? ' selected' : '') + '>排序：状态</option>';
+      sortSel = '<div class="select-wrap"><select id="sortSel">' + sortOpts + '</select></div>';
+    }
+    // list/grid toggle only applies to cover cards, not to the document index
+    var showViewToggle = kind !== 'wiki';
     return '<div class="wrap">' +
       '<div class="catalog-top"><div class="crumb">INDEX / <b>' + esc(meta.label) + '</b></div>' +
         '<div class="catalog-title"><h2>' + esc(meta.label) + '</h2><span class="count">' + list.length + ' / ' + kindItems.length + ' ENTRIES · ' + esc(meta.desc) + '</span></div>' +
       '</div>' +
-      '<div class="catalog-layout">' + filterRail(kindItems) +
+      '<div class="catalog-layout' + (rail ? '' : ' no-rail') + '">' + rail +
         '<div class="list-col">' +
           '<div class="list-toolbar">' +
             '<div class="search-box"><span class="search-icon"></span><input id="listSearch" type="search" placeholder="筛选当前列表…" value="' + esc(state.q) + '"><kbd>/</kbd></div>' +
-            '<div class="select-wrap"><select id="sortSel">' +
-              '<option value="updated"' + (state.sort === 'updated' ? ' selected' : '') + '>排序：更新时间</option>' +
-              '<option value="title"' + (state.sort === 'title' ? ' selected' : '') + '>排序：标题</option>' +
-              '<option value="status"' + (state.sort === 'status' ? ' selected' : '') + '>排序：状态</option>' +
-            '</select></div>' +
+            sortSel +
+            (showViewToggle ?
             '<div class="view-toggle"><button data-view="list" class="' + (state.view === 'list' ? 'active' : '') + '" title="列表"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M2 3h12M2 8h12M2 13h12"/></svg></button>' +
-              '<button data-view="grid" class="' + (state.view === 'grid' ? 'active' : '') + '" title="网格"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg></button></div>' +
+              '<button data-view="grid" class="' + (state.view === 'grid' ? 'active' : '') + '" title="网格"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg></button></div>' : '') +
             '<span class="result-line">SHOWING ' + list.length + ' RESULTS</span>' +
           '</div>' +
-          (list.length ? '<div class="cards' + gridCls + '">' + list.map(cardHtml).join('') + '</div>' :
-            '<div class="empty"><div class="cross mar-cross"><i class="h"></i><i class="v"></i><i class="d"></i></div><h3>无匹配档案</h3><p>调整筛选条件或清除检索词</p></div>') +
+          cardsRegion(kind) +
         '</div>' +
       '</div>' +
     '</div>';
@@ -291,7 +384,8 @@
   function viewDetail(id) {
     var it = byId(id);
     if (!it) return '<div class="wrap"><div class="empty"><h3>档案不存在</h3><p>' + esc(id) + '</p></div></div>';
-    var tags = '<span class="tag' + (it.status === 'maintaining' ? ' accent' : '') + '">' + esc(it.statusLabel) + '</span>';
+    var tags = '';
+    if (it.status) tags += '<span class="tag' + (it.status === 'maintaining' ? ' accent' : '') + (it.status === 'stopped' ? ' stopped' : '') + '">' + esc(it.statusLabel) + '</span>';
     if (it.loader) tags += '<span class="tag">' + loaderSvg(it.loader) + esc(it.loaderLabel || it.loader) + '</span>';
     if (it.minecraft) tags += '<span class="tag">MC ' + esc(it.minecraft) + '</span>';
     if (it.packVersion) tags += '<span class="tag">v' + esc(it.packVersion) + '</span>';
@@ -311,21 +405,29 @@
       return '<a class="link-chip" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + ico + esc(l.label) + '<span style="margin-left:auto;color:var(--ink-3)">↗</span></a>';
     }).join('');
 
-    var kv = [
-      ['档案编号', it.id], ['原始名称', it.originalName || '—'],
-      ['更新时间', it.updateDate || it.updateDateRaw || '待定'],
-      ['加载器', it.loaderLabel || it.loader || '—'],
-      ['MC 版本', it.minecraft || '—'], ['包版本', it.packVersion || '—']
-    ].map(function (p) { return '<div class="kv"><dt>' + esc(p[0]) + '</dt><dd>' + esc(p[1]) + '</dd></div>'; }).join('');
+    // Drop rows that have no value: a wiki chapter would otherwise show a
+    // column of "—" placeholders for loader / MC version / pack version.
+    var kvPairs = [['档案编号', it.id], ['原始名称', it.originalName], ['更新时间', it.updateDate || it.updateDateRaw],
+      ['加载器', it.loaderLabel || it.loader], ['MC 版本', it.minecraft], ['包版本', it.packVersion]]
+      .filter(function (p) { return p[1]; });
+    var kv = kvPairs.map(function (p) { return '<div class="kv"><dt>' + esc(p[0]) + '</dt><dd>' + esc(p[1]) + '</dd></div>'; }).join('');
+
+    var cover = coverOf(it);
+    var hasCover = cover && ((cover.state === 'ready' && cover.target) || (cover.state === 'remote' && (cover.target || cover.source)));
+    // No cover art → skip the hero thumbnail entirely rather than showing an
+    // empty "NO SIGNAL" plate next to the title.
+    var heroIcon = hasCover
+      ? mediaSlot(cover, 'cover').replace('class="media-slot ', 'class="detail-icon media-slot ')
+      : '';
 
     return '<div class="wrap">' +
       '<a class="detail-back" href="#/' + it.kind + '">← 返回 ' + esc(KIND_META[it.kind].label) + '索引</a>' +
       '<div class="detail">' +
         '<div class="detail-main">' +
           '<div class="detail-hero"><div class="detail-hd">' +
-            mediaSlot(coverOf(it), 'cover').replace('class="media-slot ', 'class="detail-icon media-slot ') +
+            heroIcon +
             '<div><h1>' + esc(it.title) + '</h1>' + (it.originalName ? '<div class="detail-original">' + esc(it.originalName) + '</div>' : '') +
-            '<div class="detail-tags">' + tags + '</div></div>' +
+            (tags ? '<div class="detail-tags">' + tags + '</div>' : '') + '</div>' +
           '</div>' + (it.description ? '<p class="detail-desc">' + esc(it.description) + '</p>' : '') + '</div>' +
           (it.bodyHtml ? '<article class="prose">' + it.bodyHtml.replace(/<!--DOWNLOAD_SLOT-->/g, '') + '</article>' : '') +
         '</div>' +
