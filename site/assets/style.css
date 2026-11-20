@@ -245,6 +245,8 @@ main { flex: 1; width: 100%; outline: none; }
 .media-slot.is-revealing { animation: media-reveal .26s steps(5, end) both; }
 /* cover as card icon: keep the legacy fixed sizes from .card-icon / .detail-icon */
 .card-icon.media-slot, .detail-icon.media-slot { display: grid; }
+/* card thumbnails show the whole cover, not a cropped slice of it */
+.card-icon.media-slot { background-size: contain; background-color: var(--bg); }
 /* body figures: aspect ratio locked from normalizer w/h hints */
 figure.img-slot.media-slot {
   aspect-ratio: var(--slot-w, 640) / var(--slot-h, 360);

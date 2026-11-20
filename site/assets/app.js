@@ -8,6 +8,7 @@
   var M = window.VMMotion;
   var main = document.getElementById('main');
   var searchEl = document.getElementById('globalSearch');
+  var lastKind = null; // last rendered non-detail view; drives cross-view filter reset
   var state = {
     kind: 'home',
     q: '',
@@ -360,7 +361,15 @@
   }
   function render() {
     var r = parseHash();
-    if (r.kind !== 'detail') state.kind = r.kind;
+    // Switching between catalog views clears any active filters, so a loader /
+    // version chosen in one category never empties a different category.
+    // Use lastKind (updated only from the real route) instead of state.kind,
+    // which the global search may pre-set without changing the hash.
+    if (r.kind !== 'detail' && r.kind !== lastKind) {
+      state.q = ''; state.loader = null; state.status = null; state.version = null;
+      if (searchEl) searchEl.value = '';
+    }
+    if (r.kind !== 'detail') { state.kind = r.kind; lastKind = r.kind; }
     document.body.dataset.view = r.kind;
     var html;
     if (r.kind === 'home') html = viewHome();
