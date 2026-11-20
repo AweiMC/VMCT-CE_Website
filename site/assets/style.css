@@ -276,14 +276,14 @@ figure.img-slot.media-slot.is-ready { background-color: var(--bg); }
 .card:has(.card-icon:hover) .card-foot .tag svg { transform: scale(1.18); }
 .cards.grid .card-icon { width: 100%; height: 130px; flex: none; }
 
-/* rounded inverted-triangle notch at bottom-right. Rounded corners come from a
-   thick round-joined stroke in the inline SVG, so there are no sharp points.
-   It reads as a soft "cut corner"; hover grows + lights it up (0.3s ease). */
+/* Rounded inverted-triangle mark at bottom-right. Stroked in the acid accent
+   (never filled with void black) so it reads as part of the design language.
+   Round joins remove sharp points; hover grows + lights it up (0.3s ease). */
 .card::after {
-  content: ''; position: absolute; right: -1px; bottom: -1px;
-  width: 22px; height: 22px; pointer-events: none; z-index: 2;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 5 L12 19 L18 5 Z' fill='%230B0D0B' stroke='%230B0D0B' stroke-width='7' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
-  opacity: .85; transform-origin: 70% 70%;
+  content: ''; position: absolute; right: 2px; bottom: 2px;
+  width: 18px; height: 18px; pointer-events: none; z-index: 2;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6 L12 19 L18 6' fill='none' stroke='%23C0FE04' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
+  opacity: .55; transform-origin: 70% 70%;
   transition: transform .3s ease, opacity .3s ease, filter .3s ease;
 }
 .card:hover::after { transform: scale(1.22); opacity: 1; }
