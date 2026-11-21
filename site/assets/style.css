@@ -592,6 +592,8 @@ figure.img-slot.media-slot.is-ready { background-color: var(--bg); }
 .credit-list { padding: 12px 16px 18px; display: flex; flex-wrap: wrap; gap: 6px; max-height: 460px; overflow: auto; }
 .credit-person { border: 1px solid var(--line-2); padding: 5px 9px; font: 400 12px var(--ui); }
 .credit-person small { display: block; color: var(--ink-3); font: 400 10px var(--mono); }
+a.credit-person { transition: color .2s ease, border-color .2s ease; }
+a.credit-person:hover { color: var(--accent); border-color: var(--accent); }
 
 /* ---------- footer ----------------------------------------------------- */
 .footer { border-top: 1px solid var(--line-2); padding: 20px 24px; }
@@ -612,6 +614,9 @@ figure.img-slot.media-slot.is-ready { background-color: var(--bg); }
 .footer-toggle-sign .gi { width: 13px; height: 13px; }
 .footer-toggle[aria-expanded="true"] .footer-toggle-sign { transform: rotate(45deg); }
 /* repository link: same square, bordered language as the toggle */
+.footer-by { font: 400 10px var(--mono); letter-spacing: .1em; color: var(--ink-3); }
+.footer-by a { color: var(--ink-2); border-bottom: 1px solid var(--line-2); transition: color .2s ease, border-color .2s ease; }
+.footer-by a:hover { color: var(--accent); border-color: var(--accent); }
 .footer-gh {
   display: inline-flex; align-items: center; gap: 8px;
   border: 1px solid var(--line-2); padding: 8px 10px;

@@ -619,11 +619,30 @@
   function viewCredits() {
     var groups = {};
     DATA.credits.forEach(function (p) { (groups[p.group] = groups[p.group] || []).push(p); });
+    // Site-level attribution lives in the renderer, not the synced dataset, so
+    // an upstream sync can never drop it.
+    var site = {
+      group: '站点镜像',
+      people: [
+        { name: 'AweiMC', title: '站点维护', url: 'https://github.com/AweiMC' },
+        { name: 'vmct-ce-site', title: '源码仓库（MIT）', url: 'https://github.com/AweiMC/vmct-ce-site' },
+        { name: 'VM 中文翻译组', title: '上游数据与内容', url: 'https://github.com/VM-Chinese-translate-group' }
+      ]
+    };
+    function person(p) {
+      var body = esc(p.name) + (p.title ? '<small>' + esc(p.title) + '</small>' : '');
+      return p.url
+        ? '<a class="credit-person is-link" href="' + esc(p.url) + '" target="_blank" rel="noopener">' + body + '</a>'
+        : '<div class="credit-person">' + body + '</div>';
+    }
     return '<div class="wrap"><div class="catalog-top"><div class="crumb">INDEX / <b>致谢</b></div>' +
-      '<div class="catalog-title"><h2>贡献者名录</h2><span class="count">' + DATA.credits.length + ' ENTRIES</span></div></div>' +
-      '<div class="credits-grid">' + Object.keys(groups).map(function (g) {
+      '<div class="catalog-title"><h2>贡献者名录</h2><span class="count">' + (DATA.credits.length + site.people.length) + ' ENTRIES</span></div></div>' +
+      '<div class="credits-grid">' +
+      '<section class="credit-col"><h3>' + esc(site.group) + '<span>' + site.people.length + '</span></h3><div class="credit-list">' +
+      site.people.map(person).join('') + '</div></section>' +
+      Object.keys(groups).map(function (g) {
         return '<section class="credit-col"><h3>' + esc(g) + '<span>' + groups[g].length + '</span></h3><div class="credit-list">' +
-          groups[g].map(function (p) { return '<div class="credit-person">' + esc(p.name) + (p.title ? '<small>' + esc(p.title) + '</small>' : '') + '</div>'; }).join('') +
+          groups[g].map(person).join('') +
           '</div></section>';
       }).join('') + '</div></div>';
   }

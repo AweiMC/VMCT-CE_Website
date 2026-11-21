@@ -14,6 +14,8 @@
 
 线上地址：<https://aweimc.github.io/vmct-ce-site/>
 
+维护者：AweiMC（[GitHub](https://github.com/AweiMC)）· 上游内容：[VM 中文翻译组](https://github.com/VM-Chinese-translate-group) · 代码许可：[MIT](LICENSE)
+
 纯静态，无后端。数据写在 `site/data/catalog.js`（`window.VMCT_DATA`），因此可直接以静态文件托管，不暴露服务器本地文件。
 
 特性：
