@@ -38,10 +38,10 @@ python -m http.server 8080
 
 ## 重新同步数据
 
-需要 Python 3.10+ 与 `pyyaml`、`markdown`：
+需要 Python 3.10+ 与 `pyyaml`、`markdown`、`pillow`：
 
 ```bash
-pip install pyyaml markdown
+pip install pyyaml markdown pillow
 ```
 
 把上游仓库克隆到本地某目录后：
@@ -49,6 +49,9 @@ pip install pyyaml markdown
 ```bash
 python scripts/normalize_data.py --repo <上游仓库目录> --site site
 ```
+
+脚本会顺带把封面图/正文图转成 WebP 并缩放到界面实际显示尺寸（12 MB 封面 → 约 1.5 MB），
+`--no-optimize` 可跳过该步骤。若未安装 pillow，脚本会提示并保留原图。
 
 脚本只读取上游仓库中 `src/pages` 的内容与 `database/download-seeds.json`，输出的 JSON 仅包含仓库相对路径，不含任何本机绝对路径。
 

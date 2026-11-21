@@ -255,9 +255,237 @@
     setTimeout(done, 1500);            // watchdog
   }
 
+  /* ---------- hero dot-matrix wordmark ---------------------------------
+     "VMCT-CE" is sampled from the display face onto a dot lattice, then:
+       1. ignition — letters light one after another, column by column
+          inside each letter (a scan head crossing the glyph),
+       2. scanline — one bright sweep verifies the whole word,
+       3. breath — the settled wordmark pulses very slowly.
+     Deterministic (no Math.random), self-measuring, and it tears itself
+     down as soon as its canvas leaves the document. */
+  var heroState = null;
+  function heroTeardown() {
+    if (!heroState) return;
+    cancelAnimationFrame(heroState.raf);
+    clearInterval(heroState.timer);
+    clearTimeout(heroState.resizeT);
+    removeEventListener('resize', heroState.onResize);
+    heroState = null;
+  }
+  function initHeroGlyph(canvas) {
+    heroTeardown();
+    if (!canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    var WORD = 'VMCT-CE';
+    var FONT = "'Maratype', 'Arial Black', Impact, sans-serif";
+    var LETTER_GAP = 250;   // ms between letter ignitions
+    var IGNITE = 300;       // ms for one letter to light, column by column
+    var FADE = 130;         // ms for a single dot to reach its level
+    var SCAN_DUR = 760;     // ms for the verification sweep
+    var dpr = Math.min(devicePixelRatio || 1, 2);
+    var pts = [], ranges = [];
+    var bw = 0, bh = 0, step = 8, dot = 3, x0 = 0, wordW = 0, capH = 0;
+    var accent = getComputedStyle(document.documentElement).getPropertyValue('--mar-accent').trim() || '#C0FE04';
+    var NEUTRAL = [223, 222, 224];   // dead cells: the matrix's grey texture
+    var BRIGHT = [234, 255, 178];    // sweep highlight — a colour, never a drawn line
+    var startAt = 0;
+
+    // stable per-coordinate noise: identical layout on every load
+    function hash(x, y) {
+      var h = (x * 374761393 + y * 668265263) ^ 0x5bf03635;
+      h = Math.imul(h ^ (h >>> 13), 1274126177);
+      return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+    }
+    function hexRGB(h) {
+      h = String(h || '').replace('#', '').trim();
+      if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+      var n = parseInt(h, 16);
+      return h.length === 6 && !isNaN(n) ? [(n >> 16) & 255, (n >> 8) & 255, n & 255] : [192, 254, 4];
+    }
+    function mix(a, b, u) {
+      return [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u, a[2] + (b[2] - a[2]) * u];
+    }
+    function css(c) {
+      return 'rgb(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ')';
+    }
+    function measure(octx, text) {
+      var m = octx.measureText(text);
+      return m && m.width ? m.width : 0;
+    }
+
+    // Fit the word into the box, draw it once offscreen, keep every lit
+    // pixel as a dot tagged with its letter index and column fraction.
+    function sample() {
+      pts = [];
+      var W = canvas.clientWidth, H = canvas.clientHeight;
+      if (W < 60 || H < 60) return false;
+      var off = document.createElement('canvas');
+      var octx = off.getContext('2d');
+      if (!octx) return false;
+      bw = W; bh = H;
+      off.width = Math.ceil(W); off.height = Math.ceil(H);
+
+      var probe = 100;
+      octx.font = '700 ' + probe + 'px ' + FONT;
+      var w100 = measure(octx, WORD);
+      if (!w100) return false;
+      var size = probe * (W * 0.97) / w100;
+      if (size * 0.74 > H * 0.92) size = H * 0.92 / 0.74;   // cap-height fit
+      octx.font = '700 ' + size + 'px ' + FONT;
+
+      var total = measure(octx, WORD);
+      if (!total) return false;
+      x0 = (W - total) / 2;
+      ranges = [];
+      var cursor = x0;
+      for (var i = 0; i < WORD.length; i++) {
+        var w = measure(octx, WORD[i]) || size * 0.6;
+        ranges.push([cursor, cursor + w]);
+        cursor += w;
+      }
+      wordW = total;
+      capH = size * 0.72;
+      octx.fillStyle = '#fff';
+      octx.fillText(WORD, x0, H / 2 + capH / 2);
+
+      var img = null;
+      try { img = octx.getImageData(0, 0, off.width, off.height); } catch (e) { img = null; }
+      if (!img || !img.data) return false;
+
+      step = Math.max(5, Math.min(14, Math.round(size / 11)));
+      dot = Math.max(2, step * 0.46);
+      var data = img.data, W2 = off.width, H2 = off.height;
+      for (var gy = 0; gy < H2; gy += step) {
+        for (var gx = 0; gx < W2; gx += step) {
+          if (data[(gy * W2 + gx) * 4 + 3] < 110) continue;
+          // nearest letter range; tolerate side bearings around the glyph
+          var best = -1, bd = 1e9;
+          for (var r = 0; r < ranges.length; r++) {
+            var d = gx < ranges[r][0] ? ranges[r][0] - gx : (gx > ranges[r][1] ? gx - ranges[r][1] : 0);
+            if (d < bd) { bd = d; best = r; }
+          }
+          if (best < 0 || bd > step * 1.6) continue;
+          var rr = ranges[best];
+          var j = hash(gx, gy);
+          pts.push({
+            x: gx, y: gy, li: best,
+            f: rr[1] > rr[0] ? (gx - rr[0]) / (rr[1] - rr[0]) : 0,
+            dead: j > 0.94          // a few unlit cells give the matrix texture
+          });
+        }
+      }
+      return pts.length > 0;
+    }
+
+    function sizeCanvas() {
+      var W = canvas.clientWidth, H = canvas.clientHeight;
+      if (W < 60 || H < 60) return false;
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return true;
+    }
+
+    function draw(now) {
+      ctx.clearRect(0, 0, bw, bh);
+      if (!pts.length) return;
+      var t = now - startAt;
+      var wordEnd = (WORD.length - 1) * LETTER_GAP + IGNITE + FADE;
+      var scanStart = wordEnd + 140;
+      var scanning = t >= scanStart && t < scanStart + SCAN_DUR;
+      var sweep = scanning
+        ? x0 - 24 + ((t - scanStart) / SCAN_DUR) * (wordW + 48)
+        : -1e9;
+
+      var rgb = hexRGB(accent);
+      var dim = [rgb[0] * 0.3, rgb[1] * 0.3, rgb[2] * 0.3];
+      var nDim = [NEUTRAL[0] * 0.3, NEUTRAL[1] * 0.3, NEUTRAL[2] * 0.3];
+
+      for (var i = 0; i < pts.length; i++) {
+        var p = pts[i];
+        var appear = (t - p.li * LETTER_GAP - p.f * IGNITE) / FADE;
+        if (appear <= 0) continue;
+        if (appear > 1) appear = 1;
+        // breath: a slow colour swell (~16s per cycle) reading across the word
+        var breath = 0.5 + 0.5 * Math.sin(t / 2600 - (p.x + p.y * 0.6) / 90);
+        // verification pass: nearby cells warm toward white — a colour wave,
+        // no drawn line
+        var d = p.x - sweep;
+        if (d < 0) d = -d;
+        var s = d < 64 ? 1 - d / 64 : 0;
+        var base = p.dead
+          ? mix(nDim, NEUTRAL, breath)
+          : mix(dim, rgb, 0.32 + 0.68 * breath);
+        if (s > 0) base = mix(base, BRIGHT, s * 0.85);
+        var a = appear * 0.95 + s * 0.3;
+        if (a <= 0.02) continue;
+        ctx.globalAlpha = a > 1 ? 1 : a;
+        ctx.fillStyle = css(base);
+        ctx.fillRect(p.x - dot / 2, p.y - dot / 2, dot, dot);
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function drawStatic() {
+      startAt = performance.now() - 1e7;   // everything lit, sweep already past
+      draw(performance.now());
+    }
+    function loop(now) {
+      if (!heroState || heroState.canvas !== canvas || !canvas.isConnected) { heroTeardown(); return; }
+      draw(now);
+      heroState.raf = requestAnimationFrame(loop);
+    }
+
+    var onResize = function () {
+      if (!heroState || heroState.canvas !== canvas) return;
+      clearTimeout(heroState.resizeT);
+      heroState.resizeT = setTimeout(function () {
+        if (!heroState || heroState.canvas !== canvas || !canvas.isConnected) return;
+        if (!(sizeCanvas() && sample())) return;
+        if (reduced()) { drawStatic(); return; }
+        if (!heroState.raf) {          // host was zero-sized at first paint
+          startAt = performance.now();
+          heroState.raf = requestAnimationFrame(loop);
+        }
+      }, 160);
+    };
+
+    heroState = { canvas: canvas, raf: 0, timer: 0, resizeT: 0, onResize: onResize };
+    addEventListener('resize', onResize);
+
+    // the display face may still be swapping in: re-sample once it is ready
+    if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
+      document.fonts.ready.then(function () {
+        if (!heroState || heroState.canvas !== canvas || !canvas.isConnected) return;
+        if (!sample()) return;
+        if (reduced()) { drawStatic(); return; }
+        if (!heroState.raf) {
+          startAt = performance.now();
+          heroState.raf = requestAnimationFrame(loop);
+        }
+      });
+    }
+
+    if (!sizeCanvas()) return;        // zero-sized host: retry on resize
+    sample();
+    if (reduced()) { drawStatic(); return; }
+
+    // hold ignition until the boot overlay lifts, unless it is already gone
+    var booting = !!document.getElementById('bootHost');
+    startAt = performance.now() + (booting ? 1560 : 0);
+    heroState.timer = setInterval(function () {
+      accent = getComputedStyle(document.documentElement).getPropertyValue('--mar-accent').trim() || accent;
+    }, 1500);
+    heroState.raf = requestAnimationFrame(loop);
+  }
+
   window.VMMotion = {
     initDotField: initDotField,
     bgTeardown: bgTeardown,
+    initHeroGlyph: initHeroGlyph,
+    heroTeardown: heroTeardown,
     viewTransition: viewTransition,
     scopedTransition: scopedTransition,
     boot: boot,

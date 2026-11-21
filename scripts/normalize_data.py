@@ -59,6 +59,17 @@ LOADER_LABELS = {
 }
 
 COMPONENT_RE = re.compile(r"<\s*/?\s*(DownloadLayout|DocLayout|DownloadLinks|DocSupport|DonateLayout|JoinGroupCard)[^>]*>", re.I)
+
+# Upstream keeps template/dev notes next to real entries. They are not archive
+# records: `modpacks/example.md` is the page-template demo, and the per-pack
+# `*/secret.md` notes are config scribbles whose body is a raw GitHub blob URL.
+SKIP_RELS = {"modpacks/example.md"}
+
+
+def skip_rel(rel: str) -> bool:
+    return rel in SKIP_RELS or rel.endswith("/secret.md")
+
+
 DOWNLOAD_SLOT = "\n\n<!--DOWNLOAD_SLOT-->\n\n"
 
 # image placeholder slots. A slot always carries: where it goes (slot id),
@@ -281,7 +292,133 @@ def read_downloads(repo_root):
         return {}
 
 
-def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool):
+def dedupe_downloads(dl_list):
+    """Seeds sometimes repeat one mirror (a bare `link` copy of an earlier
+    lanzou entry pointing at the same file). Keep one entry per destination
+    and fold any extra mirror (quark) into the entry that stays, so the
+    detail page never renders the same button twice."""
+    out, index = [], {}
+    for d in dl_list:
+        if not isinstance(d, dict):
+            continue
+        primary = str(d.get("link") or d.get("lanzouLink") or "")
+        quark = str(d.get("quarkLink") or "")
+        if primary and primary in index:
+            kept = index[primary]
+            if quark and not kept.get("quarkLink"):
+                kept["quarkLink"] = quark
+            continue
+        if not primary and quark and quark in index:
+            continue
+        if primary:
+            index[primary] = d
+        if quark:
+            index.setdefault(quark, d)
+        out.append(d)
+    return out
+
+
+# Covers ship from upstream at full size (up to 2 MB each) but the UI paints
+# them in a 68 px list box or a grid card. Downscaling + re-encoding is the
+# single biggest bandwidth win: 12 MB of covers becomes well under 1 MB.
+# Idempotent — files already inside the cap are skipped, so a repeated sync
+# only pays for newly downloaded originals.
+ICON_MAX_PX = 512
+IMG_MAX_PX = 1600
+IMAGE_SUFFIXES = (".png", ".jpg", ".jpeg", ".gif", ".webp")
+
+try:
+    from PIL import Image as _PILImage
+    from PIL import ImageFile as _PILImageFile
+except Exception:                                     # pillow is optional
+    _PILImage = None
+    _PILImageFile = None
+
+
+def _fit(im, cap):
+    w, h = im.size
+    longest = max(w, h)
+    if longest <= cap:
+        return im
+    s = cap / longest
+    return im.resize((max(1, round(w * s)), max(1, round(h * s))), _PILImage.LANCZOS)
+
+
+def optimize_images(items, site_root: Path, quality=82):
+    """Re-encode cached covers + article images as WebP and downscale them to the
+    size the UI actually paints. Upstream ships 512 px RGBA PNGs (300-400 KB of
+    photo content in a format that cannot compress photos) and even 2 MB GIFs;
+    the same picture as WebP lands at 20-60 KB. Referenced paths are rewritten
+    in memory before the dataset is serialised, so the output stays valid.
+    """
+    if _PILImage is None:
+        print("pillow not installed: images left unoptimized (pip install pillow)")
+        return
+    _PILImage.MAX_IMAGE_PIXELS = 40_000_000
+    _PILImageFile.LOAD_TRUNCATED_IMAGES = True
+    changes, saved = {}, 0
+    for folder, cap in (("icons", ICON_MAX_PX), ("imgs", IMG_MAX_PX)):
+        base = site_root / "assets" / folder
+        if not base.exists():
+            continue
+        for src in sorted(base.rglob("*")):
+            if not src.is_file() or src.suffix.lower() not in IMAGE_SUFFIXES:
+                continue
+            dst = src if src.suffix.lower() == ".webp" else src.with_suffix(".webp")
+            tmp = src.with_name(src.stem + "__opt.webp")
+            before = src.stat().st_size
+            try:
+                with _PILImage.open(src) as im:
+                    # files we produced are already webp and inside the cap:
+                    # never recompress them lossily on the next sync
+                    if src.suffix.lower() == ".webp" and max(im.size) <= cap:
+                        continue
+                    if getattr(im, "is_animated", False):
+                        frames, durations = [], []
+                        for i in range(getattr(im, "n_frames", 1)):
+                            im.seek(i)
+                            frames.append(_fit(im.convert("RGBA"), cap))
+                            durations.append(int(im.info.get("duration") or 80))
+                        frames[0].save(tmp, format="WEBP", save_all=True,
+                                       append_images=frames[1:], duration=durations,
+                                       loop=int(im.info.get("loop") or 0),
+                                       quality=70, method=4)
+                    else:
+                        _fit(im, cap).save(tmp, format="WEBP", quality=quality, method=6)
+                if tmp.exists() and tmp.stat().st_size < before:
+                    after = tmp.stat().st_size
+                    tmp.replace(dst)
+                    if dst != src:
+                        src.unlink()
+                    saved += before - after
+                    if src != dst:
+                        changes[src.relative_to(site_root).as_posix()] = \
+                            dst.relative_to(site_root).as_posix()
+                elif tmp.exists():
+                    tmp.unlink()
+            except Exception as exc:
+                if tmp.exists():
+                    tmp.unlink()
+                print("  skipped", src.name, "-", exc)
+
+    if changes:
+        def fix(value):
+            return changes.get(value, value) if isinstance(value, str) else value
+
+        for item in items:
+            item["icon"] = fix(item.get("icon"))
+            for slot in item.get("media", []):
+                if slot.get("target"):
+                    slot["target"] = fix(slot["target"])
+            body = item.get("bodyHtml") or ""
+            for old, new in changes.items():
+                if old in body:
+                    body = body.replace(old, new)
+            item["bodyHtml"] = body
+    print("images optimized: saved %.1f MB, %d files converted" % (saved / 1_048_576, len(changes)))
+
+
+def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool, do_optimize: bool = True):
     downloads = read_downloads(repo_root)
     pages_root = repo_root / "src" / "pages"
 
@@ -289,7 +426,7 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool):
     md_files = sorted(pages_root.rglob("*.md"))
     for path in md_files:
         rel = path.relative_to(pages_root).as_posix()
-        if rel.startswith("admin/"):
+        if rel.startswith("admin/") or skip_rel(rel):
             continue
         text = path.read_text(encoding="utf-8")
         meta, body = split_frontmatter(text)
@@ -318,7 +455,7 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool):
         }
         body_html, body_slots = clean_body(body, site_root, repo_root, item_slug)
         media = [cover] + body_slots
-        dl_list = downloads.get(item_slug, [])
+        dl_list = dedupe_downloads(downloads.get(item_slug, []))
         for dl in dl_list:
             if isinstance(dl, dict) and dl.get("icon"):
                 dl["icon"] = localize_path(dl["icon"], repo_root, site_root)
@@ -347,7 +484,7 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool):
             "media": media,
             "bodyHtml": body_html,
         }
-        # child pages (fc5-wiki, sb4/secret, rad/secret) get a parent pointer
+        # child pages (fc5-wiki chapters) get a parent pointer
         if "/" in item_slug:
             item["parent"] = item_slug.rsplit("/", 1)[0]
         items.append(item)
@@ -357,6 +494,9 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool):
     if do_icons:
         # cache remote icons BEFORE serializing so rewritten paths land in output
         cache_remote_icons(items, site_root / "assets" / "icons")
+    if do_optimize:
+        # shrink the cached bytes to what the UI actually paints
+        optimize_images(items, site_root)
 
     nav = [
         {"id": "modpacks", "label": "整合包", "kind": "modpack"},
@@ -417,6 +557,11 @@ def cache_remote_icons(items, out_dir):
         if target.exists() and target.stat().st_size > 0:
             item["icon"] = "assets/icons/" + target.name
             continue
+        # already converted to webp by the image optimizer: reuse, don't refetch
+        webp = target.with_suffix(".webp")
+        if webp.exists() and webp.stat().st_size > 0:
+            item["icon"] = "assets/icons/" + webp.name
+            continue
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
             with urllib.request.urlopen(req, timeout=12) as resp:
@@ -446,10 +591,12 @@ def main():
     ap.add_argument("--site", required=True, help="path to static site directory")
     ap.add_argument("--source-url", default="https://github.com/VM-Chinese-translate-group/vmct-website-v4")
     ap.add_argument("--no-icons", action="store_true", help="skip caching cover icons")
+    ap.add_argument("--no-optimize", action="store_true", help="skip downscaling cached images")
     args = ap.parse_args()
     # Body images are never downloaded: only sizing hints + upstream URLs are
     # recorded; the browser loads them from the original site on demand.
-    build(Path(args.repo).resolve(), Path(args.site).resolve(), args.source_url, not args.no_icons)
+    build(Path(args.repo).resolve(), Path(args.site).resolve(), args.source_url,
+          not args.no_icons, not args.no_optimize)
 
 
 if __name__ == "__main__":

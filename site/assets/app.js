@@ -32,6 +32,28 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
+  /* ---------- Marathon UI glyphs --------------------------------------
+     Inline SVG only: square caps, mitred joins, 16px box — the same geometry
+     language as .mar-cross / .mar-corner. UI chrome never uses font glyphs
+     (↗ → ← ◷ ✕ ↤ ▾), which render differently on every platform. */
+  function gi(body) {
+    return '<svg class="gi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"' +
+      ' stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false">' + body + '</svg>';
+  }
+  var GI = {
+    arrowUR: gi('<path d="M4.5 11.5 11.5 4.5"/><path d="M5.5 4.5h6v6"/>'),
+    arrowR:  gi('<path d="M2.5 8h11"/><path d="M10 4.5 13.5 8 10 11.5"/>'),
+    arrowL:  gi('<path d="M13.5 8h-11"/><path d="M6 4.5 2.5 8 6 11.5"/>'),
+    clock:   gi('<circle cx="8" cy="8" r="5.5"/><path d="M8 4.5V8h3.2"/>'),
+    close:   gi('<path d="M4 4l8 8M12 4 4 12"/>'),
+    download: gi('<path d="M8 2.5v7.5"/><path d="M4.5 7 8 10.5 11.5 7"/><path d="M3 13.5h10"/>'),
+    plus:    gi('<path d="M8 3.5v9M3.5 8h9"/>'),
+    chevron: gi('<path d="M3.5 6 8 10.5 12.5 6"/>'),
+    // reticle search: circle + crosshair + handle, one glyph used in both
+    // the top bar (index.html) and the list toolbar
+    search:  gi('<circle cx="7" cy="7" r="5"/><path d="M7 4.2v5.6M4.2 7h5.6"/><path d="M10.9 10.9 14.5 14.5"/>')
+  };
+
   // Plain text of an item's body, cached. Used for search matches and for a
   // real excerpt when an entry carries no frontmatter description.
   var TEXT_CACHE = Object.create(null);
@@ -64,13 +86,18 @@
     var isReady = slot.state === 'ready' && slot.target;
     var hasImage = isReady || isRemote;
     var imageUrl = isReady ? slot.target : (isRemote ? (slot.target || slot.source) : '');
-    var style = hasImage ? "background-image:url('" + esc(imageUrl) + "')" : '';
+    // A real <img> rather than a CSS background: backgrounds cannot be lazily
+    // loaded, so one list paint used to pull every cover (12 MB of upstream
+    // originals). Native lazy loading fetches only what enters the viewport.
+    var img = hasImage
+      ? '<img class="media-slot-img" src="' + esc(imageUrl) + '" alt="' + esc(slot.alt || '') + '" loading="lazy" decoding="async">'
+      : '';
     var cls = 'media-slot ' + (variant === 'cover' ? 'media-slot-cover' : 'media-slot-body') +
       (hasImage ? ' is-ready' : ' is-pending');
     var label = hasImage ? '' : '<span class="media-slot-mark">NO SIGNAL<br><small>IMG // ' + esc(slot.slot.toUpperCase()) + '</small></span>';
     return '<div class="' + cls + '" data-img-slot="' + esc(slot.slot) + '" data-img-state="' + slot.state + '"' +
       ' data-img-target="' + esc(slot.target || '') + '" data-img-source="' + esc(slot.source || '') + '"' +
-      ' style="' + style + '" role="img" aria-label="' + esc(slot.alt || slot.slot) + '">' + label + '</div>';
+      ' role="img" aria-label="' + esc(slot.alt || slot.slot) + '">' + img + label + '</div>';
   }
   function coverOf(item) {
     return (item.media || []).find(function (m) { return m.role === 'cover'; }) || null;
@@ -91,7 +118,16 @@
       if (hasImage) {
         var stale = fig.querySelector('.img-slot-mark');
         if (stale) stale.remove();
-        fig.style.backgroundImage = 'url("' + imageUrl + '")';
+        var img = fig.querySelector('.media-slot-img');
+        if (!img) {
+          img = document.createElement('img');
+          img.className = 'media-slot-img';
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          img.alt = fig.getAttribute('aria-label') || '';
+          fig.insertBefore(img, fig.firstChild);
+        }
+        img.src = imageUrl;
         M.mediaReveal(fig);
       } else {
         var old = fig.querySelector('.img-slot-mark');
@@ -116,19 +152,21 @@
   function byId(id) { return DATA.items.find(function (x) { return x.id === id; }); }
 
   /* ---------- tabs ----------------------------------------------------- */
+  // Counts live in exactly one place (the hero stat plate). Duplicating them
+  // into the nav made every number appear three times on the home screen.
   function renderTabs() {
     var tabs = document.getElementById('tabs');
     var defs = [
-      { id: 'home', label: '总览', num: '00' },
-      { id: 'modpack', label: '整合包', num: DATA.meta.counts.modpack },
-      { id: 'map', label: '地图', num: DATA.meta.counts.map },
-      { id: 'wiki', label: '资料库', num: DATA.meta.counts.wiki },
-      { id: 'credits', label: '致谢', num: '' },
-      { id: 'page', label: '其他', num: DATA.meta.counts.page }
+      { id: 'home', label: '总览' },
+      { id: 'modpack', label: '整合包' },
+      { id: 'map', label: '地图' },
+      { id: 'wiki', label: '资料库' },
+      { id: 'credits', label: '致谢' },
+      { id: 'page', label: '其他' }
     ];
     tabs.innerHTML = defs.map(function (d) {
       return '<button class="tab' + (state.kind === d.id ? ' active' : '') + '" data-kind="' + d.id + '">' +
-        d.label + (d.num !== '' ? '<span class="tab-num">' + d.num + '</span>' : '') + '</button>';
+        d.label + '</button>';
     }).join('');
     tabs.querySelectorAll('.tab').forEach(function (b) {
       b.addEventListener('click', function () { navigate('#/' + b.dataset.kind); });
@@ -138,17 +176,19 @@
   /* ---------- home ----------------------------------------------------- */
   function viewHome() {
     var c = DATA.meta.counts;
+    // Counts are shown once, in the hero stat plate — the module tiles carry
+    // only their index so the same numbers never repeat down the page.
     var modules = [
-      { kind: 'modpack', n: c.modpack, t: '整合包', d: '收录 57+ 汉化整合包，版本 / 加载器 / 状态一目了然。' },
-      { kind: 'map', n: c.map, t: '地图', d: '建筑、解谜、角色扮演——汉化地图存档档案。' },
-      { kind: 'wiki', n: c.wiki, t: '资料库', d: '配套攻略、机制说明与词条索引。' },
-      { kind: 'credits', n: DATA.credits.length, t: '致谢', d: '所有让资料得以存在的贡献者。' }
+      { kind: 'modpack', t: '整合包', d: '版本 / 加载器 / 状态一目了然的汉化档案。' },
+      { kind: 'map', t: '地图', d: '建筑、解谜、角色扮演——汉化地图存档档案。' },
+      { kind: 'wiki', t: '资料库', d: '配套攻略、机制说明与词条索引。' },
+      { kind: 'credits', t: '致谢', d: '所有让资料得以存在的贡献者。' }
     ];
     var featured = DATA.items.filter(function (i) { return i.featured; }).slice(0, 6);
     return '' +
       '<section class="hero">' +
         '<div class="hero-grid"></div>' +
-        '<div class="hero-glyph" aria-hidden="true">VM</div>' +
+        '<canvas class="hero-glyph" id="heroGlyph" aria-hidden="true"></canvas>' +
         '<div class="wrap hero-inner">' +
           '<div class="hero-plate"><span class="line"></span><span class="plate">ARCHIVE // 索引终端 04</span></div>' +
           '<h1>COMMUNITY<br><span class="acid">ARCHIVE</span></h1>' +
@@ -160,18 +200,18 @@
             '<div><span class="k">总档案</span><span class="v">' + c.total + '</span></div>' +
           '</div>' +
           '<div class="hero-actions">' +
-            '<button class="btn primary" data-goto="modpack">进入整合包索引 <span class="arrow">↗</span></button>' +
-            '<button class="btn" data-goto="map">浏览地图档案 <span class="arrow">→</span></button>' +
+            '<button class="btn primary" data-goto="modpack">进入整合包索引 <span class="arrow">' + GI.arrowUR + '</span></button>' +
+            '<button class="btn" data-goto="map">浏览地图档案 <span class="arrow">' + GI.arrowR + '</span></button>' +
           '</div>' +
         '</div>' +
       '</section>' +
       '<div class="wrap">' +
-        '<div class="section-head"><h2>01 / 数据模块</h2><span class="idx">SELECT A MODULE</span></div>' +
+        '<div class="section-head"><h2>数据模块</h2><span class="idx">SELECT A MODULE</span></div>' +
         '<div class="modules">' + modules.map(function (m, i) {
-          return '<div class="module" data-goto="' + m.kind + '"><span class="num">0' + (i + 1) + ' / ' + m.n + ' ENTRIES</span>' +
-            '<span class="go">↗</span><h3>' + m.t + '</h3><p>' + m.d + '</p></div>';
+          return '<div class="module" data-goto="' + m.kind + '"><span class="num">' + String(i + 1).padStart(2, '0') + '</span>' +
+            '<span class="go">' + GI.arrowUR + '</span><h3>' + m.t + '</h3><p>' + m.d + '</p></div>';
         }).join('') + '</div>' +
-        (featured.length ? '<div class="section-head"><h2>02 / 精选档案</h2><span class="idx">FEATURED</span></div>' +
+        (featured.length ? '<div class="section-head"><h2>精选档案</h2><span class="idx">FEATURED</span></div>' +
           '<div class="cards grid featured-grid">' + featured.map(cardHtml).join('') + '</div>' : '') +
       '</div>';
   }
@@ -223,7 +263,7 @@
     if (Object.keys(versions).length) {
       var verOpts = Object.keys(versions).sort(function (a, b) { return b.localeCompare(a, undefined, { numeric: true }); })
         .slice(0, 12).map(function (v) { return optRow(v, v, versions[v], 'version', state.version === v); }).join('');
-      groups.push('<div class="filter-group"><h3>游戏版本 <span class="caret">−</span><span class="plate">VERSION</span></h3><div class="filter-body">' +
+      groups.push('<div class="filter-group"><h3>游戏版本 <span class="caret">' + GI.chevron + '</span><span class="plate">VERSION</span></h3><div class="filter-body">' +
         '<input class="filter-search" placeholder="搜索版本…" data-filter-search="version">' + verOpts + '</div></div>');
     }
     if (Object.keys(loaders).length) {
@@ -243,7 +283,7 @@
     }
     if (!groups.length) return '';
     return '<aside class="filter-rail">' + groups.join('') +
-      '<button class="btn" id="clearFilters" style="justify-content:center"' + (state.loader || state.status || state.version || state.q ? '' : ' hidden') + '>清除筛选 ✕</button>' +
+      '<button class="btn" id="clearFilters" style="justify-content:center"' + (state.loader || state.status || state.version || state.q ? '' : ' hidden') + '>清除筛选 <span class="arrow">' + GI.close + '</span></button>' +
       '</aside>';
   }
   // Only render what the record actually has: a wiki chapter has no status,
@@ -255,8 +295,8 @@
     if (it.minecraft) tags += '<span class="tag">MC ' + esc(it.minecraft) + '</span>';
     var meta = '';
     var bits = [];
-    if (it.updateDate) bits.push('<span>◷ ' + esc(it.updateDate) + '</span>');
-    if (it.links.length + it.downloads.length) bits.push('<span>↗ ' + (it.links.length + it.downloads.length) + '</span>');
+    if (it.updateDate) bits.push('<span>' + GI.clock + esc(it.updateDate) + '</span>');
+    if (it.links.length + it.downloads.length) bits.push('<span>' + GI.arrowUR + (it.links.length + it.downloads.length) + '</span>');
     if (bits.length) meta = '<div class="card-meta">' + bits.join('') + '</div>';
     var desc = excerptOf(it, 120);
     var cover = iconFor(it);
@@ -276,26 +316,55 @@
       '<span class="doc-num">' + (num || '§') + '</span>' +
       '<div class="card-body"><div class="card-head"><h3 class="card-title">' + esc(it.title) + '</h3></div>' +
       (excerpt ? '<p class="card-desc">' + esc(excerpt) + '</p>' : '') +
-      '</div><span class="doc-go" aria-hidden="true">↗</span></article>';
+      '</div><span class="doc-go" aria-hidden="true">' + GI.arrowUR + '</span></article>';
   }
-  // Root = the page the other listed pages point at as their parent. Judging
-  // by a missing `parent` field does not work: the wiki's own index page
-  // (modpacks/fc5-wiki) has a parent of "modpacks".
-  function docListHtml(list) {
-    var ids = list.map(function (i) { return i.id; });
-    var root = list.filter(function (i) { return list.some(function (k) { return k.parent === i.id; }); });
-    var rootIds = root.map(function (i) { return i.id; });
-    var kids = list.filter(function (i) { return rootIds.indexOf(i.id) < 0 && ids.indexOf(i.parent) >= 0; });
-    var strays = list.filter(function (i) {
-      return rootIds.indexOf(i.id) < 0 && kids.indexOf(i) < 0;
+  // One card per document source: the root page carries its chapters folded
+  // inside as jump links. Chapters are never rows of their own — the index
+  // stays scannable while every chapter stays one click away, and opening
+  // the card itself leads to the source's detail page.
+  function docGroupHtml(root, kids) {
+    var excerpt = excerptOf(root, 160);
+    var chips = kids.map(function (k) {
+      return '<a class="kid" href="#/detail/' + encodeURIComponent(k.id) + '">' + esc(k.title) + '</a>';
+    }).join('');
+    return '<article class="card doc-row doc-group" data-detail="' + esc(root.id) + '">' +
+      '<span class="doc-num">§</span>' +
+      '<div class="card-body"><div class="card-head"><h3 class="card-title">' + esc(root.title) + '</h3>' +
+      (kids.length ? '<span class="doc-count">' + String(kids.length).padStart(2, '0') + ' 章</span>' : '') + '</div>' +
+      (excerpt ? '<p class="card-desc">' + esc(excerpt) + '</p>' : '') +
+      (kids.length ? '<div class="doc-kids">' + chips + '</div>' : '') +
+      '</div><span class="doc-go" aria-hidden="true">' + GI.arrowUR + '</span></article>';
+  }
+  // `visible` is the filtered list, `universe` every wiki item: a chapter that
+  // matches a search still shows its source card even when the root does not.
+  function docListHtml(visible, universe) {
+    var byId = {}, isRoot = {};
+    universe.forEach(function (i) {
+      byId[i.id] = i;
+      if (i.parent) isRoot[i.parent] = true;
     });
-    var n = 0;
-    var num = function () { return String(++n).padStart(2, '0'); };
-    return '<div class="cards doc-list">' +
-      root.map(function (i) { return docRow(i, '§'); }).join('') +
-      kids.map(function (i) { return docRow(i, num()); }).join('') +
-      strays.map(function (i) { return docRow(i, num()); }).join('') +
-      '</div>';
+    var emitted = {}, out = [], n = 0;
+    visible.forEach(function (i) {
+      var kids = visible.filter(function (k) { return k.parent === i.id && k.id !== i.id; });
+      if (kids.length) {                       // source with chapters visible
+        if (emitted[i.id]) return;
+        emitted[i.id] = true;
+        out.push(docGroupHtml(i, kids));
+        return;
+      }
+      var p = i.parent && byId[i.parent];
+      if (p && p.kind === 'wiki') {            // chapter: fold into its source
+        if (emitted[p.id]) return;
+        emitted[p.id] = true;
+        out.push(docGroupHtml(p, visible.filter(function (k) {
+          return k.parent === p.id && k.id !== p.id;
+        })));
+        return;
+      }
+      n += 1;                                  // a standalone document
+      out.push(docRow(i, isRoot[i.id] ? '§' : String(n).padStart(2, '0')));
+    });
+    return '<div class="cards doc-list">' + out.join('') + '</div>';
   }
 
   // Render just the cards/empty region of the list column.
@@ -304,7 +373,7 @@
     // the document index keeps upstream order (root page, then chapters)
     if (kind === 'wiki') {
       var docs = kindItems.filter(itemMatches);
-      return docs.length ? docListHtml(docs) : emptyRegion();
+      return docs.length ? docListHtml(docs, kindItems) : emptyRegion();
     }
     var list = sorted(kindItems.filter(itemMatches));
     if (!list.length) return emptyRegion();
@@ -367,7 +436,7 @@
       '<div class="catalog-layout' + (rail ? '' : ' no-rail') + '">' + rail +
         '<div class="list-col">' +
           '<div class="list-toolbar">' +
-            '<div class="search-box"><span class="search-icon"></span><input id="listSearch" type="search" placeholder="筛选当前列表…" value="' + esc(state.q) + '"><kbd>/</kbd></div>' +
+            '<div class="search-box"><span class="search-icon" aria-hidden="true">' + GI.search + '</span><input id="listSearch" type="search" placeholder="筛选当前列表…" value="' + esc(state.q) + '"><kbd>/</kbd></div>' +
             sortSel +
             (showViewToggle ?
             '<div class="view-toggle"><button data-view="list" class="' + (state.view === 'list' ? 'active' : '') + '" title="列表"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M2 3h12M2 8h12M2 13h12"/></svg></button>' +
@@ -390,19 +459,34 @@
     if (it.minecraft) tags += '<span class="tag">MC ' + esc(it.minecraft) + '</span>';
     if (it.packVersion) tags += '<span class="tag">v' + esc(it.packVersion) + '</span>';
 
+    // One button per destination: seeds sometimes repeat a mirror, and a
+    // quark mirror rides along with its lanzou partner. Seen-URLs are tracked
+    // across the whole list so a duplicate can never reach the DOM.
+    var seenUrl = {};
     var dlHtml = it.downloads.map(function (d) {
-      var ico = d.icon ? '<img class="dl-ico" src="' + esc(d.icon) + '" alt="" onerror="this.style.display=\'none\'">' : '<span class="dl-ico" style="display:grid;place-items:center;color:var(--accent)">↧</span>';
       var url = d.link || d.lanzouLink || d.quarkLink || '#';
-      var label = d.text || (d.lanzouLink && d.quarkLink ? '蓝奏云 / 夸克网盘' : '下载汉化');
-      return '<a class="dl-btn" href="' + esc(url) + '" target="_blank" rel="noopener">' + ico +
-        '<span class="dl-name">' + esc(label) + '</span><span class="dl-arrow">↗</span></a>' +
-        (d.lanzouLink && d.quarkLink ? '<a class="dl-btn" href="' + esc(d.quarkLink) + '" target="_blank" rel="noopener"><span class="dl-ico" style="display:grid;place-items:center;color:var(--accent)">Q</span><span class="dl-name">夸克网盘</span><span class="dl-arrow">↗</span></a>' : '');
+      var out = '';
+      if (!seenUrl[url]) {
+        seenUrl[url] = 1;
+        var ico = d.icon ? '<img class="dl-ico" src="' + esc(d.icon) + '" alt="" onerror="this.style.display=\'none\'">' :
+          '<span class="dl-ico dl-ico-gi" style="display:grid;place-items:center;color:var(--accent)">' + GI.download + '</span>';
+        var label = d.text || (d.lanzouLink && d.quarkLink ? '蓝奏云 / 夸克网盘' : '下载汉化');
+        out = '<a class="dl-btn" href="' + esc(url) + '" target="_blank" rel="noopener">' + ico +
+          '<span class="dl-name">' + esc(label) + '</span><span class="dl-arrow">' + GI.arrowUR + '</span></a>';
+      }
+      if (d.quarkLink && !seenUrl[d.quarkLink]) {
+        seenUrl[d.quarkLink] = 1;
+        out += '<a class="dl-btn" href="' + esc(d.quarkLink) + '" target="_blank" rel="noopener">' +
+          '<span class="dl-ico dl-ico-gi" style="display:grid;place-items:center;color:var(--accent)">' + GI.download + '</span>' +
+          '<span class="dl-name">夸克网盘</span><span class="dl-arrow">' + GI.arrowUR + '</span></a>';
+      }
+      return out;
     }).join('');
 
     var linkIcons = { github: 'assets/imgs/svg/github.svg', bilibili: 'assets/imgs/svg/bilibili.svg', modrinth: 'assets/imgs/svg/modrinth.svg', curseforge: 'assets/imgs/svg/curseforge.svg', paratranz: 'assets/imgs/svg/paratranz.svg', planetminecraft: 'assets/imgs/svg/planetminecraft.svg' };
     var linksHtml = it.links.map(function (l) {
-      var ico = linkIcons[l.id] ? '<img class="ico" src="' + linkIcons[l.id] + '" alt="">' : '<span class="ico" style="color:var(--accent)">↗</span>';
-      return '<a class="link-chip" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + ico + esc(l.label) + '<span style="margin-left:auto;color:var(--ink-3)">↗</span></a>';
+      var ico = linkIcons[l.id] ? '<img class="ico" src="' + linkIcons[l.id] + '" alt="">' : '<span class="ico">' + GI.arrowUR + '</span>';
+      return '<a class="link-chip" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + ico + esc(l.label) + '<span class="chip-go">' + GI.arrowUR + '</span></a>';
     }).join('');
 
     // Drop rows that have no value: a wiki chapter would otherwise show a
@@ -421,7 +505,7 @@
       : '';
 
     return '<div class="wrap">' +
-      '<a class="detail-back" href="#/' + it.kind + '">← 返回 ' + esc(KIND_META[it.kind].label) + '索引</a>' +
+      '<a class="detail-back" href="#/' + it.kind + '">' + GI.arrowL + '返回 ' + esc(KIND_META[it.kind].label) + '索引</a>' +
       '<div class="detail">' +
         '<div class="detail-main">' +
           '<div class="detail-hero"><div class="detail-hd">' +
@@ -487,6 +571,7 @@
     else html = viewCatalog(r.kind);
     main.innerHTML = '<div class="view">' + html + '</div>';
     hydrateMedia();
+    if (r.kind === 'home') M.initHeroGlyph(main.querySelector('#heroGlyph'));
     if (r.kind === 'detail') {
       var hero = main.querySelector('.detail-hero');
       M.detailIntro(hero);
@@ -564,7 +649,7 @@
         var body = h.nextElementSibling;
         body.classList.toggle('collapsed');
         var c = h.querySelector('.caret');
-        if (c) c.textContent = body.classList.contains('collapsed') ? '+' : '−';
+        if (c) c.classList.toggle('up', body.classList.contains('collapsed'));
       });
     });
   }
