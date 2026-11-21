@@ -68,20 +68,27 @@
   // prefetched while idle; until it arrives only metadata is searchable, so
   // a cached stale payload with inline searchText still works too.
   var TEXT_CACHE = Object.create(null);
-  var searchState = 'idle';   // idle | loading | ready | failed
-  function ensureSearch() {
-    if (window.VMCT_SEARCH) { searchState = 'ready'; return true; }
-    if (searchState === 'loading' || searchState === 'failed') return false;
-    searchState = 'loading';
+  var searchReq = Object.create(null);   // kind -> loading | ready | failed
+  function ensureSearch(kind) {
+    kind = kind || state.kind;
+    if (searchReq[kind] === 'ready') return true;
+    if (searchReq[kind] === 'loading' || searchReq[kind] === 'failed') return false;
+    searchReq[kind] = 'loading';
     var s = document.createElement('script');
-    s.src = 'data/search.js';
+    s.src = 'data/search/' + kind + '.js';
     s.onload = function () {
-      searchState = window.VMCT_SEARCH ? 'ready' : 'failed';
-      if (state.q) refreshScoped();          // complete the in-flight query
+      searchReq[kind] = 'ready';
+      if (state.q && state.kind === kind) refreshScoped();   // finish the query
     };
-    s.onerror = function () { searchState = 'failed'; };
+    s.onerror = function () { searchReq[kind] = 'failed'; };
     document.head.appendChild(s);
     return false;
+  }
+  // One index per view: searching is always scoped to the list on screen.
+  function mayPrefetch() {
+    var c = navigator.connection || navigator.mozConnection || {};
+    if (c.saveData) return false;
+    return c.effectiveType !== 'slow-2g' && c.effectiveType !== '2g';
   }
   function plainText(it) {
     var index = window.VMCT_SEARCH;
@@ -664,6 +671,7 @@
     }
     if (r.kind !== 'detail' && r.kind !== state.kind) state.page = 1;   // new view: back to page 1
     if (r.kind !== 'detail') { state.kind = r.kind; lastKind = r.kind; }
+    if (r.kind !== 'detail' && r.kind !== 'credits' && r.kind !== 'home' && state.q) ensureSearch(r.kind);
     document.body.dataset.view = r.kind;
     var html;
     if (r.kind === 'home') html = viewHome();
@@ -794,8 +802,8 @@
   searchEl.addEventListener('input', function () {
     state.q = searchEl.value.trim();
     state.page = 1;
-    ensureSearch();
     if (state.kind === 'home' && state.q) { state.kind = 'modpack'; }
+    ensureSearch(state.kind);
     if (main.querySelector('.list-col')) {
       // keep the top search focus; only the list column refreshes
       var listInput = document.getElementById('listSearch');
@@ -839,10 +847,15 @@
     M.initDotField();
     render();
     clock(); setInterval(clock, 1000);
-    // warm the full-text index while the browser is idle: search stays
-    // complete without paying for it on first paint
-    if (window.requestIdleCallback) requestIdleCallback(ensureSearch, { timeout: 2500 });
-    else setTimeout(ensureSearch, 1200);
+    // warm the full-text index for the current view while the browser is idle:
+    // search stays complete without paying for it on first paint. Data-saver
+    // and slow connections defer it to the first search keystroke.
+    var warm = function () {
+      if (state.kind === 'home' || state.kind === 'credits' || !mayPrefetch()) return;
+      ensureSearch(state.kind);
+    };
+    if (window.requestIdleCallback) requestIdleCallback(warm, { timeout: 2500 });
+    else setTimeout(warm, 1200);
   }
   init();
 })();

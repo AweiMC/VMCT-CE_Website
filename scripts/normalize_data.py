@@ -525,12 +525,12 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool, do_
         shutil.rmtree(bodies_dir)
     bodies_dir.mkdir(parents=True, exist_ok=True)
     body_bytes = 0
-    search_map = {}
+    search_by_kind = {}
     for item in items:
         body_html = item.pop("bodyHtml", "")
         item["media"] = [m for m in item.get("media", []) if m.get("role") == "cover"]
         text = plain_text(body_html)
-        search_map[item["id"]] = text
+        search_by_kind.setdefault(item["kind"], {})[item["id"]] = text
         item["excerpt"] = item["description"] or (text[:160] + ("…" if len(text) > 160 else ""))
         target = bodies_dir / (item["id"].replace("/", "__") + ".js")
         target.write_text(
@@ -542,16 +542,24 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool, do_
         body_bytes += target.stat().st_size
     print("bodies:", len(items), "files,", round(body_bytes / 1024, 1), "KB")
 
-    # Searchable plain text is the second half of the payload. It ships on its
-    # own and is prefetched when the browser is idle: search stays full-text,
-    # while the first paint only carries list metadata.
-    search_path = site_root / "data" / "search.js"
-    search_path.write_text(
-        "window.VMCT_SEARCH=" +
-        json.dumps(search_map, ensure_ascii=False, separators=(",", ":")) + ";\n",
-        encoding="utf-8",
-    )
-    print("search index:", round(search_path.stat().st_size / 1024, 1), "KB")
+    # Searchable plain text is the second half of the payload. It ships per
+    # view (search is always scoped to the current list) and is prefetched
+    # when the browser is idle: search stays full-text, while the first paint
+    # only carries list metadata.
+    search_dir = site_root / "data" / "search"
+    if search_dir.exists():
+        shutil.rmtree(search_dir)
+    search_dir.mkdir(parents=True, exist_ok=True)
+    search_bytes = 0
+    for kind, mapping in sorted(search_by_kind.items()):
+        target = search_dir / (kind + ".js")
+        target.write_text(
+            "window.VMCT_SEARCH=window.VMCT_SEARCH||{};Object.assign(window.VMCT_SEARCH," +
+            json.dumps(mapping, ensure_ascii=False, separators=(",", ":")) + ");\n",
+            encoding="utf-8",
+        )
+        search_bytes += target.stat().st_size
+    print("search index:", len(search_by_kind), "files,", round(search_bytes / 1024, 1), "KB")
 
     nav = [
         {"id": "modpacks", "label": "整合包", "kind": "modpack"},

@@ -60,8 +60,9 @@ python scripts/normalize_data.py --repo <上游仓库目录> --site site
 `site/data/catalog.js` 只包含列表所需的数据：条目元信息与 `excerpt`（摘要），约 150 KB（gzip 约 27 KB）。
 
 - `site/data/bodies/<id>.js`：每篇正文一个文件，只有打开对应详情页时才加载（约 1–2 KB gzip），之后缓存在内存里。
-- `site/data/search.js`：全文检索用的纯文本索引（gzip 约 71 KB）。首屏不加载，浏览器空闲时自动预取；搜索框第一次输入也会触发加载。
+- `site/data/search/<kind>.js`：全文检索用的纯文本索引，**按视图拆分**（整合包约 45 KB、地图 11 KB、资料库 9 KB、其他 6 KB gzip）。首屏不加载，浏览器空闲时只预取当前视图那一份；搜索框第一次输入也会触发加载。开启数据节省模式（Save-Data）或 2G 网络时不预取，留到首次搜索。
 - 列表默认每页 24 张卡片，可通过底部分页条切换每页 12 / 24 / 48 / 96 条，选择记在 `localStorage`。
+- GitHub Pages 只提供 gzip 压缩（不支持 Brotli）。开发者工具的「大小 / Size」列显示的是解压后体积，「传输 / Transferred」列才是真实字节；若显示「已缓存」，说明这次是缓存命中、没有网络传输——勾选面板里的「禁用缓存 / Disable Cache」再刷新即可看到真实压缩体积。
 
 ### 图片占位与后续同步
 
