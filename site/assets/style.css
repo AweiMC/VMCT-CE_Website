@@ -45,6 +45,8 @@ body * { box-sizing: border-box; }
 
 a { color: inherit; text-decoration: none; }
 button, input, select { font: inherit; }
+/* the UA's [hidden] rule loses to component display rules like .btn */
+[hidden] { display: none !important; }
 
 /* inline SVG glyph box — every chrome icon (arrows, clock, close, chevron)
    is one of these: 16px viewBox, square caps, currentColor stroke */
@@ -116,12 +118,15 @@ body.search-open { overflow: hidden; }
   position: relative; width: min(760px, 92vw); margin-top: 11vh;
   background: var(--panel); border: 1px solid var(--line-2);
   box-shadow: 0 24px 90px rgba(0, 0, 0, .6);
-  animation: search-in .18s steps(4, end) both;
+  animation: search-in .14s ease-out both;
 }
 .search-panel::before { content: ''; position: absolute; left: -1px; top: -1px; width: 3px; height: 72px; background: var(--accent); }
+/* opacity/offset only: a clip-path keyframe can be left stuck at its first
+   frame (some browsers/headless environments pause animations), which hid
+   everything below the input row */
 @keyframes search-in {
-  from { opacity: .35; clip-path: inset(0 0 100% 0); }
-  to   { opacity: 1; clip-path: inset(0 0 0 0); }
+  from { opacity: .55; transform: translateY(-8px); }
+  to   { opacity: 1; transform: none; }
 }
 .search-field { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--line-2); }
 .search-field .search-icon { position: static; transform: none; width: 16px; height: 16px; color: var(--accent); }
@@ -677,8 +682,11 @@ figure.img-slot.media-slot.is-ready { background-color: var(--bg); }
   .topbar-right { padding: 0 12px; }
   .search-box { width: 46vw; }
   .catalog-layout { grid-template-columns: 1fr; }
-  .filter-rail { position: static; flex-direction: row; flex-wrap: wrap; }
-  .filter-group { flex: 1 1 200px; }
+  .filter-rail { position: static; flex-direction: row; flex-wrap: wrap; gap: 8px; }
+  .filter-group { flex: 1 1 100%; }
+  /* collapsed groups sit in one narrow strip; an open group gets its own
+     scroll area instead of pushing the whole list off-screen */
+  .filter-body { max-height: 210px; overflow-y: auto; overscroll-behavior: contain; }
   .detail { grid-template-columns: 1fr; }
   .detail-side { position: static; }
 }
@@ -693,7 +701,12 @@ figure.img-slot.media-slot.is-ready { background-color: var(--bg); }
   .detail-hero { padding: 18px; }
   .detail-hd { flex-direction: column; }
   .detail-icon { width: 72px; height: 72px; flex-basis: 72px; }
-  .catalog-title h2 { font-size: 24px; }
+  /* keep the section title on one line, move the long count to its own row */
+  .catalog-title { flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+  .catalog-title h2 { font-size: 26px; white-space: nowrap; }
+  .catalog-title .count { flex-basis: 100%; font-size: 10px; line-height: 1.5; }
+  .search-box { width: 44vw; }
+  .search-box kbd { display: none; }   /* keyboard hint is desktop-only */
   .card-icon { width: 54px; height: 54px; flex-basis: 54px; }
 }
 

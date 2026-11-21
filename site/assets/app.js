@@ -27,16 +27,19 @@
     pageSize: savedPageSize
   };
 
+  var MOBILE_Q = '(max-width: 860px)';
+  function isMobile() {
+    return !!(window.matchMedia && window.matchMedia(MOBILE_Q).matches);
+  }
+
   var KIND_META = {
-    modpack: { label: '整合包', num: '01', desc: '经过汉化的 Minecraft 整合包档案' },
-    map: { label: '地图', num: '02', desc: '汉化地图与冒险存档档案' },
+    modpack: { label: '整合包', num: '01', desc: '经过汉化的 Minecraft 整合包档案' },    map: { label: '地图', num: '02', desc: '汉化地图与冒险存档档案' },
     wiki: { label: '资料库', num: '03', desc: '整合包配套资料与攻略文档' },
     credits: { label: '致谢', num: '04', desc: '贡献者与社区成员名录' },
     page: { label: '其他', num: '05', desc: '社区公告与说明文档' }
   };
 
-  function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+  function esc(s) {    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
@@ -261,6 +264,16 @@
   // The rail only exists when there is something to filter on. Kinds whose
   // records carry no compatibility metadata (wiki chapters, community pages)
   // render a plain single-column list instead of an empty sidebar.
+  // Filter groups collapse by default on phones: the rail otherwise fills the
+  // whole first screen before any card appears.
+  function filterGroup(title, plate, body) {
+    var collapsed = isMobile();
+    return '<div class="filter-group"><h3>' + title +
+      '<span class="caret' + (collapsed ? ' up' : '') + '">' + GI.chevron + '</span>' +
+      '<span class="plate">' + plate + '</span></h3>' +
+      '<div class="filter-body' + (collapsed ? ' collapsed' : '') + '">' + body + '</div></div>';
+  }
+
   function filterRail(kindItems) {
     var versions = facetCounts(kindItems, 'minecraft');
     var loaders = facetCounts(kindItems, 'loader');
@@ -269,8 +282,8 @@
     if (Object.keys(versions).length) {
       var verOpts = Object.keys(versions).sort(function (a, b) { return b.localeCompare(a, undefined, { numeric: true }); })
         .slice(0, 12).map(function (v) { return optRow(v, v, versions[v], 'version', state.version === v); }).join('');
-      groups.push('<div class="filter-group"><h3>游戏版本 <span class="caret">' + GI.chevron + '</span><span class="plate">VERSION</span></h3><div class="filter-body">' +
-        '<input class="filter-search" placeholder="搜索版本…" data-filter-search="version">' + verOpts + '</div></div>');
+      groups.push(filterGroup('游戏版本', 'VERSION',
+        '<input class="filter-search" placeholder="搜索版本…" data-filter-search="version">' + verOpts));
     }
     if (Object.keys(loaders).length) {
       var loaderOpts = Object.keys(loaders).sort().map(function (v) {
@@ -278,14 +291,14 @@
         var ico = ICONS[v] ? '<span class="fopt-ico">' + ICONS[v] + '</span>' : '';
         return optRow(v, label, loaders[v], 'loader', state.loader === v, ico);
       }).join('');
-      groups.push('<div class="filter-group"><h3>加载器 <span class="plate">LOADER</span></h3><div class="filter-body">' + loaderOpts + '</div></div>');
+      groups.push(filterGroup('加载器', 'LOADER', loaderOpts));
     }
     if (Object.keys(statuses).length) {
       var statusOpts = Object.keys(statuses).map(function (v) {
         var lbl = DATA.statusLabels[v] || v;
         return optRow(v, lbl, statuses[v], 'status', state.status === v);
       }).join('');
-      groups.push('<div class="filter-group"><h3>状态 <span class="plate">STATUS</span></h3><div class="filter-body">' + statusOpts + '</div></div>');
+      groups.push(filterGroup('状态', 'STATUS', statusOpts));
     }
     if (!groups.length) return '';
     return '<aside class="filter-rail">' + groups.join('') +
@@ -825,6 +838,15 @@
   }
   function isSearchOpen() { return !!(searchModal && !searchModal.hidden); }
 
+  // A phone-sized trigger box cannot fit the desktop placeholder.
+  function syncSearchPlaceholder() {
+    if (!searchEl) return;
+    var w = window.innerWidth || 0;
+    searchEl.placeholder = w <= 400 ? '检索'
+      : isMobile() ? '检索 / SEARCH'
+      : '检索档案 / SEARCH ARCHIVE';
+  }
+
   // Ranked metadata search: title beats original name, which beats description.
   function searchHits(q) {
     var needle = q.trim().toLowerCase();
@@ -951,6 +973,8 @@
     M.boot();
     M.initDotField();
     buildSearchModal();
+    syncSearchPlaceholder();
+    addEventListener('resize', syncSearchPlaceholder);
     render();
     clock(); setInterval(clock, 1000);
   }
