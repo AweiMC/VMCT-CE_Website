@@ -137,8 +137,15 @@
       ' role="img" aria-label="' + esc(slot.alt || slot.slot) + '">' + img + label + '</div>';
   }
   function coverOf(item) {
-    return (item.media || []).find(function (m) { return m.role === 'cover'; }) || null;
+    // Derived, not shipped: the cover is just the icon file. Remote icons are
+    // shown straight from the source URL; no file means a pending plate.
+    var icon = item.icon || '';
+    if (!icon) return { role: 'cover', slot: 'cover', state: 'pending', target: null, source: '', alt: item.title || '' };
+    if (icon.indexOf('http') === 0) return { role: 'cover', slot: 'cover', state: 'remote', target: icon, source: icon, alt: item.title || '' };
+    return { role: 'cover', slot: 'cover', state: 'ready', target: icon, source: '', alt: item.title || '' };
   }
+  function statusText(it) { return (DATA.statusLabels || {})[it.status] || it.status || ''; }
+  function loaderText(it) { return (DATA.loaderLabels || {})[it.loader] || it.loader || ''; }
   // Hydrate placeholder figures emitted by the normalizer into fixed-ratio
   // media boxes. Boxes are sized by CSS var(--slot-w/h); only the fill changes.
   function hydrateMedia() {
@@ -327,8 +334,8 @@
   // date or links, and empty placeholders ("未标注" / "待定" / "↗ 0") are noise.
   function cardHtml(it) {
     var tags = '';
-    if (it.status) tags += '<span class="tag' + (it.status === 'maintaining' ? ' accent' : '') + (it.status === 'stopped' ? ' stopped' : '') + '">' + esc(it.statusLabel) + '</span>';
-    if (it.loader) tags += '<span class="tag">' + loaderSvg(it.loader) + esc(it.loaderLabel || it.loader) + '</span>';
+    if (it.status) tags += '<span class="tag' + (it.status === 'maintaining' ? ' accent' : '') + (it.status === 'stopped' ? ' stopped' : '') + '">' + esc(statusText(it)) + '</span>';
+    if (it.loader) tags += '<span class="tag">' + loaderSvg(it.loader) + esc(loaderText(it)) + '</span>';
     if (it.minecraft) tags += '<span class="tag">MC ' + esc(it.minecraft) + '</span>';
     var meta = '';
     var bits = [];
@@ -556,8 +563,8 @@
     var it = byId(id);
     if (!it) return '<div class="wrap"><div class="empty"><h3>档案不存在</h3><p>' + esc(id) + '</p></div></div>';
     var tags = '';
-    if (it.status) tags += '<span class="tag' + (it.status === 'maintaining' ? ' accent' : '') + (it.status === 'stopped' ? ' stopped' : '') + '">' + esc(it.statusLabel) + '</span>';
-    if (it.loader) tags += '<span class="tag">' + loaderSvg(it.loader) + esc(it.loaderLabel || it.loader) + '</span>';
+    if (it.status) tags += '<span class="tag' + (it.status === 'maintaining' ? ' accent' : '') + (it.status === 'stopped' ? ' stopped' : '') + '">' + esc(statusText(it)) + '</span>';
+    if (it.loader) tags += '<span class="tag">' + loaderSvg(it.loader) + esc(loaderText(it)) + '</span>';
     if (it.minecraft) tags += '<span class="tag">MC ' + esc(it.minecraft) + '</span>';
     if (it.packVersion) tags += '<span class="tag">v' + esc(it.packVersion) + '</span>';
 
@@ -593,8 +600,8 @@
 
     // Drop rows that have no value: a wiki chapter would otherwise show a
     // column of "—" placeholders for loader / MC version / pack version.
-    var kvPairs = [['档案编号', it.id], ['原始名称', it.originalName], ['更新时间', it.updateDate || it.updateDateRaw],
-      ['加载器', it.loaderLabel || it.loader], ['MC 版本', it.minecraft], ['包版本', it.packVersion]]
+    var kvPairs = [['档案编号', it.id], ['原始名称', it.originalName], ['更新时间', it.updateDate],
+      ['加载器', loaderText(it)], ['MC 版本', it.minecraft], ['包版本', it.packVersion]]
       .filter(function (p) { return p[1]; });
     var kv = kvPairs.map(function (p) { return '<div class="kv"><dt>' + esc(p[0]) + '</dt><dd>' + esc(p[1]) + '</dd></div>'; }).join('');
 

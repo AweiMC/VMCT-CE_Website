@@ -425,9 +425,6 @@ def optimize_images(items, site_root: Path, quality=82):
 
         for item in items:
             item["icon"] = fix(item.get("icon"))
-            for slot in item.get("media", []):
-                if slot.get("target"):
-                    slot["target"] = fix(slot["target"])
             body = item.get("bodyHtml") or ""
             for old, new in changes.items():
                 if old in body:
@@ -461,45 +458,31 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool, do_
             status_type = str(status or "").lower()
 
         icon = localize_path(meta.get("icon"), repo_root, site_root)
-        # cover slot — always present so the layout never shifts after SYNC
-        cover_source = str(meta.get("icon") or "") if icon else ""
-        cover_target = icon if str(icon).startswith("assets/") else None
-        cover = {
-            "slot": "cover", "role": "cover",
-            "target": cover_target, "source": cover_source,
-            "alt": str(meta.get("title") or ""),
-            "state": "ready" if icon else "pending",
-            "w": COVER_RATIO[0] * 100, "h": COVER_RATIO[1] * 100,
-        }
-        body_html, body_slots = clean_body(body, site_root, repo_root, item_slug)
-        media = [cover] + body_slots
+        # clean_body also localises in-body figures; the slot list itself is no
+        # longer shipped — body placeholders already carry their own attrs.
+        body_html, _body_slots = clean_body(body, site_root, repo_root, item_slug)
         dl_list = dedupe_downloads(downloads.get(item_slug, []))
         for dl in dl_list:
             if isinstance(dl, dict) and dl.get("icon"):
                 dl["icon"] = localize_path(dl["icon"], repo_root, site_root)
+        # Only what the client cannot derive. slug/path/labels/date-raw and the
+        # cover slot are computed at runtime from id/kind/status/loader/icon.
         item = {
             "id": item_slug,
             "kind": kind,
-            "slug": item_slug.split("/")[-1],
             "title": str(meta.get("title") or title_from_slug(item_slug)).strip(),
             "originalName": str(meta.get("originalName") or "").strip(),
             "description": str(meta.get("description") or "").strip().replace("\n", " "),
             "icon": icon,
             "updateDate": parse_date(meta.get("updateDate")),
-            "updateDateRaw": str(meta.get("updateDate") or ""),
             "status": status_type,
-            "statusLabel": STATUS_LABELS.get(status_type, status_type or "未标注"),
             "loader": str(compat.get("loader") or "").lower(),
-            "loaderLabel": LOADER_LABELS.get(str(compat.get("loader") or "").lower(), str(compat.get("loader") or "")),
             "minecraft": str(compat.get("minecraft") or ""),
             "packVersion": str(compat.get("pack") or ""),
             "authors": [str(a) for a in (meta.get("authors") or [])],
             "links": normalize_links(meta),
             "downloads": dl_list,
             "featured": bool(meta.get("featured")),
-            "sidebar": meta.get("sidebar", True) is not False,
-            "path": "src/pages/" + rel,
-            "media": media,
             "bodyHtml": body_html,
         }
         # child pages (fc5-wiki chapters) get a parent pointer
@@ -528,10 +511,10 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool, do_
     search_by_kind = {}
     for item in items:
         body_html = item.pop("bodyHtml", "")
-        item["media"] = [m for m in item.get("media", []) if m.get("role") == "cover"]
         text = plain_text(body_html)
         search_by_kind.setdefault(item["kind"], {})[item["id"]] = text
-        item["excerpt"] = item["description"] or (text[:160] + ("…" if len(text) > 160 else ""))
+        if not item["description"] and text:
+            item["excerpt"] = text[:160] + ("…" if len(text) > 160 else "")
         target = bodies_dir / (item["id"].replace("/", "__") + ".js")
         target.write_text(
             "window.VMCT_BODY=window.VMCT_BODY||{};window.VMCT_BODY[" +
