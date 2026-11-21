@@ -3,7 +3,7 @@
   "meta": {
     "title": "VM 中文翻译组 · 社区资料站",
     "source": "https://github.com/VM-Chinese-translate-group/vmct-website-v4",
-    "generatedAt": "2026-11-21T02:57:38Z",
+    "generatedAt": "2026-11-21T03:43:38Z",
     "counts": {
       "modpack": 58,
       "map": 22,
@@ -159,8 +159,8 @@
         {
           "id": "lanzou-quark-mapdl",
           "text": "下载地图和汉化",
-          "lanzouLink": "/doing",
-          "quarkLink": "/doing"
+          "lanzouLink": "https://www.vmct.top/doing",
+          "quarkLink": "https://www.vmct.top/doing"
         }
       ],
       "featured": false,
@@ -198,8 +198,8 @@
         {
           "id": "lanzou-quark-mapdl",
           "text": "下载地图和汉化",
-          "lanzouLink": "/doing",
-          "quarkLink": "/doing"
+          "lanzouLink": "https://www.vmct.top/doing",
+          "quarkLink": "https://www.vmct.top/doing"
         }
       ],
       "featured": false,
@@ -485,8 +485,8 @@
         {
           "id": "lanzou-quark-mapdl",
           "text": "下载地图和汉化",
-          "lanzouLink": "/doing",
-          "quarkLink": "/doing"
+          "lanzouLink": "https://www.vmct.top/doing",
+          "quarkLink": "https://www.vmct.top/doing"
         }
       ],
       "featured": false,
@@ -1060,8 +1060,8 @@
         {
           "id": "quark-lanzou",
           "text": "下载汉化",
-          "lanzouLink": "/doing",
-          "quarkLink": "/doing"
+          "lanzouLink": "https://www.vmct.top/doing",
+          "quarkLink": "https://www.vmct.top/doing"
         }
       ],
       "featured": false,
@@ -1192,8 +1192,8 @@
         {
           "id": "quark-lanzou",
           "text": "下载汉化",
-          "lanzouLink": "/doing",
-          "quarkLink": "/doing"
+          "lanzouLink": "https://www.vmct.top/doing",
+          "quarkLink": "https://www.vmct.top/doing"
         }
       ],
       "featured": false,
@@ -1704,8 +1704,8 @@
         {
           "id": "quark-lanzou",
           "text": "下载汉化",
-          "lanzouLink": "/doing",
-          "quarkLink": "/doing"
+          "lanzouLink": "https://www.vmct.top/doing",
+          "quarkLink": "https://www.vmct.top/doing"
         }
       ],
       "featured": false,
@@ -1837,8 +1837,8 @@
         {
           "id": "quark-lanzou",
           "text": "下载汉化",
-          "lanzouLink": "/doing",
-          "quarkLink": "/doing"
+          "lanzouLink": "https://www.vmct.top/doing",
+          "quarkLink": "https://www.vmct.top/doing"
         }
       ],
       "featured": false,
@@ -1913,8 +1913,8 @@
         {
           "id": "quark-lanzou",
           "text": "下载汉化",
-          "lanzouLink": "/doing",
-          "quarkLink": "/doing"
+          "lanzouLink": "https://www.vmct.top/doing",
+          "quarkLink": "https://www.vmct.top/doing"
         }
       ],
       "featured": false,
@@ -2085,7 +2085,7 @@
           "id": "vm",
           "text": "整合包wiki（英文）",
           "icon": "assets/imgs/logo/logo_128.png",
-          "link": "/modpacks/fc5-wiki/"
+          "link": "https://www.vmct.top/modpacks/fc5-wiki/"
         }
       ],
       "featured": false,
@@ -2589,8 +2589,8 @@
         {
           "id": "quark-lanzou",
           "text": "下载汉化",
-          "lanzouLink": "/doing",
-          "quarkLink": "/doing"
+          "lanzouLink": "https://www.vmct.top/doing",
+          "quarkLink": "https://www.vmct.top/doing"
         }
       ],
       "featured": false,
@@ -3011,8 +3011,8 @@
         {
           "id": "quark-lanzou",
           "text": "下载汉化",
-          "lanzouLink": "/doing",
-          "quarkLink": "/doing"
+          "lanzouLink": "https://www.vmct.top/doing",
+          "quarkLink": "https://www.vmct.top/doing"
         }
       ],
       "featured": false,

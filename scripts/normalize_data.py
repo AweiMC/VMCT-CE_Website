@@ -30,6 +30,23 @@ LINK_DEFAULTS = {
     "i18nupdate": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar",
 }
 
+# Upstream seeds occasionally carry site-relative URLs ("/doing",
+# "/modpacks/fc5-wiki/"). They are written relative to the upstream site, so
+# they must be absolutised — otherwise they resolve against this mirror's
+# origin and 404.
+UPSTREAM_SITE = "https://www.vmct.top"
+
+
+def absolutize(url: str) -> str:
+    url = str(url or "").strip()
+    if not url:
+        return url
+    if url.startswith("//"):
+        return "https:" + url
+    if url.startswith("/"):
+        return UPSTREAM_SITE + url
+    return url
+
 LINK_LABELS = {
     "bilibili": "B 站介绍",
     "github": "GitHub",
@@ -162,7 +179,7 @@ def normalize_links(meta, extra_links=None):
         out.append({
             "id": lid,
             "label": str(item.get("text") or LINK_LABELS.get(lid, lid)),
-            "url": url,
+            "url": absolutize(url),
         })
     return out
 
@@ -479,7 +496,12 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool, do_
         body_html, _body_slots = clean_body(body, site_root, repo_root, item_slug)
         dl_list = dedupe_downloads(downloads.get(item_slug, []))
         for dl in dl_list:
-            if isinstance(dl, dict) and dl.get("icon"):
+            if not isinstance(dl, dict):
+                continue
+            for key in ("link", "lanzouLink", "quarkLink"):
+                if dl.get(key):
+                    dl[key] = absolutize(dl[key])
+            if dl.get("icon"):
                 dl["icon"] = localize_path(dl["icon"], repo_root, site_root)
         # Only what the client cannot derive. slug/path/labels/date-raw and the
         # cover slot are computed at runtime from id/kind/status/loader/icon.
