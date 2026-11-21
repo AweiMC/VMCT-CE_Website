@@ -361,11 +361,11 @@ def dedupe_downloads(dl_list):
 # single biggest bandwidth win: 12 MB of covers becomes well under 1 MB.
 # Idempotent — files already inside the cap are skipped, so a repeated sync
 # only pays for newly downloaded originals.
-ICON_MAX_PX = 320
-IMG_MAX_PX = 1600
-ANIM_MAX_PX = 128            # animated covers render at 68-130px
-ANIM_MAX_FRAMES = 30
-ANIM_QUALITY = 55
+ICON_MAX_PX = 256
+IMG_MAX_PX = 1400
+ANIM_MAX_PX = 112            # animated covers render at 68-130px
+ANIM_MAX_FRAMES = 20
+ANIM_QUALITY = 50
 IMAGE_SUFFIXES = (".png", ".jpg", ".jpeg", ".gif", ".webp", ".avif")
 ICON_AVIF_QUALITY = 50
 IMG_AVIF_QUALITY = 55
