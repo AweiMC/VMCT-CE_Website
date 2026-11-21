@@ -60,28 +60,30 @@ python scripts/normalize_data.py --repo <上游仓库目录> --site site
 `site/data/catalog.js` 只包含列表所需的数据：条目元信息与 `excerpt`（摘要），约 100 KB（gzip 约 22 KB）。`slug` / `path` / 状态与加载器的显示名 / 日期原始值 / 封面槽位这些都能从 `id`、`kind`、`status`、`loader`、`icon` 推导，不再随数据下发。
 
 - `site/data/bodies/<id>.js`：每篇正文一个文件，只有打开对应详情页时才加载（约 1–2 KB gzip），之后缓存在内存里。
-- `site/data/search/<kind>.js`：全文检索用的纯文本索引，**按视图拆分**（整合包约 45 KB、地图 11 KB、资料库 9 KB、其他 6 KB gzip）。首屏不加载，浏览器空闲时只预取当前视图那一份；搜索框第一次输入也会触发加载。开启数据节省模式（Save-Data）或 2G 网络时不预取，留到首次搜索。
+- **检索只匹配元数据**：标题、原名、简介/摘要、作者、加载器/状态/版本，全部已在 `catalog.js` 中，因此不再下发任何全文索引（`data/search/` 仅保留 4 个兼容空桩，供缓存了旧 `app.js` 的客户端避免 404）。
+- 顶部搜索框打开的是**检索弹窗**（背景模糊的 Marathon 风格面板）：输入即时排序结果（标题 > 原名 > 简介 > 作者），`↑ ↓` 选择、`↵` 打开、`ESC` 关闭；`/` 或 `Ctrl/Cmd+K` 随时唤起。
 - 列表默认每页 24 张卡片，可通过底部分页条切换每页 12 / 24 / 48 / 96 条，选择记在 `localStorage`。
+- 封面图统一下载后缩放到 512px 并转成 **AVIF**（动画封面保留为动画 WebP），正文配图转 AVIF（≤1600px）。
 - GitHub Pages 只提供 gzip 压缩（不支持 Brotli）。开发者工具的「大小 / Size」列显示的是解压后体积，「传输 / Transferred」列才是真实字节；若显示「已缓存」，说明这次是缓存命中、没有网络传输——勾选面板里的「禁用缓存 / Disable Cache」再刷新即可看到真实压缩体积。
 
 ### 图片占位与后续同步
 
-每条档案在数据里带 `media` 数组，每个槽位记录：
+正文图在 HTML 里已经是固定比例的 `figure.img-slot` 占位盒，属性直接记录：
 
-| 字段 | 含义 |
+| 属性 | 含义 |
 | --- | --- |
-| `slot` | 槽位 ID（`cover` / `body-01`…） |
-| `role` | `cover`（封面）或 `body`（正文图） |
-| `target` | 本地路径（`ready`）或原始图片 URL（`remote`） |
-| `source` | 原始图片 URL |
-| `state` | `ready`（本地文件）、`remote`（由原站按需提供）、`pending`（无图占位） |
-| `w` / `h` | 占位尺寸比例，锁定布局 |
+| `data-img-slot` | 槽位 ID（`body-01`…） |
+| `data-img-state` | `ready`（本地文件）、`remote`（由原站按需提供）、`pending`（无图占位） |
+| `data-img-target` | 本地路径（`ready`） |
+| `data-img-source` | 原始图片 URL |
 
-渲染层据此预留固定比例的占位盒：本地图与外链图都直接显示，无图时显示带槽位编号的斜纹骨架。盒子尺寸由 `w/h` 锁定，图片是否加载都不影响布局。
+封面不再单独下发槽位结构：渲染层由 `icon` 推导（有本地文件即 `ready`，外链即 `remote`，无图为 `pending`）。
 
-正文远程图**不下载到本地**：只记录尺寸比例与原始 URL（`state: remote`），图片字节由原站按需提供，避免构建时下载整图占用带宽与磁盘。仓库自带的 `/imgs/` 资源属源仓库内容，仍复制到 `site/assets/imgs/`；封面缩略图缓存于 `site/assets/icons/`。
+渲染层据此预留固定比例的占位盒：本地图与外链图都直接显示，无图时显示带槽位编号的斜纹骨架。盒子尺寸由样式锁定，图片是否加载都不影响布局。
 
-如需跳过封面图标缓存：加 `--no-icons`。
+正文远程图**不下载到本地**：只记录尺寸比例与原始 URL（`state: remote`），图片字节由原站按需提供，避免构建时下载整图占用带宽与磁盘。仓库自带的 `/imgs/` 资源属源仓库内容，仍复制到 `site/assets/imgs/`（并转成 AVIF）；封面缓存于 `site/assets/icons/`。
+
+如需跳过封面图标缓存：加 `--no-icons`；跳过图片压缩/转码：加 `--no-optimize`。
 
 ## 同步比对工具
 

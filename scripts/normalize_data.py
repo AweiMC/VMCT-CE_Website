@@ -343,7 +343,10 @@ def dedupe_downloads(dl_list):
 # only pays for newly downloaded originals.
 ICON_MAX_PX = 512
 IMG_MAX_PX = 1600
-IMAGE_SUFFIXES = (".png", ".jpg", ".jpeg", ".gif", ".webp")
+IMAGE_SUFFIXES = (".png", ".jpg", ".jpeg", ".gif", ".webp", ".avif")
+ICON_AVIF_QUALITY = 50
+IMG_AVIF_QUALITY = 55
+ICON_AVIF_SPEED = 8
 
 try:
     from PIL import Image as _PILImage
@@ -363,11 +366,12 @@ def _fit(im, cap):
 
 
 def optimize_images(items, site_root: Path, quality=82):
-    """Re-encode cached covers + article images as WebP and downscale them to the
-    size the UI actually paints. Upstream ships 512 px RGBA PNGs (300-400 KB of
-    photo content in a format that cannot compress photos) and even 2 MB GIFs;
-    the same picture as WebP lands at 20-60 KB. Referenced paths are rewritten
-    in memory before the dataset is serialised, so the output stays valid.
+    """Re-encode cached covers and article images at the size the UI paints.
+
+    Covers go to AVIF (roughly half the bytes of WebP for the same picture and
+    supported since 2022); animated covers stay animated WebP because Pillow
+    does not encode AVIF animation. Article images use WebP. Referenced paths
+    are rewritten in memory before serialisation, so the output stays valid.
     """
     if _PILImage is None:
         print("pillow not installed: images left unoptimized (pip install pillow)")
@@ -382,16 +386,21 @@ def optimize_images(items, site_root: Path, quality=82):
         for src in sorted(base.rglob("*")):
             if not src.is_file() or src.suffix.lower() not in IMAGE_SUFFIXES:
                 continue
-            dst = src if src.suffix.lower() == ".webp" else src.with_suffix(".webp")
-            tmp = src.with_name(src.stem + "__opt.webp")
+            try:
+                with _PILImage.open(src) as probe:
+                    animated = bool(getattr(probe, "is_animated", False))
+                    src_size = probe.size
+            except Exception:
+                continue
+            target_ext = ".webp" if animated else ".avif"
+            if src.suffix.lower() == target_ext and max(src_size) <= cap:
+                continue        # already final format at the right size
+            dst = src.with_suffix(target_ext)
+            tmp = src.with_name(src.stem + "__opt" + target_ext)
             before = src.stat().st_size
             try:
                 with _PILImage.open(src) as im:
-                    # files we produced are already webp and inside the cap:
-                    # never recompress them lossily on the next sync
-                    if src.suffix.lower() == ".webp" and max(im.size) <= cap:
-                        continue
-                    if getattr(im, "is_animated", False):
+                    if animated:
                         frames, durations = [], []
                         for i in range(getattr(im, "n_frames", 1)):
                             im.seek(i)
@@ -402,18 +411,25 @@ def optimize_images(items, site_root: Path, quality=82):
                                        loop=int(im.info.get("loop") or 0),
                                        quality=70, method=4)
                     else:
-                        _fit(im, cap).save(tmp, format="WEBP", quality=quality, method=6)
-                if tmp.exists() and tmp.stat().st_size < before:
+                        frame = im.convert("RGBA") if im.mode in ("RGBA", "LA", "P") else im
+                        frame = _fit(frame, cap)
+                        if target_ext == ".avif":
+                            frame.save(tmp, format="AVIF",
+                                       quality=ICON_AVIF_QUALITY if folder == "icons" else IMG_AVIF_QUALITY,
+                                       speed=ICON_AVIF_SPEED)
+                        else:
+                            frame.save(tmp, format="WEBP", quality=quality, method=6)
+                if tmp.exists():
                     after = tmp.stat().st_size
-                    tmp.replace(dst)
-                    if dst != src:
-                        src.unlink()
-                    saved += before - after
-                    if src != dst:
-                        changes[src.relative_to(site_root).as_posix()] = \
-                            dst.relative_to(site_root).as_posix()
-                elif tmp.exists():
-                    tmp.unlink()
+                    if after < before:
+                        tmp.replace(dst)
+                        if dst != src:
+                            src.unlink()
+                            changes[src.relative_to(site_root).as_posix()] = \
+                                dst.relative_to(site_root).as_posix()
+                        saved += before - after
+                    else:
+                        tmp.unlink()
             except Exception as exc:
                 if tmp.exists():
                     tmp.unlink()
@@ -499,20 +515,18 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool, do_
         # shrink the cached bytes to what the UI actually paints
         optimize_images(items, site_root)
 
-    # Split the payload: lists and search need metadata, an excerpt and the
-    # searchable text; the full article HTML ships as one small file per entry
-    # and is fetched when its detail page opens. Nobody reads 100 pages, so
-    # there is no reason to hand the browser all of them up front.
+    # Split the payload: lists need metadata and an excerpt; the full article
+    # HTML ships as one small file per entry and is fetched when its detail
+    # page opens. Nobody reads 100 pages, so there is no reason to hand the
+    # browser all of them up front.
     bodies_dir = site_root / "data" / "bodies"
     if bodies_dir.exists():
         shutil.rmtree(bodies_dir)
     bodies_dir.mkdir(parents=True, exist_ok=True)
     body_bytes = 0
-    search_by_kind = {}
     for item in items:
         body_html = item.pop("bodyHtml", "")
         text = plain_text(body_html)
-        search_by_kind.setdefault(item["kind"], {})[item["id"]] = text
         if not item["description"] and text:
             item["excerpt"] = text[:160] + ("…" if len(text) > 160 else "")
         target = bodies_dir / (item["id"].replace("/", "__") + ".js")
@@ -525,24 +539,21 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool, do_
         body_bytes += target.stat().st_size
     print("bodies:", len(items), "files,", round(body_bytes / 1024, 1), "KB")
 
-    # Searchable plain text is the second half of the payload. It ships per
-    # view (search is always scoped to the current list) and is prefetched
-    # when the browser is idle: search stays full-text, while the first paint
-    # only carries list metadata.
+    # Search now matches title / original name / description / excerpt, all of
+    # which already live in the index, so no separate text payload ships. Keep
+    # empty per-view files as 200 shims for clients that cached the previous
+    # app.js (10 minute max-age) and still request them.
     search_dir = site_root / "data" / "search"
     if search_dir.exists():
         shutil.rmtree(search_dir)
     search_dir.mkdir(parents=True, exist_ok=True)
-    search_bytes = 0
-    for kind, mapping in sorted(search_by_kind.items()):
-        target = search_dir / (kind + ".js")
-        target.write_text(
-            "window.VMCT_SEARCH=window.VMCT_SEARCH||{};Object.assign(window.VMCT_SEARCH," +
-            json.dumps(mapping, ensure_ascii=False, separators=(",", ":")) + ");\n",
+    for kind in ("modpack", "map", "wiki", "page"):
+        (search_dir / (kind + ".js")).write_text(
+            "/* compat stub: search is metadata-only now, no text index */\n"
+            "window.VMCT_SEARCH=window.VMCT_SEARCH||{};\n",
             encoding="utf-8",
         )
-        search_bytes += target.stat().st_size
-    print("search index:", len(search_by_kind), "files,", round(search_bytes / 1024, 1), "KB")
+    print("search stubs: 4 files")
     # Compatibility shim: a client that cached the pre-split app.js (10 minute
     # max-age) may still request this URL. Their cached catalog.js still carries
     # inline searchText, so search keeps working; the shim only avoids a 404.
@@ -612,10 +623,15 @@ def cache_remote_icons(items, out_dir):
         if target.exists() and target.stat().st_size > 0:
             item["icon"] = "assets/icons/" + target.name
             continue
-        # already converted to webp by the image optimizer: reuse, don't refetch
-        webp = target.with_suffix(".webp")
-        if webp.exists() and webp.stat().st_size > 0:
-            item["icon"] = "assets/icons/" + webp.name
+        # already re-encoded by the image optimizer: reuse, don't refetch
+        cached = None
+        for alt_ext in (".avif", ".webp"):
+            alt = target.with_suffix(alt_ext)
+            if alt.exists() and alt.stat().st_size > 0:
+                cached = alt
+                break
+        if cached is not None:
+            item["icon"] = "assets/icons/" + cached.name
             continue
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})

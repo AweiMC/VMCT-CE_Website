@@ -103,6 +103,69 @@ button, input, select { font: inherit; }
 .search-icon .gi { width: 15px; height: 15px; stroke-width: 1.3; }
 .search-box:focus-within .search-icon { color: var(--accent); }
 .search-box kbd { position: absolute; right: 9px; font: 400 10px var(--mono); color: var(--ink-3); border: 1px solid var(--line-2); padding: 1px 5px; }
+
+/* ---------- search palette -------------------------------------------
+   A Marathon-styled dialog: hard-edged panel over a blurred archive, acid
+   bar on the left, mono meta row, one ranked list. Same geometry as the
+   rest of the chrome (no rounding, 1px rules, square caps). */
+body.search-open { overflow: hidden; }
+.search-modal { position: fixed; inset: 0; z-index: 90; display: flex; justify-content: center; align-items: flex-start; }
+.search-modal[hidden] { display: none; }
+.search-backdrop { position: absolute; inset: 0; background: rgba(5, 6, 5, .7); backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px); }
+.search-panel {
+  position: relative; width: min(760px, 92vw); margin-top: 11vh;
+  background: var(--panel); border: 1px solid var(--line-2);
+  box-shadow: 0 24px 90px rgba(0, 0, 0, .6);
+  animation: search-in .18s steps(4, end) both;
+}
+.search-panel::before { content: ''; position: absolute; left: -1px; top: -1px; width: 3px; height: 72px; background: var(--accent); }
+@keyframes search-in {
+  from { opacity: .35; clip-path: inset(0 0 100% 0); }
+  to   { opacity: 1; clip-path: inset(0 0 0 0); }
+}
+.search-field { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--line-2); }
+.search-field .search-icon { position: static; transform: none; width: 16px; height: 16px; color: var(--accent); }
+.search-field .search-icon .gi { width: 16px; height: 16px; }
+.search-field input {
+  flex: 1; min-width: 0; background: transparent; border: 0; outline: none;
+  color: var(--ink); font: 400 15px var(--mono); letter-spacing: .02em;
+}
+.search-field input::placeholder { color: var(--ink-3); }
+.search-field kbd { font: 400 9px var(--mono); color: var(--ink-3); border: 1px solid var(--line-2); padding: 2px 6px; letter-spacing: .1em; }
+.search-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 18px; border-bottom: 1px solid var(--line);
+  font: 400 10px var(--mono); letter-spacing: .12em; color: var(--ink-3);
+}
+.search-results { max-height: min(52vh, 470px); overflow-y: auto; overscroll-behavior: contain; }
+.sr-item {
+  display: flex; width: 100%; align-items: center; gap: 14px; text-align: left;
+  padding: 11px 18px; background: transparent; border: 0; border-bottom: 1px solid var(--line);
+  color: var(--ink); cursor: pointer;
+}
+.sr-item:last-child { border-bottom: 0; }
+.sr-item:hover, .sr-item.active { background: var(--overlay); box-shadow: inset 3px 0 var(--accent); }
+.sr-thumb {
+  width: 42px; height: 42px; flex: 0 0 42px; display: grid; place-items: center;
+  background: var(--bg); border: 1px solid var(--line-2); overflow: hidden;
+}
+.sr-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.sr-body { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.sr-kind { font: 400 9px var(--mono); letter-spacing: .16em; color: var(--accent); }
+.sr-title { font: 700 14px var(--display); letter-spacing: .03em; text-transform: uppercase; color: var(--ink); }
+.sr-item:hover .sr-title, .sr-item.active .sr-title { color: var(--accent); }
+.sr-orig { margin-left: 8px; font: 400 10px var(--ui); letter-spacing: 0; text-transform: none; color: var(--ink-3); }
+.sr-desc { font: 400 11px/1.5 var(--ui); color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sr-meta { font: 400 9px var(--mono); letter-spacing: .1em; color: var(--ink-3); }
+.sr-go { flex: 0 0 auto; display: inline-flex; color: var(--ink-3); }
+.sr-go .gi { width: 14px; height: 14px; }
+.sr-item:hover .sr-go, .sr-item.active .sr-go { color: var(--accent); }
+.search-empty { padding: 30px 18px; font: 400 11px var(--mono); letter-spacing: .08em; color: var(--ink-3); }
+.search-empty .se-mark { display: block; color: var(--accent); margin-bottom: 8px; letter-spacing: .18em; }
+.search-foot {
+  display: flex; gap: 16px; padding: 9px 18px; border-top: 1px solid var(--line);
+  font: 400 9px var(--mono); letter-spacing: .12em; color: var(--ink-3);
+}
 .sys-clock { font: 400 11px var(--mono); color: var(--ink-3); letter-spacing: .1em; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .menu-toggle { display: none; background: transparent; border: 0; border-left: 1px solid var(--line-2); width: 56px; cursor: pointer; padding: 0; }
 /* ragged bar stack instead of an even hamburger — FUI, not material */

@@ -62,54 +62,18 @@
     search:  gi('<circle cx="7" cy="7" r="5"/><path d="M7 4.2v5.6M4.2 7h5.6"/><path d="M10.9 10.9 14.5 14.5"/>')
   };
 
-  // Plain text of an item's body, cached. Used for search matches and for a
-  // real excerpt when an entry carries no frontmatter description. The
-  // normalizer ships this text as a separate index (data/search.js) that is
-  // prefetched while idle; until it arrives only metadata is searchable, so
-  // a cached stale payload with inline searchText still works too.
-  var TEXT_CACHE = Object.create(null);
-  var searchReq = Object.create(null);   // kind -> loading | ready | failed
-  function ensureSearch(kind) {
-    kind = kind || state.kind;
-    if (searchReq[kind] === 'ready') return true;
-    if (searchReq[kind] === 'loading' || searchReq[kind] === 'failed') return false;
-    searchReq[kind] = 'loading';
-    var s = document.createElement('script');
-    s.src = 'data/search/' + kind + '.js';
-    s.onload = function () {
-      searchReq[kind] = 'ready';
-      if (state.q && state.kind === kind) refreshScoped();   // finish the query
-    };
-    s.onerror = function () { searchReq[kind] = 'failed'; };
-    document.head.appendChild(s);
-    return false;
-  }
-  // One index per view: searching is always scoped to the list on screen.
-  function mayPrefetch() {
-    var c = navigator.connection || navigator.mozConnection || {};
-    if (c.saveData) return false;
-    return c.effectiveType !== 'slow-2g' && c.effectiveType !== '2g';
-  }
-  function plainText(it) {
-    var index = window.VMCT_SEARCH;
-    if (index && typeof index[it.id] === 'string') return index[it.id];
-    if (typeof it.searchText === 'string') return it.searchText;   // stale cache
-    if (TEXT_CACHE[it.id] === undefined) {
-      var d = document.createElement('div');
-      d.innerHTML = it.bodyHtml || '';
-      // drop the "IMG // BODY-01" placeholder captions — they are chrome,
-      // not prose, and would otherwise open every excerpt
-      d.querySelectorAll('.img-slot-mark').forEach(function (n) { n.remove(); });
-      TEXT_CACHE[it.id] = (d.textContent || '').replace(/\s+/g, ' ').trim();
-    }
-    return TEXT_CACHE[it.id];
-  }
+  // Search is metadata-only: title, original name, description, excerpt and
+  // authors — all of which already ship in the index. Article text is lazily
+  // loaded and never indexed, which is why no separate search payload exists.
   function excerptOf(it, max) {
     if (it.description) return it.description;
     if (it.excerpt) return it.excerpt;
-    var t = plainText(it);
-    if (!t) return '';
-    return t.length > max ? t.slice(0, max) + '…' : t;
+    return '';
+  }
+  function searchHaystack(it) {
+    return [it.title, it.originalName, it.description, it.excerpt,
+      (it.authors || []).join(' '), loaderText(it), statusText(it),
+      it.minecraft, it.packVersion].join(' ').toLowerCase();
   }
   function loaderSvg(loader) {
     var raw = ICONS[loader];
@@ -264,9 +228,7 @@
   function itemMatches(it) {
     if (state.q) {
       var q = state.q.toLowerCase();
-      var hay = (it.title + ' ' + it.originalName + ' ' + it.description + ' ' +
-        it.authors.join(' ') + ' ' + plainText(it)).toLowerCase();
-      if (hay.indexOf(q) < 0) return false;
+      if (searchHaystack(it).indexOf(q) < 0) return false;
     }
     if (state.loader && it.loader !== state.loader) return false;
     if (state.status && it.status !== state.status) return false;
@@ -678,7 +640,6 @@
     }
     if (r.kind !== 'detail' && r.kind !== state.kind) state.page = 1;   // new view: back to page 1
     if (r.kind !== 'detail') { state.kind = r.kind; lastKind = r.kind; }
-    if (r.kind !== 'detail' && r.kind !== 'credits' && r.kind !== 'home' && state.q) ensureSearch(r.kind);
     document.body.dataset.view = r.kind;
     var html;
     if (r.kind === 'home') html = viewHome();
@@ -755,7 +716,6 @@
     if (ls) ls.addEventListener('input', function () {
       state.q = ls.value.trim();
       state.page = 1;
-      ensureSearch();          // first keystroke kicks off the search index
       refreshScoped();   // toolbar input is preserved, focus stays put
     });
     var sortSel = document.getElementById('sortSel');
@@ -805,27 +765,165 @@
     });
   }
 
+  /* ---------- search palette (Marathon dialog) ------------------------- */
+  var searchModal = null, searchInput = null, searchResults = null, searchCount = null;
+  var searchActive = -1, searchLastFocus = null;
+
+  function buildSearchModal() {
+    if (searchModal) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'search-modal';
+    wrap.id = 'searchModal';
+    wrap.hidden = true;
+    wrap.innerHTML =
+      '<div class="search-backdrop" data-search-close></div>' +
+      '<div class="search-panel" role="dialog" aria-modal="true" aria-label="检索档案">' +
+        '<div class="search-field">' +
+          '<span class="search-icon" aria-hidden="true">' + GI.search + '</span>' +
+          '<input id="searchModalInput" type="search" autocomplete="off" spellcheck="false" placeholder="检索标题 / 简介 / 作者…">' +
+          '<kbd>ESC</kbd>' +
+        '</div>' +
+        '<div class="search-meta"><span id="searchCount">输入关键词开始检索</span><span class="plate">SEARCH // ARCHIVE</span></div>' +
+        '<div class="search-results" id="searchResults"></div>' +
+        '<div class="search-foot"><span>↑ ↓ 选择</span><span>↵ 打开</span><span>ESC 关闭</span></div>' +
+      '</div>';
+    document.body.appendChild(wrap);
+    searchModal = wrap;
+    searchInput = wrap.querySelector('#searchModalInput');
+    searchResults = wrap.querySelector('#searchResults');
+    searchCount = wrap.querySelector('#searchCount');
+
+    wrap.addEventListener('click', function (e) {
+      if (e.target.closest('[data-search-close]')) closeSearch();
+    });
+    searchInput.addEventListener('input', renderSearchResults);
+    searchInput.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown') { e.preventDefault(); setSearchActive(searchActive + 1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); setSearchActive(searchActive - 1); }
+      else if (e.key === 'Enter') { e.preventDefault(); openSearchActive(); }
+      else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); closeSearch(); }
+    });
+  }
+
+  function openSearch() {
+    buildSearchModal();
+    if (!searchModal.hidden) { searchInput.focus(); return; }
+    searchLastFocus = document.activeElement;
+    searchModal.hidden = false;
+    document.body.classList.add('search-open');
+    renderSearchResults();
+    searchInput.focus();
+    searchInput.select();
+  }
+  function closeSearch() {
+    if (!searchModal || searchModal.hidden) return;
+    searchModal.hidden = true;
+    document.body.classList.remove('search-open');
+    var back = searchLastFocus;
+    if (back && back !== searchEl && back.focus) back.focus();
+    else if (document.activeElement === searchInput) searchInput.blur();
+  }
+  function isSearchOpen() { return !!(searchModal && !searchModal.hidden); }
+
+  // Ranked metadata search: title beats original name, which beats description.
+  function searchHits(q) {
+    var needle = q.trim().toLowerCase();
+    if (!needle) {
+      var feat = DATA.items.filter(function (i) { return i.featured; }).slice(0, 6);
+      return { items: feat, total: feat.length };
+    }
+    var scored = [];
+    DATA.items.forEach(function (it) {
+      var title = (it.title || '').toLowerCase();
+      var orig = (it.originalName || '').toLowerCase();
+      var desc = (it.description || '').toLowerCase();
+      var exc = (it.excerpt || '').toLowerCase();
+      var authors = (it.authors || []).join(' ').toLowerCase();
+      var score = 0;
+      if (title.indexOf(needle) === 0) score = 100;
+      else if (title.indexOf(needle) >= 0) score = 80;
+      else if (orig.indexOf(needle) >= 0) score = 60;
+      else if (desc.indexOf(needle) >= 0) score = 40;
+      else if (exc.indexOf(needle) >= 0) score = 30;
+      else if (authors.indexOf(needle) >= 0) score = 20;
+      if (score) scored.push({ it: it, s: score });
+    });
+    scored.sort(function (a, b) {
+      return b.s - a.s || String(a.it.title).localeCompare(String(b.it.title));
+    });
+    return { items: scored.slice(0, 30).map(function (x) { return x.it; }), total: scored.length };
+  }
+
+  function renderSearchResults() {
+    if (!searchInput) return;
+    var q = searchInput.value.trim();
+    var hit = searchHits(q);
+    searchCount.textContent = q ? hit.total + ' 条匹配 // ' + hit.total + ' HITS' : '精选档案 // FEATURED';
+    if (!hit.items.length) {
+      searchResults.innerHTML = '<div class="search-empty"><span class="se-mark">NO MATCH</span>无匹配档案 — 试试标题、原名或简介中的词</div>';
+      searchActive = -1;
+      return;
+    }
+    searchResults.innerHTML = hit.items.map(function (it, idx) {
+      var cover = coverOf(it);
+      var url = cover.target || cover.source || '';
+      var meta = KIND_META[it.kind] || { label: it.kind, num: '--' };
+      var bits = [];
+      if (it.loader) bits.push(loaderText(it));
+      if (it.minecraft) bits.push('MC ' + it.minecraft);
+      if (it.status) bits.push(statusText(it));
+      var excerpt = excerptOf(it, 120);
+      return '<button type="button" class="sr-item' + (idx === 0 ? ' active' : '') + '" data-search-id="' + esc(it.id) + '">' +
+        '<span class="sr-thumb">' + (url ? '<img src="' + esc(url) + '" alt="" loading="lazy" decoding="async">' : '') + '</span>' +
+        '<span class="sr-body">' +
+          '<span class="sr-kind">' + esc(meta.num) + ' ' + esc(meta.label) + '</span>' +
+          '<span class="sr-title">' + esc(it.title) +
+            (it.originalName ? '<span class="sr-orig">' + esc(it.originalName) + '</span>' : '') + '</span>' +
+          (excerpt ? '<span class="sr-desc">' + esc(excerpt) + '</span>' : '') +
+          (bits.length ? '<span class="sr-meta">' + esc(bits.join(' · ')) + '</span>' : '') +
+        '</span><span class="sr-go" aria-hidden="true">' + GI.arrowUR + '</span>' +
+      '</button>';
+    }).join('');
+    searchActive = 0;
+    searchResults.querySelectorAll('[data-search-id]').forEach(function (b, idx) {
+      b.addEventListener('click', function () { pickSearch(b.dataset.searchId); });
+      b.addEventListener('mousemove', function () { setSearchActive(idx); });
+    });
+  }
+  function setSearchActive(i) {
+    var rows = searchResults.querySelectorAll('.sr-item');
+    if (!rows.length) { searchActive = -1; return; }
+    if (i < 0) i = rows.length - 1;
+    if (i >= rows.length) i = 0;
+    searchActive = i;
+    rows.forEach(function (r, n) { r.classList.toggle('active', n === i); });
+    if (rows[i].scrollIntoView) rows[i].scrollIntoView({ block: 'nearest' });
+  }
+  function openSearchActive() {
+    var rows = searchResults.querySelectorAll('.sr-item');
+    if (searchActive >= 0 && rows[searchActive]) pickSearch(rows[searchActive].dataset.searchId);
+  }
+  function pickSearch(id) {
+    closeSearch();
+    navigate('#/detail/' + encodeURIComponent(id));
+  }
+
   /* ---------- global --------------------------------------------------- */
-  searchEl.addEventListener('input', function () {
-    state.q = searchEl.value.trim();
-    state.page = 1;
-    if (state.kind === 'home' && state.q) { state.kind = 'modpack'; }
-    ensureSearch(state.kind);
-    if (main.querySelector('.list-col')) {
-      // keep the top search focus; only the list column refreshes
-      var listInput = document.getElementById('listSearch');
-      if (listInput) listInput.value = state.q;
-      refreshScoped();
-    } else {
-      render();
-    }
-    searchEl.focus();
-  });
+  // The header input is a trigger: focus/click opens the search palette.
+  searchEl.addEventListener('focus', function () { openSearch(); });
+  searchEl.addEventListener('click', function (e) { e.preventDefault(); openSearch(); });
   document.addEventListener('keydown', function (e) {
-    if (e.key === '/' && document.activeElement !== searchEl && document.activeElement.tagName !== 'INPUT') {
-      e.preventDefault(); searchEl.focus();
+    var typing = document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA');
+    if ((e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault(); openSearch(); return;
     }
-    if (e.key === 'Escape') { searchEl.value = ''; state.q = ''; state.page = 1; render(); }
+    if (e.key === '/' && !typing && !e.metaKey && !e.ctrlKey) {
+      e.preventDefault(); openSearch(); return;
+    }
+    if (e.key === 'Escape') {
+      if (isSearchOpen()) { closeSearch(); return; }
+      searchEl.value = ''; state.q = ''; state.page = 1; render();
+    }
   });
   // The hash actually changed, so the view must re-render. Comparing against
   // state.kind is wrong here: entering a detail page keeps the previous kind,
@@ -852,17 +950,9 @@
   function init() {
     M.boot();
     M.initDotField();
+    buildSearchModal();
     render();
     clock(); setInterval(clock, 1000);
-    // warm the full-text index for the current view while the browser is idle:
-    // search stays complete without paying for it on first paint. Data-saver
-    // and slow connections defer it to the first search keystroke.
-    var warm = function () {
-      if (state.kind === 'home' || state.kind === 'credits' || !mayPrefetch()) return;
-      ensureSearch(state.kind);
-    };
-    if (window.requestIdleCallback) requestIdleCallback(warm, { timeout: 2500 });
-    else setTimeout(warm, 1200);
   }
   init();
 })();
