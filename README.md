@@ -57,7 +57,11 @@ python scripts/normalize_data.py --repo <上游仓库目录> --site site
 
 ### 数据分片（按需加载）
 
-`site/data/catalog.js` 只包含列表与检索所需的数据：条目元信息、`excerpt`（摘要）和 `searchText`（去标签后的全文，供全文搜索使用）。正文 HTML 拆到 `site/data/bodies/<id>.js`，只有打开某个详情页时才加载对应那一个小文件——首屏不再把 97 篇正文一次性推给浏览器。
+`site/data/catalog.js` 只包含列表所需的数据：条目元信息与 `excerpt`（摘要），约 150 KB（gzip 约 27 KB）。
+
+- `site/data/bodies/<id>.js`：每篇正文一个文件，只有打开对应详情页时才加载（约 1–2 KB gzip），之后缓存在内存里。
+- `site/data/search.js`：全文检索用的纯文本索引（gzip 约 71 KB）。首屏不加载，浏览器空闲时自动预取；搜索框第一次输入也会触发加载。
+- 列表默认每页 24 张卡片，可通过底部分页条切换每页 12 / 24 / 48 / 96 条，选择记在 `localStorage`。
 
 ### 图片占位与后续同步
 

@@ -9,6 +9,12 @@
   var main = document.getElementById('main');
   var searchEl = document.getElementById('globalSearch');
   var lastKind = null; // last rendered non-detail view; drives cross-view filter reset
+  var PAGE_SIZES = [12, 24, 48, 96];
+  var savedPageSize = 24;
+  try {
+    var storedSize = parseInt(localStorage.getItem('vmct.pageSize'), 10);
+    if (PAGE_SIZES.indexOf(storedSize) >= 0) savedPageSize = storedSize;
+  } catch (e) { /* private mode / storage disabled: keep the default */ }
   var state = {
     kind: 'home',
     q: '',
@@ -16,7 +22,9 @@
     status: null,
     version: null,
     sort: 'updated',
-    view: 'list'
+    view: 'list',
+    page: 1,
+    pageSize: savedPageSize
   };
 
   var KIND_META = {
@@ -56,11 +64,29 @@
 
   // Plain text of an item's body, cached. Used for search matches and for a
   // real excerpt when an entry carries no frontmatter description. The
-  // normalizer ships this text inside the index so full-text search does not
-  // need the (lazy) article HTML; the fallback covers stale cached data.
+  // normalizer ships this text as a separate index (data/search.js) that is
+  // prefetched while idle; until it arrives only metadata is searchable, so
+  // a cached stale payload with inline searchText still works too.
   var TEXT_CACHE = Object.create(null);
+  var searchState = 'idle';   // idle | loading | ready | failed
+  function ensureSearch() {
+    if (window.VMCT_SEARCH) { searchState = 'ready'; return true; }
+    if (searchState === 'loading' || searchState === 'failed') return false;
+    searchState = 'loading';
+    var s = document.createElement('script');
+    s.src = 'data/search.js';
+    s.onload = function () {
+      searchState = window.VMCT_SEARCH ? 'ready' : 'failed';
+      if (state.q) refreshScoped();          // complete the in-flight query
+    };
+    s.onerror = function () { searchState = 'failed'; };
+    document.head.appendChild(s);
+    return false;
+  }
   function plainText(it) {
-    if (typeof it.searchText === 'string') return it.searchText;
+    var index = window.VMCT_SEARCH;
+    if (index && typeof index[it.id] === 'string') return index[it.id];
+    if (typeof it.searchText === 'string') return it.searchText;   // stale cache
     if (TEXT_CACHE[it.id] === undefined) {
       var d = document.createElement('div');
       d.innerHTML = it.bodyHtml || '';
@@ -368,7 +394,35 @@
       n += 1;                                  // a standalone document
       out.push(docRow(i, isRoot[i.id] ? '§' : String(n).padStart(2, '0')));
     });
-    return '<div class="cards doc-list">' + out.join('') + '</div>';
+    var pg = pageOf(out.length);
+    var shown = out.slice(pg.start, pg.start + pg.per);
+    return '<div class="cards doc-list">' + shown.join('') + '</div>' +
+      pageBar(out.length, pg, shown.length);
+  }
+
+  /* ---------- paging ---------------------------------------------------
+     Every list shows at most one page of cards; the size is user-selectable
+     and remembered. Paging is client-side over the filtered list, so the
+     filters and search keep operating on the full set. */
+  function pageOf(total) {
+    var per = state.pageSize;
+    var pages = Math.max(1, Math.ceil(total / per));
+    var page = Math.min(Math.max(1, state.page), pages);
+    return { page: page, pages: pages, per: per, start: (page - 1) * per };
+  }
+  function pageBar(total, pg, shown) {
+    if (!total) return '';
+    var opts = PAGE_SIZES.map(function (n) {
+      return '<option value="' + n + '"' + (n === state.pageSize ? ' selected' : '') + '>每页 ' + n + '</option>';
+    }).join('');
+    return '<div class="page-bar">' +
+      '<span class="page-range">' + (pg.start + 1) + '–' + (pg.start + shown) + ' / ' + total + '</span>' +
+      '<span class="page-size"><span class="select-wrap"><select id="pageSize" aria-label="每页条数">' + opts + '</select></span></span>' +
+      '<div class="page-nav">' +
+        '<button class="page-btn" data-page="' + (pg.page - 1) + '"' + (pg.page <= 1 ? ' disabled' : '') + ' aria-label="上一页">' + GI.arrowL + '</button>' +
+        '<span class="page-num"><b>' + String(pg.page).padStart(2, '0') + '</b> / ' + String(pg.pages).padStart(2, '0') + '</span>' +
+        '<button class="page-btn" data-page="' + (pg.page + 1) + '"' + (pg.page >= pg.pages ? ' disabled' : '') + ' aria-label="下一页">' + GI.arrowR + '</button>' +
+      '</div></div>';
   }
 
   // Render just the cards/empty region of the list column.
@@ -377,12 +431,16 @@
     // the document index keeps upstream order (root page, then chapters)
     if (kind === 'wiki') {
       var docs = kindItems.filter(itemMatches);
-      return docs.length ? docListHtml(docs, kindItems) : emptyRegion();
+      return '<div class="list-region">' + (docs.length ? docListHtml(docs, kindItems) : emptyRegion()) + '</div>';
     }
     var list = sorted(kindItems.filter(itemMatches));
-    if (!list.length) return emptyRegion();
+    if (!list.length) return '<div class="list-region">' + emptyRegion() + '</div>';
+    var pg = pageOf(list.length);
+    var slice = list.slice(pg.start, pg.start + pg.per);
     var gridCls = state.view === 'grid' ? ' grid' : '';
-    return '<div class="cards' + gridCls + '">' + list.map(cardHtml).join('') + '</div>';
+    return '<div class="list-region">' +
+      '<div class="cards' + gridCls + '">' + slice.map(cardHtml).join('') + '</div>' +
+      pageBar(list.length, pg, slice.length) + '</div>';
   }
   function emptyRegion() {
     return '<div class="empty"><div class="cross mar-cross"><i class="h"></i><i class="v"></i><i class="d"></i></div><h3>无匹配档案</h3><p>调整筛选条件或清除检索词</p></div>';
@@ -393,7 +451,7 @@
     var kind = state.kind;
     var listCol = main.querySelector('.list-col');
     if (!listCol) { render(); return; }
-    var region = listCol.querySelector('.cards, .empty');
+    var region = listCol.querySelector('.list-region');
     if (region) region.outerHTML = cardsRegion(kind);
     var rl = listCol.querySelector('.result-line');
     var kindItems = allItems().filter(function (i) { return i.kind === kind; });
@@ -409,6 +467,7 @@
     var clearBtn = document.getElementById('clearFilters');
     if (clearBtn) clearBtn.hidden = !(state.loader || state.status || state.version || state.q);
     bindListRegion();
+    bindPaging();
   }
 
   function viewCatalog(kind) {
@@ -603,6 +662,7 @@
       state.q = ''; state.loader = null; state.status = null; state.version = null;
       if (searchEl) searchEl.value = '';
     }
+    if (r.kind !== 'detail' && r.kind !== state.kind) state.page = 1;   // new view: back to page 1
     if (r.kind !== 'detail') { state.kind = r.kind; lastKind = r.kind; }
     document.body.dataset.view = r.kind;
     var html;
@@ -644,21 +704,53 @@
     });
   }
 
+  // Paging is client-side: a page button repaints only the list region.
+  // Direct update (no transition): paging should feel instant and must not
+  // depend on animation frames being delivered.
+  function bindPaging() {
+    main.querySelectorAll('[data-page]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (b.disabled) return;
+        var next = parseInt(b.dataset.page, 10);
+        if (!next || next === state.page) return;
+        state.page = next;
+        updateScoped();
+        var top = main.querySelector('.catalog-top');
+        if (top) window.scrollTo({ top: top.getBoundingClientRect().top + window.scrollY, behavior: M.reduced() ? 'auto' : 'instant' });
+      });
+    });
+    var ps = document.getElementById('pageSize');
+    if (ps) ps.addEventListener('change', function () {
+      var v = parseInt(ps.value, 10);
+      if (PAGE_SIZES.indexOf(v) < 0) return;
+      state.pageSize = v;
+      state.page = 1;
+      try { localStorage.setItem('vmct.pageSize', String(v)); } catch (e) { /* ignore */ }
+      updateScoped();
+    });
+  }
+
   function bindView() {
     main.querySelectorAll('[data-goto]').forEach(function (el) {
       el.addEventListener('click', function () { navigate('#/' + el.dataset.goto); });
     });
     bindListRegion();
+    bindPaging();
     var ls = document.getElementById('listSearch');
     if (ls) ls.addEventListener('input', function () {
       state.q = ls.value.trim();
+      state.page = 1;
+      ensureSearch();          // first keystroke kicks off the search index
       refreshScoped();   // toolbar input is preserved, focus stays put
     });
     var sortSel = document.getElementById('sortSel');
-    if (sortSel) sortSel.addEventListener('change', function () { state.sort = sortSel.value; refreshScoped(); });
+    if (sortSel) sortSel.addEventListener('change', function () {
+      state.sort = sortSel.value; state.page = 1; refreshScoped();
+    });
     main.querySelectorAll('[data-view]').forEach(function (b) {
       b.addEventListener('click', function () {
         state.view = b.dataset.view;
+        state.page = 1;
         main.querySelectorAll('[data-view]').forEach(function (x) { x.classList.toggle('active', x === b); });
         refreshScoped();
       });
@@ -667,6 +759,7 @@
       el.addEventListener('click', function () {
         var key = el.dataset.facet, val = el.dataset.value;
         state[key] = state[key] === val ? null : val;
+        state.page = 1;
         refreshScoped();
       });
     });
@@ -681,6 +774,7 @@
     var clear = document.getElementById('clearFilters');
     if (clear) clear.addEventListener('click', function () {
       state.q = ''; state.loader = null; state.status = null; state.version = null;
+      state.page = 1;
       if (searchEl) searchEl.value = '';
       var lsEl = document.getElementById('listSearch');
       if (lsEl) lsEl.value = '';
@@ -699,6 +793,8 @@
   /* ---------- global --------------------------------------------------- */
   searchEl.addEventListener('input', function () {
     state.q = searchEl.value.trim();
+    state.page = 1;
+    ensureSearch();
     if (state.kind === 'home' && state.q) { state.kind = 'modpack'; }
     if (main.querySelector('.list-col')) {
       // keep the top search focus; only the list column refreshes
@@ -714,7 +810,7 @@
     if (e.key === '/' && document.activeElement !== searchEl && document.activeElement.tagName !== 'INPUT') {
       e.preventDefault(); searchEl.focus();
     }
-    if (e.key === 'Escape') { searchEl.value = ''; state.q = ''; render(); }
+    if (e.key === 'Escape') { searchEl.value = ''; state.q = ''; state.page = 1; render(); }
   });
   // The hash actually changed, so the view must re-render. Comparing against
   // state.kind is wrong here: entering a detail page keeps the previous kind,
@@ -743,6 +839,10 @@
     M.initDotField();
     render();
     clock(); setInterval(clock, 1000);
+    // warm the full-text index while the browser is idle: search stays
+    // complete without paying for it on first paint
+    if (window.requestIdleCallback) requestIdleCallback(ensureSearch, { timeout: 2500 });
+    else setTimeout(ensureSearch, 1200);
   }
   init();
 })();
