@@ -611,6 +611,15 @@ figure.img-slot.media-slot.is-ready { background-color: var(--bg); }
 .footer-toggle-sign { display: inline-flex; line-height: 1; transition: transform .3s ease; }
 .footer-toggle-sign .gi { width: 13px; height: 13px; }
 .footer-toggle[aria-expanded="true"] .footer-toggle-sign { transform: rotate(45deg); }
+/* repository link: same square, bordered language as the toggle */
+.footer-gh {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--line-2); padding: 8px 10px;
+  color: var(--ink-2); font: 700 11px var(--display); letter-spacing: .1em; text-transform: uppercase;
+  transition: color .3s ease, border-color .3s ease, background-color .3s ease;
+}
+.footer-gh svg { width: 14px; height: 14px; display: block; }
+.footer-gh:hover { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
 .footer-more {
   display: grid; grid-template-rows: 0fr; opacity: 0;
   transition: grid-template-rows .34s ease, opacity .3s ease;
