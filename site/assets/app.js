@@ -548,6 +548,7 @@
     // across the whole list so a duplicate can never reach the DOM.
     var seenUrl = {};
     var dlHtml = it.downloads.map(function (d) {
+      if (!d.link && !d.lanzouLink && !d.quarkLink) return '';   // no destination
       var url = d.link || d.lanzouLink || d.quarkLink || '#';
       var out = '';
       if (!seenUrl[url]) {

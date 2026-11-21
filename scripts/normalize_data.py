@@ -338,6 +338,8 @@ def dedupe_downloads(dl_list):
             continue
         primary = str(d.get("link") or d.get("lanzouLink") or "")
         quark = str(d.get("quarkLink") or "")
+        if not primary and not quark:
+            continue        # seed entry without any destination: dead button
         if primary and primary in index:
             kept = index[primary]
             if quark and not kept.get("quarkLink"):

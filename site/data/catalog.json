@@ -3,7 +3,7 @@
   "meta": {
     "title": "VM 中文翻译组 · 社区资料站",
     "source": "https://github.com/VM-Chinese-translate-group/vmct-website-v4",
-    "generatedAt": "2026-11-21T03:43:38Z",
+    "generatedAt": "2026-11-21T03:52:24Z",
     "counts": {
       "modpack": 58,
       "map": 22,
@@ -2411,10 +2411,6 @@
           "text": "FTB整合包下载工具",
           "icon": "assets/imgs/svg/gitee.svg",
           "link": "https://gitee.com/flrscn/curse-the-beast/releases"
-        },
-        {
-          "id": "lazy",
-          "link": ""
         }
       ],
       "featured": false,
