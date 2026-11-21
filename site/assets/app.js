@@ -162,6 +162,54 @@
   function allItems() { return DATA.items; }
   function byId(id) { return DATA.items.find(function (x) { return x.id === id; }); }
 
+  // Offsite targets (links/downloads) and the credit roll are not needed to
+  // render lists, so they ship as separate payloads and load on demand.
+  // Counts (lc/dc) stay in the index so cards show them without the payload.
+  var DETAILS = null, detailsState = 'idle';
+  var CREDITS = null, creditsState = 'idle';
+
+  function loadSideScript(src, onReady) {
+    var s = document.createElement('script');
+    s.src = src;
+    s.onload = onReady;
+    s.onerror = function () {};
+    document.head.appendChild(s);
+  }
+  function ensureDetails() {
+    if (DETAILS) return true;
+    if (detailsState !== 'idle') return false;
+    detailsState = 'loading';
+    loadSideScript('data/details.js', function () {
+      DETAILS = window.VMCT_DETAILS || {};
+      detailsState = 'ready';
+      var host = main.querySelector('[data-side-extra]');
+      if (host) {
+        var it = byId(host.getAttribute('data-side-extra'));
+        if (it) host.innerHTML = sideExtraHtml(it);
+      }
+    });
+    return false;
+  }
+  function ensureCredits() {
+    if (CREDITS) return true;
+    if (creditsState !== 'idle') return false;
+    creditsState = 'loading';
+    loadSideScript('data/credits.js', function () {
+      CREDITS = window.VMCT_CREDITS || [];
+      creditsState = 'ready';
+      if (parseHash().kind === 'credits') render();
+    });
+    return false;
+  }
+  function detailData(it) {
+    return (DETAILS && DETAILS[it.id]) || { links: it.links || [], downloads: it.downloads || [] };
+  }
+  function linkCount(it) {
+    if (typeof it.lc === 'number' || typeof it.dc === 'number') return (it.lc || 0) + (it.dc || 0);
+    var d = detailData(it);
+    return (d.links || []).length + (d.downloads || []).length;
+  }
+
   /* ---------- tabs ----------------------------------------------------- */
   // Counts live in exactly one place (the hero stat plate). Duplicating them
   // into the nav made every number appear three times on the home screen.
@@ -315,7 +363,7 @@
     var meta = '';
     var bits = [];
     if (it.updateDate) bits.push('<span>' + GI.clock + esc(it.updateDate) + '</span>');
-    if (it.links.length + it.downloads.length) bits.push('<span>' + GI.arrowUR + (it.links.length + it.downloads.length) + '</span>');
+    if (linkCount(it)) bits.push('<span>' + GI.arrowUR + linkCount(it) + '</span>');
     if (bits.length) meta = '<div class="card-meta">' + bits.join('') + '</div>';
     var desc = excerptOf(it, 120);
     var cover = iconFor(it);
@@ -534,20 +582,11 @@
     document.head.appendChild(s);
   }
 
-  function viewDetail(id) {
-    var it = byId(id);
-    if (!it) return '<div class="wrap"><div class="empty"><h3>档案不存在</h3><p>' + esc(id) + '</p></div></div>';
-    var tags = '';
-    if (it.status) tags += '<span class="tag' + (it.status === 'maintaining' ? ' accent' : '') + (it.status === 'stopped' ? ' stopped' : '') + '">' + esc(statusText(it)) + '</span>';
-    if (it.loader) tags += '<span class="tag">' + loaderSvg(it.loader) + esc(loaderText(it)) + '</span>';
-    if (it.minecraft) tags += '<span class="tag">MC ' + esc(it.minecraft) + '</span>';
-    if (it.packVersion) tags += '<span class="tag">v' + esc(it.packVersion) + '</span>';
-
-    // One button per destination: seeds sometimes repeat a mirror, and a
-    // quark mirror rides along with its lanzou partner. Seen-URLs are tracked
-    // across the whole list so a duplicate can never reach the DOM.
+  // Download buttons / link chips are built from data/details.js, which is
+  // fetched after first paint (or when a detail page opens).
+  function dlHtmlFor(it) {
     var seenUrl = {};
-    var dlHtml = it.downloads.map(function (d) {
+    return (detailData(it).downloads || []).map(function (d) {
       if (!d.link && !d.lanzouLink && !d.quarkLink) return '';   // no destination
       var url = d.link || d.lanzouLink || d.quarkLink || '#';
       var out = '';
@@ -567,12 +606,40 @@
       }
       return out;
     }).join('');
-
+  }
+  function linksHtmlFor(it) {
     var linkIcons = { github: 'assets/imgs/svg/github.svg', bilibili: 'assets/imgs/svg/bilibili.svg', modrinth: 'assets/imgs/svg/modrinth.svg', curseforge: 'assets/imgs/svg/curseforge.svg', paratranz: 'assets/imgs/svg/paratranz.svg', planetminecraft: 'assets/imgs/svg/planetminecraft.svg' };
-    var linksHtml = it.links.map(function (l) {
+    return (detailData(it).links || []).map(function (l) {
       var ico = linkIcons[l.id] ? '<img class="ico" src="' + linkIcons[l.id] + '" alt="">' : '<span class="ico">' + GI.arrowUR + '</span>';
       return '<a class="link-chip" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + ico + esc(l.label) + '<span class="chip-go">' + GI.arrowUR + '</span></a>';
     }).join('');
+  }
+  function sideExtraHtml(it) {
+    var dls = detailData(it).downloads || [];
+    var lks = detailData(it).links || [];
+    var waiting = !DETAILS && (detailsState === 'loading');
+    var html = '';
+    if (dls.length) {
+      html += '<div class="side-card"><h3>获取汉化 <span>DOWNLOAD</span></h3><div class="side-body">' + dlHtmlFor(it) + '</div></div>';
+    } else if (waiting && it.dc > 0) {
+      html += '<div class="side-card"><h3>获取汉化 <span>DOWNLOAD</span></h3><div class="side-body"><div class="body-loading">同步中 // SYNC</div></div></div>';
+    }
+    if (lks.length) {
+      html += '<div class="side-card"><h3>相关链接 <span>LINKS</span></h3><div class="side-body">' + linksHtmlFor(it) + '</div></div>';
+    } else if (waiting && it.lc > 0) {
+      html += '<div class="side-card"><h3>相关链接 <span>LINKS</span></h3><div class="side-body"><div class="body-loading">同步中 // SYNC</div></div></div>';
+    }
+    return html;
+  }
+
+  function viewDetail(id) {
+    var it = byId(id);
+    if (!it) return '<div class="wrap"><div class="empty"><h3>档案不存在</h3><p>' + esc(id) + '</p></div></div>';
+    var tags = '';
+    if (it.status) tags += '<span class="tag' + (it.status === 'maintaining' ? ' accent' : '') + (it.status === 'stopped' ? ' stopped' : '') + '">' + esc(statusText(it)) + '</span>';
+    if (it.loader) tags += '<span class="tag">' + loaderSvg(it.loader) + esc(loaderText(it)) + '</span>';
+    if (it.minecraft) tags += '<span class="tag">MC ' + esc(it.minecraft) + '</span>';
+    if (it.packVersion) tags += '<span class="tag">v' + esc(it.packVersion) + '</span>';
 
     // Drop rows that have no value: a wiki chapter would otherwise show a
     // column of "—" placeholders for loader / MC version / pack version.
@@ -607,8 +674,7 @@
         '</div>' +
         '<aside class="detail-side">' +
           '<div class="side-card"><h3>档案参数 <span>DATA</span></h3><div class="side-body">' + kv + '</div></div>' +
-          (it.downloads.length ? '<div class="side-card"><h3>获取汉化 <span>DOWNLOAD</span></h3><div class="side-body">' + dlHtml + '</div></div>' : '') +
-          (it.links.length ? '<div class="side-card"><h3>相关链接 <span>LINKS</span></h3><div class="side-body">' + linksHtml + '</div></div>' : '') +
+          '<div data-side-extra="' + esc(it.id) + '">' + sideExtraHtml(it) + '</div>' +
           (it.authors.length ? '<div class="side-card"><h3>贡献者 <span>CREDITS</span></h3><div class="side-body"><div class="people">' + it.authors.map(function (a) { return '<span class="person">' + esc(a) + '</span>'; }).join('') + '</div></div></div>' : '') +
         '</aside>' +
       '</div>' +
@@ -617,8 +683,15 @@
 
   /* ---------- credits -------------------------------------------------- */
   function viewCredits() {
+    var list = CREDITS || DATA.credits || [];
+    if (!list.length) {
+      ensureCredits();   // credit roll ships separately (data/credits.js)
+      return '<div class="wrap"><div class="catalog-top"><div class="crumb">INDEX / <b>致谢</b></div>' +
+        '<div class="catalog-title"><h2>贡献者名录</h2><span class="count">SYNC…</span></div></div>' +
+        '<div class="empty"><div class="cross mar-cross"><i class="h"></i><i class="v"></i><i class="d"></i></div><h3>载入中</h3><p>SYNC CREDITS</p></div></div>';
+    }
     var groups = {};
-    DATA.credits.forEach(function (p) { (groups[p.group] = groups[p.group] || []).push(p); });
+    list.forEach(function (p) { (groups[p.group] = groups[p.group] || []).push(p); });
     // Site-level attribution lives in the renderer, not the synced dataset, so
     // an upstream sync can never drop it.
     var site = {
@@ -636,7 +709,7 @@
         : '<div class="credit-person">' + body + '</div>';
     }
     return '<div class="wrap"><div class="catalog-top"><div class="crumb">INDEX / <b>致谢</b></div>' +
-      '<div class="catalog-title"><h2>贡献者名录</h2><span class="count">' + (DATA.credits.length + site.people.length) + ' ENTRIES</span></div></div>' +
+      '<div class="catalog-title"><h2>贡献者名录</h2><span class="count">' + (list.length + site.people.length) + ' ENTRIES</span></div></div>' +
       '<div class="credits-grid">' +
       '<section class="credit-col"><h3>' + esc(site.group) + '<span>' + site.people.length + '</span></h3><div class="credit-list">' +
       site.people.map(person).join('') + '</div></section>' +
@@ -685,6 +758,7 @@
     if (r.kind === 'detail') {
       var hero = main.querySelector('.detail-hero');
       M.detailIntro(hero);
+      ensureDetails();
       loadBody(r.id);
     }
     renderTabs();
@@ -997,6 +1071,13 @@
     addEventListener('resize', syncSearchPlaceholder);
     render();
     clock(); setInterval(clock, 1000);
+    // warm the offsite-target payload while idle: detail pages then open with
+    // their download/link sections already available
+    if (!(navigator.connection && navigator.connection.saveData)) {
+      var warm = function () { ensureDetails(); };
+      if (window.requestIdleCallback) requestIdleCallback(warm, { timeout: 2500 });
+      else setTimeout(warm, 1200);
+    }
   }
   init();
 })();

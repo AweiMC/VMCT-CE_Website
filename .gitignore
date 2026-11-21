@@ -3,6 +3,7 @@ _source_repo/
 _tmp_frames/
 _shots/
 _ref_site/
+dist/
 *.b64
 
 # java build output

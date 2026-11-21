@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import html as html_mod
 import json
+import math
 import os
 import re
 import shutil
@@ -360,8 +361,11 @@ def dedupe_downloads(dl_list):
 # single biggest bandwidth win: 12 MB of covers becomes well under 1 MB.
 # Idempotent — files already inside the cap are skipped, so a repeated sync
 # only pays for newly downloaded originals.
-ICON_MAX_PX = 512
+ICON_MAX_PX = 320
 IMG_MAX_PX = 1600
+ANIM_MAX_PX = 128            # animated covers render at 68-130px
+ANIM_MAX_FRAMES = 30
+ANIM_QUALITY = 55
 IMAGE_SUFFIXES = (".png", ".jpg", ".jpeg", ".gif", ".webp", ".avif")
 ICON_AVIF_QUALITY = 50
 IMG_AVIF_QUALITY = 55
@@ -412,7 +416,12 @@ def optimize_images(items, site_root: Path, quality=82):
             except Exception:
                 continue
             target_ext = ".webp" if animated else ".avif"
-            if src.suffix.lower() == target_ext and max(src_size) <= cap:
+            if animated:
+                frames_now = int(getattr(probe, "n_frames", 1))
+                if (src.suffix.lower() == ".webp" and max(src_size) <= ANIM_MAX_PX
+                        and frames_now <= ANIM_MAX_FRAMES):
+                    continue
+            elif src.suffix.lower() == target_ext and max(src_size) <= cap:
                 continue        # already final format at the right size
             dst = src.with_suffix(target_ext)
             tmp = src.with_name(src.stem + "__opt" + target_ext)
@@ -420,15 +429,20 @@ def optimize_images(items, site_root: Path, quality=82):
             try:
                 with _PILImage.open(src) as im:
                     if animated:
+                        # A 64px animation does not need 279 frames: sample down
+                        # and keep the loop duration, or the card alone costs
+                        # hundreds of KB.
+                        n = int(getattr(im, "n_frames", 1))
+                        step = max(1, math.ceil(n / ANIM_MAX_FRAMES))
                         frames, durations = [], []
-                        for i in range(getattr(im, "n_frames", 1)):
+                        for i in range(0, n, step):
                             im.seek(i)
-                            frames.append(_fit(im.convert("RGBA"), cap))
-                            durations.append(int(im.info.get("duration") or 80))
+                            frames.append(_fit(im.convert("RGBA"), ANIM_MAX_PX))
+                            durations.append(int(im.info.get("duration") or 80) * step)
                         frames[0].save(tmp, format="WEBP", save_all=True,
                                        append_images=frames[1:], duration=durations,
                                        loop=int(im.info.get("loop") or 0),
-                                       quality=70, method=4)
+                                       quality=ANIM_QUALITY, method=4)
                     else:
                         frame = im.convert("RGBA") if im.mode in ("RGBA", "LA", "P") else im
                         frame = _fit(frame, cap)
@@ -548,11 +562,22 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool, do_
         shutil.rmtree(bodies_dir)
     bodies_dir.mkdir(parents=True, exist_ok=True)
     body_bytes = 0
+    details = {}
     for item in items:
         body_html = item.pop("bodyHtml", "")
         text = plain_text(body_html)
         if not item["description"] and text:
             item["excerpt"] = text[:160] + ("…" if len(text) > 160 else "")
+        # Offsite targets are only needed on the detail page: keep counts in
+        # the index and ship the real links/downloads separately.
+        links = item.get("links") or []
+        dls = item.get("downloads") or []
+        if links or dls:
+            details[item["id"]] = {"links": links, "downloads": dls}
+        item["lc"] = len(links)
+        item["dc"] = len(dls)
+        item["links"] = []
+        item["downloads"] = []
         target = bodies_dir / (item["id"].replace("/", "__") + ".js")
         target.write_text(
             "window.VMCT_BODY=window.VMCT_BODY||{};window.VMCT_BODY[" +
@@ -562,6 +587,22 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool, do_
         )
         body_bytes += target.stat().st_size
     print("bodies:", len(items), "files,", round(body_bytes / 1024, 1), "KB")
+
+    details_path = site_root / "data" / "details.js"
+    details_path.write_text(
+        "window.VMCT_DETAILS=" + json.dumps(details, ensure_ascii=False,
+                                            separators=(",", ":")) + ";\n",
+        encoding="utf-8",
+    )
+    credits = collect_credits(repo_root)
+    credits_path = site_root / "data" / "credits.js"
+    credits_path.write_text(
+        "window.VMCT_CREDITS=" + json.dumps(credits, ensure_ascii=False,
+                                            separators=(",", ":")) + ";\n",
+        encoding="utf-8",
+    )
+    print("details:", round(details_path.stat().st_size / 1024, 1), "KB |",
+          "credits:", round(credits_path.stat().st_size / 1024, 1), "KB")
 
     # Search now matches title / original name / description / excerpt, all of
     # which already live in the index, so no separate text payload ships. Keep
@@ -614,7 +655,7 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool, do_
         "statusLabels": STATUS_LABELS,
         "loaderLabels": LOADER_LABELS,
         "items": items,
-        "credits": collect_credits(repo_root),
+        "credits": [],   # shipped separately in data/credits.js
     }
 
     out_json = site_root / "data" / "catalog.json"

@@ -27,10 +27,26 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Ship a minified copy: comments/whitespace do not survive gzip for free,
+      # but terser + csso still cut ~12 KB from the compressed first paint.
+      - name: Build (minify static assets)
+        run: |
+          mkdir -p dist
+          cp -r site/. dist/
+          npx --yes terser@5.31.0 dist/assets/app.js -c -m -o dist/assets/app.js
+          npx --yes terser@5.31.0 dist/assets/motion.js -c -m -o dist/assets/motion.js
+          npx --yes csso-cli@4.0.2 dist/assets/style.css -o dist/assets/style.css
+          npx --yes csso-cli@4.0.2 dist/assets/tokens.css -o dist/assets/tokens.css
+
       - name: Upload site directory
         uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: dist
 
       - name: Deploy to GitHub Pages
         id: deployment

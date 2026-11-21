@@ -3,7 +3,7 @@
   "meta": {
     "title": "VM 中文翻译组 · 社区资料站",
     "source": "https://github.com/VM-Chinese-translate-group/vmct-website-v4",
-    "generatedAt": "2026-11-21T03:52:24Z",
+    "generatedAt": "2026-11-21T08:05:51Z",
     "counts": {
       "modpack": 58,
       "map": 22,
@@ -67,32 +67,12 @@
         "Gamemode 4 (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "宣传片",
-          "url": "https://www.bilibili.com/video/BV1iSbazgEf3"
-        },
-        {
-          "id": "planetminecraft",
-          "label": "地图原帖",
-          "url": "https://www.planetminecraft.com/project/evergrowth-puzzle-map-about-block-pushing"
-        },
-        {
-          "id": "curseforge",
-          "label": "CurseForge",
-          "url": "https://www.curseforge.com/minecraft/worlds/evergrowth/"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "curseforge",
-          "text": "下载地图和汉化",
-          "link": "https://www.curseforge.com/minecraft/worlds/evergrowth/files/7111682"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "map/lumina",
@@ -110,27 +90,12 @@
         "Link2012, Mowse (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "宣传片",
-          "url": "https://www.bilibili.com/video/BV1dW421X7Xo/"
-        },
-        {
-          "id": "ctmrepository",
-          "label": "地图原帖",
-          "url": "https://ctmrepository.com/index.php?action=viewMap&id=619"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "mediafire",
-          "text": "下载地图",
-          "link": "https://www.mediafire.com/file/6jsa2peu3o34pop/Lumina_Complex.zip"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "map/shadow-runner-deluxe",
@@ -148,23 +113,12 @@
         "FlowGD (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "minecraftmaps",
-          "label": "地图原帖",
-          "url": "https://www.minecraftmaps.com/42721-shadow-runner-deluxe"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou-quark-mapdl",
-          "text": "下载地图和汉化",
-          "lanzouLink": "https://www.vmct.top/doing",
-          "quarkLink": "https://www.vmct.top/doing"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 1,
+      "dc": 1
     },
     {
       "id": "map/tunnelrats",
@@ -182,28 +136,12 @@
         "xisumavoid (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Tunnel-Rats-Chinese"
-        },
-        {
-          "id": "xisumavoid",
-          "label": "地图原帖",
-          "url": "https://xisumavoid.com/tunnelrats/"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou-quark-mapdl",
-          "text": "下载地图和汉化",
-          "lanzouLink": "https://www.vmct.top/doing",
-          "quarkLink": "https://www.vmct.top/doing"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "map/wii-party",
@@ -222,32 +160,12 @@
         "VM汉化组 (翻译)",
         "猫星汉化组 (译文参考)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "宣传片",
-          "url": "https://www.bilibili.com/video/BV1e33FzNE2x/"
-        },
-        {
-          "id": "curseforge",
-          "label": "CurseForge",
-          "url": "https://www.curseforge.com/minecraft/worlds/wii-party-in-mc/"
-        },
-        {
-          "id": "planetminecraft",
-          "label": "地图原帖",
-          "url": "https://www.planetminecraft.com/project/wii-party-board-game-island/"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "curseforge",
-          "text": "下载地图与汉化",
-          "link": "https://www.curseforge.com/minecraft/worlds/wii-party-in-mc/files/all"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "map/yoodexy",
@@ -265,28 +183,12 @@
         "MiraMappa (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍视频",
-          "url": "https://www.bilibili.com/video/BV1QuByBBE8G"
-        },
-        {
-          "id": "planetminecraft",
-          "label": "地图原帖",
-          "url": "https://www.planetminecraft.com/project/yoodexy-s-mod/"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou-quark-mapdl",
-          "text": "下载地图和汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouv.com/s/yoodexy",
-          "quarkLink": "https://pan.quark.cn/s/70e76ea75729"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "map/detective-stories",
@@ -304,22 +206,12 @@
         "MiraMappa (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "planetminecraft",
-          "label": "地图原帖",
-          "url": "https://www.planetminecraft.com/project/detective-stories-chapter-1-case-cafe/"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "mediafire",
-          "text": "下载地图",
-          "link": "https://www.mediafire.com/file/gvlmv0ynnvcafqt/Detective_Stories_1.0.1_2.zip"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 1,
+      "dc": 1
     },
     {
       "id": "map/sun-guardian2",
@@ -337,43 +229,12 @@
         "SwarmOfBears (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "curseforge",
-          "label": "CurseForge",
-          "url": "https://www.curseforge.com/minecraft/worlds/sun-guardian-2-stranded-ctm-map/"
-        },
-        {
-          "id": "planetminecraft",
-          "label": "地图原帖",
-          "url": "https://www.planetminecraft.com/project/sun-guardian-2-stranded/"
-        },
-        {
-          "id": "bilibili",
-          "label": "宣传片",
-          "url": "https://www.bilibili.com/video/BV1kWaGzTEoi/"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/15705"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "curseforge",
-          "text": "下载地图",
-          "link": "https://www.curseforge.com/minecraft/worlds/sun-guardian-2-stranded-ctm-map/files/all"
-        },
-        {
-          "id": "lanzou-quark-mapdl",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/ssg2",
-          "quarkLink": "https://pan.quark.cn/s/21835eedae08"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 4,
+      "dc": 2
     },
     {
       "id": "map/final",
@@ -391,33 +252,12 @@
         "Final Paradox Team (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "宣传片",
-          "url": "https://www.bilibili.com/video/BV1Fy4y1w7bE/"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Final-Paradox-Simplified-Chinese"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "mediafire",
-          "text": "下载地图",
-          "link": "https://www.mediafire.com/file/lej6nls9cj1kha6/Final_Paradox_v1.1.15.zip/file"
-        },
-        {
-          "id": "lanzou-quark-mapdl",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouy.com/s/fp-vmct-cn",
-          "quarkLink": "https://pan.quark.cn/s/4047ca438fdd"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 2,
+      "dc": 2
     },
     {
       "id": "map/machine",
@@ -435,28 +275,12 @@
         "SpielmitStil (主作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "宣传片",
-          "url": "https://www.bilibili.com/video/BV1cnTMz4EtC"
-        },
-        {
-          "id": "planetminecraft",
-          "label": "地图原帖",
-          "url": "https://www.planetminecraft.com/project/the-machine-a-minecraft-1-18-1-puzzlemap"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "123pan",
-          "text": "下载地图和汉化",
-          "icon": "assets/imgs/svg/123.svg",
-          "link": "https://www.123684.com/s/99kKVv-0JdEh"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "map/tales-of-glarthford",
@@ -474,23 +298,12 @@
         "McTsts, Asometric (主要作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "curseforge",
-          "label": "地图原帖",
-          "url": "https://www.crowdford.com/maps/tales_of_glarthford/"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou-quark-mapdl",
-          "text": "下载地图和汉化",
-          "lanzouLink": "https://www.vmct.top/doing",
-          "quarkLink": "https://www.vmct.top/doing"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 1,
+      "dc": 1
     },
     {
       "id": "map/deathrunner",
@@ -508,28 +321,12 @@
         "Lifeely (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "宣传片",
-          "url": "https://www.bilibili.com/video/BV1rT42117ZF"
-        },
-        {
-          "id": "planetminecraft",
-          "label": "地图原贴",
-          "url": "https://www.planetminecraft.com/project/second-deathrunner/"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou-quark-mapdl",
-          "text": "下载地图和汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/deathrunner",
-          "quarkLink": "https://pan.quark.cn/s/1f33349ea6b5"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "map/a-hole-new-world",
@@ -547,23 +344,12 @@
         "Mithey（作者）",
         "黑洞计划（翻译）"
       ],
-      "links": [
-        {
-          "id": "minecraftmaps",
-          "label": "地图原帖",
-          "url": "https://www.minecraftmaps.com/41964-a-hole-new-world"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou-quark-mapdl",
-          "text": "下载地图和汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouv.com/s/a-hole-new-world",
-          "quarkLink": "https://pan.quark.cn/s/9443f2403ce0"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 1,
+      "dc": 1
     },
     {
       "id": "map/flood-escape",
@@ -581,28 +367,12 @@
         "iWacky (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍视频",
-          "url": "https://www.bilibili.com/video/"
-        },
-        {
-          "id": "minecraftmaps",
-          "label": "地图原帖",
-          "url": "https://www.minecraftmaps.com/38661-flood-escape"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou-quark-mapdl",
-          "text": "下载地图和汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouv.com/s/flood-escape",
-          "quarkLink": "https://pan.quark.cn/s/37b7ec9298cb"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "map/rc4",
@@ -620,33 +390,12 @@
         "heliceo & suso (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "宣传片与汉化教程",
-          "url": "https://www.bilibili.com/video/BV1eM4m1f78h/"
-        },
-        {
-          "id": "ctmrepository",
-          "label": "地图原帖",
-          "url": "https://ctmrepository.com/index.php?action=viewMap&id=588"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "123pan",
-          "text": "下载汉化",
-          "icon": "assets/imgs/svg/123.svg",
-          "link": "https://www.123pan.com/s/99kKVv-zYVQh.html"
-        },
-        {
-          "id": "mediafire",
-          "text": "备用下载",
-          "link": "https://www.mediafire.com/folder/jurnv77qvvaf0"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 2,
+      "dc": 2
     },
     {
       "id": "map/winged",
@@ -664,28 +413,12 @@
         "Eluant Studios（作者）",
         "黑洞计划（翻译）"
       ],
-      "links": [
-        {
-          "id": "minecraftmaps",
-          "label": "地图原帖",
-          "url": "https://www.minecraftmaps.com/49034-winged"
-        },
-        {
-          "id": "bilibili",
-          "label": "宣传片",
-          "url": "https://www.bilibili.com/video/BV12G411F7We"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou-quark-mapdl",
-          "text": "下载地图和汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouv.com/s/winged",
-          "quarkLink": "https://pan.quark.cn/s/332e0a7aaf71"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "map/fnaf-4-miramappa",
@@ -703,38 +436,12 @@
         "MiraMappa (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "玩法介绍",
-          "url": "https://www.bilibili.com/video/BV1f6tGzDEpm"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/FromTheShElves-Chinese"
-        },
-        {
-          "id": "planetminecraft",
-          "label": "地图原帖",
-          "url": "https://www.planetminecraft.com/project/fnaf-4-miramappa/"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "mediafire",
-          "text": "下载地图",
-          "link": "https://www.mediafire.com/file/ilku2vvh3gigi1i/FNaF_4_v1.0.zip/file"
-        },
-        {
-          "id": "planetminecraft",
-          "text": "地图原帖",
-          "icon": "assets/imgs/svg/planetminecraft.svg",
-          "link": "https://www.planetminecraft.com/project/fnaf-4-miramappa/"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 3,
+      "dc": 2
     },
     {
       "id": "map/divinity",
@@ -752,23 +459,12 @@
         "DE Team (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "宣传片与汉化教程",
-          "url": "https://www.bilibili.com/video/BV1kx421C7ds"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou-quark-mapdl",
-          "text": "下载地图和汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/divinity",
-          "quarkLink": "https://pan.quark.cn/s/a55ef7997323"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 1,
+      "dc": 1
     },
     {
       "id": "map/tota",
@@ -786,28 +482,12 @@
         "Spellcrafting Roguelike Team (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "宣传片",
-          "url": "https://www.bilibili.com/video/BV1tek2YsEpZ/"
-        },
-        {
-          "id": "curseforge",
-          "label": "CurseForge",
-          "url": "https://www.curseforge.com/minecraft/worlds/temple-of-the-art-spellcrafting-roguelike"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou-quark-mapdl",
-          "text": "下载地图和汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/tota",
-          "quarkLink": "https://pan.quark.cn/s/e6eab616fa9f"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "map/bayville",
@@ -825,33 +505,12 @@
         "Dani4355 (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍视频",
-          "url": "https://www.bilibili.com/video/BV1414y1v7ny"
-        },
-        {
-          "id": "planetminecraft",
-          "label": "地图原贴",
-          "url": "https://www.planetminecraft.com/project/bayville-realistic-roleplay-town/"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "mediafire",
-          "text": "下载地图",
-          "link": "https://www.mediafire.com/file/w9gwytz72hbtdyf/Bayville_-_realistic_roleplay_town_v7.2.zip/file"
-        },
-        {
-          "id": "lanzou-quark-mapdl",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzoui.com/s/vmct-Bayville-mapt-cn",
-          "quarkLink": "https://pan.quark.cn/s/e1378993a57f"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 2,
+      "dc": 2
     },
     {
       "id": "map/tactical-gaggle",
@@ -869,28 +528,12 @@
         "Brickmasons（作者）",
         "黑洞计划（翻译）"
       ],
-      "links": [
-        {
-          "id": "minecraftmaps",
-          "label": "地图原帖",
-          "url": "https://www.minecraftmaps.com/48094-tactical-gaggle"
-        },
-        {
-          "id": "bilibili",
-          "label": "宣传片",
-          "url": "https://www.bilibili.com/video/BV16Z4y167kJ"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou-quark-mapdl",
-          "text": "下载地图和汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouv.com/s/tactical-gaggle",
-          "quarkLink": "https://pan.quark.cn/s/4f9abcad498c"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "map/the-terrace-3-shattered",
@@ -908,33 +551,12 @@
         "Siddeney (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍视频",
-          "url": "https://www.bilibili.com/video/BV1AKGg6AETB/"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/The-Terrace-3-SHATTERED-Chinese"
-        },
-        {
-          "id": "minecraftmaps",
-          "label": "地图原帖",
-          "url": "https://www.minecraftmaps.com/52344-the-terrace-3-shattered"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou-quark-mapdl",
-          "text": "下载地图和汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouv.com/s/terrace3",
-          "quarkLink": "https://pan.quark.cn/s/be63f4d9075f"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "map"
+      "parent": "map",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "modpacks/bliss",
@@ -952,27 +574,12 @@
         "Vazkii (作者)",
         "VM汉化组-cat (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv19042221/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou",
-          "text": "下载汉化",
-          "link": "https://wwn.lanzoux.com/ic4Kx0dmof2h"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/chunk",
@@ -990,38 +597,12 @@
         "Joshernoob (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍视频",
-          "url": "https://www.bilibili.com/video/BV1JNDrYEERd"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/Wulian233"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/11916"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/chunkblock",
-          "quarkLink": "https://pan.quark.cn/s/c2d804de67d5"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 4,
+      "dc": 1
     },
     {
       "id": "modpacks/craftoria",
@@ -1039,33 +620,12 @@
         "TeamAOE (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Craftoria-Chinese"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/15860"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://www.vmct.top/doing",
-          "quarkLink": "https://www.vmct.top/doing"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "modpacks/e9e",
@@ -1083,33 +643,12 @@
         "NillerMedDild (作者)",
         "VM汉化组-RCqaq (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/opus/889340731749040214"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/RCqaq/Enigmatica-9-Expert-E9E-Translation"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "weiyun",
-          "text": "下载汉化",
-          "icon": "assets/imgs/svg/weiyun.svg",
-          "link": "https://share.weiyun.com/4N6KKIcN"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "modpacks/wolf",
@@ -1127,33 +666,12 @@
         "FTB (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/direwolf20-1.19.2"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou",
-          "text": "下载汉化",
-          "link": "https://wulian233.lanzouu.com/isX0E27rys7g"
-        },
-        {
-          "id": "gitee",
-          "text": "FTB整合包下载工具",
-          "icon": "assets/imgs/svg/gitee.svg",
-          "link": "https://gitee.com/flrscn/curse-the-beast/releases"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 2
     },
     {
       "id": "modpacks/ftbe",
@@ -1171,33 +689,12 @@
         "FTB (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/FTB-Evolution-Chinese"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/12144"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://www.vmct.top/doing",
-          "quarkLink": "https://www.vmct.top/doing"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "modpacks/neotech",
@@ -1215,43 +712,12 @@
         "FTB (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "汉化教程",
-          "url": "https://www.bilibili.com/video/BV1xgsuesEEi"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "modrinth",
-          "label": "下载硬编码汉化VP模组",
-          "url": "https://cdn.modrinth.com/data/NLV0Mnpu/versions/Z3IIqvHD/vaultpatcher-all-1.5.2.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/FTB-Neotech/"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/10719"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzoui.com/s/neotech",
-          "quarkLink": "https://pan.quark.cn/s/e74bd572a6fe"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 5,
+      "dc": 1
     },
     {
       "id": "modpacks/oceanblock2",
@@ -1269,38 +735,12 @@
         "FTB (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "安装教程视频",
-          "url": "https://www.bilibili.com/video/BV1mCRbYBEc3"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/FTB-Oceanblock-2-Chinese"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/13486"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/ob2",
-          "quarkLink": "https://pan.quark.cn/s/3a23c39e812c"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 4,
+      "dc": 1
     },
     {
       "id": "modpacks/skies2-aero",
@@ -1318,38 +758,12 @@
         "FTB (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍视频",
-          "url": "https://www.bilibili.com/video/BV1vYKF6GEoC"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/FTB-Skies2-Aero"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/19713"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouv.com/s/skies2aero",
-          "quarkLink": "https://pan.quark.cn/s/6c7d678d6310"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": true,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 4,
+      "dc": 1
     },
     {
       "id": "modpacks/skies-2",
@@ -1367,38 +781,12 @@
         "FTB (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍视频",
-          "url": "https://www.bilibili.com/video/BV1U2hwzmESy"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/FTB-Skies-2-Chinese"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/15051"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/skies2",
-          "quarkLink": "https://pan.quark.cn/s/5d8815be19ab"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": true,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 4,
+      "dc": 1
     },
     {
       "id": "modpacks/arcanum",
@@ -1416,44 +804,12 @@
         "FTB (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍视频",
-          "url": "https://www.bilibili.com/video/BV1UT4m1S7rg"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "modrinth",
-          "label": "下载硬编码汉化VP模组",
-          "url": "https://cdn.modrinth.com/data/NLV0Mnpu/versions/Z3IIqvHD/vaultpatcher-all-1.5.2.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/FTB-Arcanum-Institute-Chinese"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/asxy-vmct",
-          "quarkLink": "https://pan.quark.cn/s/356f11fbd914"
-        },
-        {
-          "id": "gitee",
-          "text": "FTB整合包下载工具",
-          "icon": "assets/imgs/svg/gitee.svg",
-          "link": "https://gitee.com/flrscn/curse-the-beast/releases"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 4,
+      "dc": 2
     },
     {
       "id": "modpacks/paradise2",
@@ -1471,27 +827,12 @@
         "FTB (作者团队)",
         "VM汉化组-捂脸 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv34152267"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou",
-          "text": "下载汉化",
-          "link": "https://wulian233.lanzouj.com/ib5G81wnrpwb"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/sb3",
@@ -1509,32 +850,12 @@
         "FTB (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv21772959/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/StoneBlock3"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou",
-          "text": "下载汉化",
-          "link": "https://wulian233.lanzouu.com/iNLBv38skbxe"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "modpacks/sb4",
@@ -1553,31 +874,12 @@
         "VM汉化组 (翻译)",
         "给我带双份老鸭煲 (特别鸣谢)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍视频",
-          "url": "https://www.bilibili.com/video/BV1mAyrBqEYj"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/StoneBlock4-Chinese"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/16650"
-        }
-      ],
+      "links": [],
       "downloads": [],
       "featured": true,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 4,
+      "dc": 0
     },
     {
       "id": "modpacks/imc",
@@ -1595,38 +897,12 @@
         "CraisinLord (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "宣传片",
-          "url": "https://www.bilibili.com/video/BV16uKNzVEMA/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Integrated-MC"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/13091"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/imc",
-          "quarkLink": "https://pan.quark.cn/s/2d7a269c94de"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 4,
+      "dc": 1
     },
     {
       "id": "modpacks/muskteer",
@@ -1644,28 +920,12 @@
         "Vazkii (作者)",
         "VM汉化组-仙人掌 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv25168595/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzoui.com/s/Muskteer-vmct-cn",
-          "quarkLink": "https://pan.quark.cn/s/05136ba14348"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/ozone-skyblock-reborn-2",
@@ -1683,33 +943,12 @@
         "MuggleOrWizard (作者)",
         "VM汉化组-七羽Kiyo (翻译)"
       ],
-      "links": [
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Ozone-Skyblock-Reborn-2-Chinese"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/17669"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://www.vmct.top/doing",
-          "quarkLink": "https://www.vmct.top/doing"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "modpacks/prey",
@@ -1728,33 +967,12 @@
         "VM汉化组 (翻译)",
         "ChuijkYahus、Kasualix、老本願 (外部贡献)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv28878702/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Prey"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouy.com/s/prey-vmct",
-          "quarkLink": "https://pan.quark.cn/s/8dbc98d8e0b5"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "modpacks/architect2",
@@ -1772,38 +990,12 @@
         "ChosenArchitect (作者)",
         "VM汉化组-琪露诺 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍视频",
-          "url": "https://www.bilibili.com/video/BV1GcNheGE5X/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Project-Architect-2"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/13302"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/pa2",
-          "quarkLink": "https://pan.quark.cn/s/9c7ff45c84b1"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 4,
+      "dc": 1
     },
     {
       "id": "modpacks/rad2",
@@ -1821,28 +1013,12 @@
         "dreams01 (作者)",
         "VM汉化组-choko-takey (翻译)"
       ],
-      "links": [
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Roguelike-Adventures-and-Dungeons-2"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://www.vmct.top/doing",
-          "quarkLink": "https://www.vmct.top/doing"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/rad",
@@ -1860,21 +1036,12 @@
         "dreams01 (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍视频（新版）",
-          "url": "https://www.bilibili.com/video/BV1VbGqzGE2q"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
+      "links": [],
       "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 0
     },
     {
       "id": "modpacks/submerged-2",
@@ -1892,33 +1059,12 @@
         "benbenlaw (作者)",
         "VM汉化组-Clark (翻译)"
       ],
-      "links": [
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Submerged-2-Chinese"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/17732"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://www.vmct.top/doing",
-          "quarkLink": "https://www.vmct.top/doing"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "modpacks/decursio",
@@ -1936,28 +1082,12 @@
         "Me_Rey100 (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv26789658/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzoui.com/s/Decursio-Projectt-VMTT-1165",
-          "quarkLink": "https://pan.quark.cn/s/7bf1b90bc4bf"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/mmc",
@@ -1975,28 +1105,12 @@
         "LunaPixelStudios (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv26040553"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzoui.com/s/mmc1-19-2-fabric-vmct",
-          "quarkLink": "https://pan.quark.cn/s/c90aab011784"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/deceasedcraft",
@@ -2014,38 +1128,12 @@
         "TqLxQuanZ (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍视频",
-          "url": "https://www.bilibili.com/opus/1095991210601873410"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/DeceasedCraft-Chinese"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/15705"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/dece",
-          "quarkLink": "https://pan.quark.cn/s/4f8d739dbaa0"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": true,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 4,
+      "dc": 1
     },
     {
       "id": "modpacks/fc5",
@@ -2063,33 +1151,12 @@
         "Khazenor (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/12586"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "curseforge",
-          "text": "下载整合包",
-          "link": "https://www.curseforge.com/minecraft/modpacks/farming-crossing-5-made-to-order"
-        },
-        {
-          "id": "vm",
-          "text": "整合包wiki（英文）",
-          "icon": "assets/imgs/logo/logo_128.png",
-          "link": "https://www.vmct.top/modpacks/fc5-wiki/"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 2
     },
     {
       "id": "modpacks/frozenopolis",
@@ -2107,31 +1174,12 @@
         "CryptIX (作者)",
         "VM汉化组-捂脸 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv33005621/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou",
-          "text": "下载汉化",
-          "link": "https://wulian233.lanzouu.com/ifSib2qrvq4h"
-        },
-        {
-          "id": "lazy",
-          "link": "https://wulian233.lanzouj.com/ibKuk1qy9rbe"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 2
     },
     {
       "id": "modpacks/prominence2",
@@ -2149,48 +1197,12 @@
         "ElocinDev (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍与汉化安装教程",
-          "url": "https://www.bilibili.com/video/BV1Zc3XzQEu7"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "modrinth",
-          "label": "下载VP模组",
-          "url": "https://cdn.modrinth.com/data/NLV0Mnpu/versions/oATpDq2Q/vaultpatcher-all-1.5.3-fix.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Prominence-II-Chinese"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/13782"
-        },
-        {
-          "id": "wiki",
-          "label": "官方Wiki",
-          "url": "https://rpg.prominence.wiki/"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/prominence2",
-          "quarkLink": "https://pan.quark.cn/s/29e3994b9d1d"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 6,
+      "dc": 1
     },
     {
       "id": "modpacks/vampires-strike-back",
@@ -2208,33 +1220,12 @@
         "Nekomaster1000 (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Vampires-Strike-Back-Chinese"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/19520"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouv.com/b009i5g50f",
-          "quarkLink": "https://pan.quark.cn/s/b397bc587ec0"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": true,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "modpacks/feed",
@@ -2252,27 +1243,12 @@
         "Appocryptha (作者)",
         "VM汉化组-自尊寺 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv23974249"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "baidu-drive",
-          "text": "下载汉化",
-          "link": "https://pan.baidu.com/s/1OI533N2IMHssFsoGm5o0lg?pwd=x068%C2%A0%20#list/path=%2F%E8%87%AA%E5%B0%8A%E5%AF%BA%E6%B1%89%E5%8C%96%E5%85%A8%E9%9B%86%2F1.16.x%2FFeed%20the%20Singularity"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/jetpack",
@@ -2290,27 +1266,12 @@
         "jetpackcatyt (作者)",
         "VM汉化组-阿鹉 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv17779343/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou",
-          "text": "下载汉化 密码KparetR",
-          "link": "https://paret.lanzoum.com/b031b2uad"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/infernal",
@@ -2328,43 +1289,12 @@
         "DaddyUnion (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "宣传片",
-          "url": "https://www.bilibili.com/video/BV1tx4y1s7E8/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "modrinth",
-          "label": "下载硬编码汉化VP模组",
-          "url": "https://cdn.modrinth.com/data/NLV0Mnpu/versions/Z3IIqvHD/vaultpatcher-all-1.5.2.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Infernal-Origins"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/10136"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/infernalorigin",
-          "quarkLink": "https://pan.quark.cn/s/b2becfd4faaa"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 5,
+      "dc": 1
     },
     {
       "id": "modpacks/odyssey",
@@ -2382,39 +1312,12 @@
         "FTB (作者团队)",
         "VM汉化组-捂脸 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "安装教程视频",
-          "url": "https://www.bilibili.com/video/BV1NWFvz9Ec5/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/FTB-Sky-Odyssey/"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/od",
-          "quarkLink": "https://pan.quark.cn/s/64478aa54f27"
-        },
-        {
-          "id": "gitee",
-          "text": "FTB整合包下载工具",
-          "icon": "assets/imgs/svg/gitee.svg",
-          "link": "https://gitee.com/flrscn/curse-the-beast/releases"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 3,
+      "dc": 2
     },
     {
       "id": "modpacks/sf5",
@@ -2433,33 +1336,12 @@
         "给我带双份老鸭煲 (初版翻译)",
         "VM汉化组 (后续维护)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "安装教程视频",
-          "url": "https://www.bilibili.com/video/BV1m4rsYdEu1/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/SkyFactory-5"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/sf5",
-          "quarkLink": "https://pan.quark.cn/s/b1e58afaac74"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "modpacks/vault",
@@ -2477,28 +1359,12 @@
         "Iskall85Team (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv20450312"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzoui.com/s/the-Vault-03",
-          "quarkLink": "https://pan.quark.cn/s/24de8181311e"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/fantasy",
@@ -2516,37 +1382,12 @@
         "LunaPixelStudios (作者团队)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv26403091/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "curseforge",
-          "label": "CurseForge",
-          "url": "https://www.curseforge.com/minecraft/modpacks/fantasy-realm"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou",
-          "text": "下载1.16汉化",
-          "link": "https://vmhanhuazu.lanzoui.com/s/FR-zhcn-cat"
-        },
-        {
-          "id": "lanzou",
-          "text": "下载1.18汉化",
-          "link": "https://vmhanhuazu.lanzoui.com/s/fantasy1-18-2--vmct"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 3,
+      "dc": 2
     },
     {
       "id": "modpacks/prodigium-reforged",
@@ -2564,33 +1405,12 @@
         "DenLille_ (作者)",
         "VM汉化组-琪露诺 (翻译)"
       ],
-      "links": [
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Prodigium-Reforged-Chinese"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/13356"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://www.vmct.top/doing",
-          "quarkLink": "https://www.vmct.top/doing"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "modpacks/explorers-eve",
@@ -2608,28 +1428,12 @@
         "sm644me (作者)",
         "老本願 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍视频",
-          "url": "https://www.bilibili.com/video/BV14jNoziEoS/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "lanzou",
-          "text": "下载汉化",
-          "icon": "assets/imgs/quark.jpg",
-          "link": "https://pan.quark.cn/s/37de6b2d081e"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/if",
@@ -2647,27 +1451,12 @@
         "rovenne (作者)",
         "VM汉化组-自尊寺 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv18916475/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "baidu-drive",
-          "text": "下载汉化",
-          "link": "https://pan.baidu.com/s/1OI533N2IMHssFsoGm5o0lg?pwd=x068#list/path=%2F%E8%87%AA%E5%B0%8A%E5%AF%BA%E6%B1%89%E5%8C%96%E5%85%A8%E9%9B%86%2F1.18.x%2FInfinity%20Foundation"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/cosmic-frontiers",
@@ -2685,38 +1474,12 @@
         "Ghostipedia (作者)",
         "VM汉化组-琪露诺 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "汉化教程",
-          "url": "https://www.bilibili.com/video/BV1jbt4zxE9u"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Cosmic-Frontiers-Chinese"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/14073"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/cf-gt",
-          "quarkLink": "https://pan.quark.cn/s/f181b9f4acbb"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 4,
+      "dc": 1
     },
     {
       "id": "modpacks/star",
@@ -2734,27 +1497,12 @@
         "Replication (作者)",
         "VM汉化组-自尊寺 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv23974249/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "baidu-drive",
-          "text": "下载汉化",
-          "link": "https://pan.baidu.com/s/1OI533N2IMHssFsoGm5o0lg?pwd=x068#list/path=%2F%E8%87%AA%E5%B0%8A%E5%AF%BA%E6%B1%89%E5%8C%96%E5%85%A8%E9%9B%86%2F1.12.x%2FStar%20Factory"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/cottage",
@@ -2773,33 +1521,12 @@
         "VM汉化组 (翻译)",
         "墨白，Enzo_Xcaesar (测试)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "宣传片",
-          "url": "https://www.bilibili.com/video/BV1Qz421X7hp/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Cottage-Witch"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/witch",
-          "quarkLink": "https://pan.quark.cn/s/4dee96c836ba"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "modpacks/cookiecrafter",
@@ -2817,32 +1544,12 @@
         "Tomtaru (作者)",
         "VM汉化组-自尊寺 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/opus/1081658462380752951"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/12150"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "baidu-drive",
-          "text": "下载汉化",
-          "link": "https://pan.baidu.com/s/1OI533N2IMHssFsoGm5o0lg?pwd=x068#list/path=%2F%E8%87%AA%E5%B0%8A%E5%AF%BA%E6%B1%89%E5%8C%96%E5%85%A8%E9%9B%86%2F1.18.x%2FCookieCrafter"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "modpacks/create",
@@ -2860,38 +1567,12 @@
         "Laskyyy_ (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍与汉化安装教程",
-          "url": "https://www.bilibili.com/video/BV1WgF4zhEBw"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/create_astral_translation_zhcn"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/11990"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouv.com/s/astral",
-          "quarkLink": "https://pan.quark.cn/s/50cdb3071277"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 4,
+      "dc": 1
     },
     {
       "id": "modpacks/create-mekanized",
@@ -2909,32 +1590,12 @@
         "bogdanasaurus (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍视频",
-          "url": "https://www.bilibili.com/video/BV1ckYTePEfL/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/11377"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "baidu-drive",
-          "text": "下载汉化",
-          "link": "https://pan.baidu.com/s/1OI533N2IMHssFsoGm5o0lg?pwd=x068#list/path=%2F%E8%87%AA%E5%B0%8A%E5%AF%BA%E6%B1%89%E5%8C%96%E5%85%A8%E9%9B%86%2F1.19.x"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "modpacks/nuclear",
@@ -2952,28 +1613,12 @@
         "ItsBrendo (作者)",
         "VM汉化组-橡树树苗 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv19042449/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://wwz.lanzouv.com/hehuangyuan1shumiao024",
-          "quarkLink": "https://pan.quark.cn/s/162b312c22b8"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/mce2",
@@ -2991,28 +1636,12 @@
         "adam98991 (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/MCE2"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://www.vmct.top/doing",
-          "quarkLink": "https://www.vmct.top/doing"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/mce",
@@ -3030,33 +1659,12 @@
         "adam98991 (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "汉化教程",
-          "url": "https://www.bilibili.com/video/BV1FD4y1p79N"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/MC-Eternal"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzoui.com/s/MCE-VMCT",
-          "quarkLink": "https://pan.quark.cn/s/30dbcf069bae"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 3,
+      "dc": 1
     },
     {
       "id": "modpacks/cave",
@@ -3074,31 +1682,12 @@
         "benbenlaw (作者)",
         "VM汉化组-自尊寺 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv21297910"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "baidu-drive",
-          "text": "下载汉化",
-          "link": "https://pan.baidu.com/s/1OI533N2IMHssFsoGm5o0lg?pwd=x068#list/path=%2F%E8%87%AA%E5%B0%8A%E5%AF%BA%E6%B1%89%E5%8C%96%E5%85%A8%E9%9B%86%2F1.18.x%2FCaveopolis"
-        },
-        {
-          "id": "lazy",
-          "link": "https://pan.baidu.com/s/1OI533N2IMHssFsoGm5o0lg?dp-logid=91125100565815730002&pwd=x068#list/path=%2F%E8%87%AA%E5%B0%8A%E5%AF%BA%E6%B1%89%E5%8C%96%E5%85%A8%E9%9B%86%2F1.18.x%2FCaveopolis"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 2
     },
     {
       "id": "modpacks/hungry",
@@ -3116,27 +1705,12 @@
         "0nce56 (作者)",
         "VM汉化组-自尊寺 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv37971713"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "baidu-drive",
-          "text": "下载汉化",
-          "link": "https://pan.baidu.com/s/1OI533N2IMHssFsoGm5o0lg?pwd=x068#list/path=%2F%E8%87%AA%E5%B0%8A%E5%AF%BA%E6%B1%89%E5%8C%96%E5%85%A8%E9%9B%86%2F1.20.x"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/dawn",
@@ -3155,38 +1729,12 @@
         "VM汉化组 (翻译)",
         "KamiKaguya (特别鸣谢)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "宣传片",
-          "url": "https://www.bilibili.com/video/BV1Ju4m1T719"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "modrinth",
-          "label": "下载VP模组",
-          "url": "https://cdn.modrinth.com/data/NLV0Mnpu/versions/B01OjFjZ/vaultpatcher-all-1.4.4+1.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/dawncraft-Chinese-patch-Pack"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzoui.com/s/DawnCraft-VMct",
-          "quarkLink": "https://pan.quark.cn/s/e60d5ec60233"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 4,
+      "dc": 1
     },
     {
       "id": "modpacks/fractured-opolis",
@@ -3204,38 +1752,12 @@
         "benbenlaw (作者)",
         "VM汉化组-冰琳 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍视频",
-          "url": "https://www.bilibili.com/video/BV1Ziuw6ZE9y"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Fractured-Opolis-Chinese"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/19875"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouv.com/s/fractured",
-          "quarkLink": "https://pan.quark.cn/s/97c7c5736fbe"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 4,
+      "dc": 1
     },
     {
       "id": "modpacks/techopolis3",
@@ -3253,38 +1775,12 @@
         "benbenlaw (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "安装教程视频",
-          "url": "https://www.bilibili.com/video/BV1NDFSzaENL"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Techopolis-3"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/14287"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouv.com/s/tech3",
-          "quarkLink": "https://pan.quark.cn/s/0ba3be3a835d"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 4,
+      "dc": 1
     },
     {
       "id": "modpacks/bee",
@@ -3302,28 +1798,12 @@
         "Valdan (作者)",
         "VM汉化组-自尊寺 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv18890616/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouv.com/S-B-VM-cn-1",
-          "quarkLink": "https://pan.quark.cn/s/f328fb592944"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/enigmatic-skies",
@@ -3341,38 +1821,12 @@
         "NillerMedDild (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "安装教程视频",
-          "url": "https://www.bilibili.com/video/BV1t97b66ENA/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Enigmatic-Skies-Chinese"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/18919"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouv.com/b009i2mh8d",
-          "quarkLink": "https://pan.quark.cn/s/954fec5e186c?pwd=yN49"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": true,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 4,
+      "dc": 1
     },
     {
       "id": "modpacks/rotn",
@@ -3390,28 +1844,12 @@
         "Foreck1 (作者)",
         "VM汉化组 (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv18948397"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouv.com/Rotn-cn-4",
-          "quarkLink": "https://pan.quark.cn/s/456a49f2c27a"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "modpacks/liminal-industries",
@@ -3429,38 +1867,12 @@
         "Appocryptha (作者)",
         "VM汉化组-七羽Kiyo (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "介绍视频",
-          "url": "https://www.bilibili.com/video/BV1KyYYzMEkP/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        },
-        {
-          "id": "github",
-          "label": "GitHub",
-          "url": "https://github.com/VM-Chinese-translate-group/Liminal-Industries-Chinese"
-        },
-        {
-          "id": "paratranz",
-          "label": "ParaTranz",
-          "url": "https://paratranz.cn/projects/15786"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "quark-lanzou",
-          "text": "下载汉化",
-          "lanzouLink": "https://vmhanhuazu.lanzouo.com/s/LI",
-          "quarkLink": "https://pan.quark.cn/s/edb80f4ce6e0"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 4,
+      "dc": 1
     },
     {
       "id": "modpacks/black",
@@ -3479,27 +1891,12 @@
         "VM汉化组-自尊寺 (翻译)",
         "VM汉化组-cat (翻译)"
       ],
-      "links": [
-        {
-          "id": "bilibili",
-          "label": "专栏介绍",
-          "url": "https://www.bilibili.com/read/cv18670489/"
-        },
-        {
-          "id": "i18n",
-          "label": "I18nUpdateMod",
-          "url": "https://cdn.modrinth.com/data/PWERr14M/versions/4ihDUjWs/I18nUpdateMod-3.7.0-all.jar"
-        }
-      ],
-      "downloads": [
-        {
-          "id": "baidu-drive",
-          "text": "下载汉化",
-          "link": "https://pan.baidu.com/s/1OI533N2IMHssFsoGm5o0lg?pwd=x068#list/path=%2F%E8%87%AA%E5%B0%8A%E5%AF%BA%E6%B1%89%E5%8C%96%E5%85%A8%E9%9B%86%2F1.16.x%2Fblackstone%20block&parentPath=%2F"
-        }
-      ],
+      "links": [],
+      "downloads": [],
       "featured": false,
-      "parent": "modpacks"
+      "parent": "modpacks",
+      "lc": 2,
+      "dc": 1
     },
     {
       "id": "agreement",
@@ -3516,7 +1913,9 @@
       "authors": [],
       "links": [],
       "downloads": [],
-      "featured": false
+      "featured": false,
+      "lc": 0,
+      "dc": 0
     },
     {
       "id": "community",
@@ -3533,7 +1932,9 @@
       "authors": [],
       "links": [],
       "downloads": [],
-      "featured": false
+      "featured": false,
+      "lc": 0,
+      "dc": 0
     },
     {
       "id": "friends-links",
@@ -3551,7 +1952,9 @@
       "links": [],
       "downloads": [],
       "featured": false,
-      "excerpt": "Bilibili UP主 他/她们在视频中使用了我们的汉化并录制了一系列视频，为我们做了宣传。 非常感谢！(*´∀`)~♥ title: 籽岷 link: https://space.bilibili.com/686127 logo: /imgs/friend-links/zimin.webp desc: 使用我们的O…"
+      "excerpt": "Bilibili UP主 他/她们在视频中使用了我们的汉化并录制了一系列视频，为我们做了宣传。 非常感谢！(*´∀`)~♥ title: 籽岷 link: https://space.bilibili.com/686127 logo: /imgs/friend-links/zimin.webp desc: 使用我们的O…",
+      "lc": 0,
+      "dc": 0
     },
     {
       "id": "doing",
@@ -3568,7 +1971,9 @@
       "authors": [],
       "links": [],
       "downloads": [],
-      "featured": false
+      "featured": false,
+      "lc": 0,
+      "dc": 0
     },
     {
       "id": "tools",
@@ -3585,7 +1990,9 @@
       "authors": [],
       "links": [],
       "downloads": [],
-      "featured": false
+      "featured": false,
+      "lc": 0,
+      "dc": 0
     },
     {
       "id": "support-us",
@@ -3602,7 +2009,9 @@
       "authors": [],
       "links": [],
       "downloads": [],
-      "featured": false
+      "featured": false,
+      "lc": 0,
+      "dc": 0
     },
     {
       "id": "privacy",
@@ -3619,7 +2028,9 @@
       "authors": [],
       "links": [],
       "downloads": [],
-      "featured": false
+      "featured": false,
+      "lc": 0,
+      "dc": 0
     },
     {
       "id": "modpacks/fc5-wiki/farming",
@@ -3638,7 +2049,9 @@
       "downloads": [],
       "featured": false,
       "parent": "modpacks/fc5-wiki",
-      "excerpt": "Farming Crossing Diet Mechanic: Summary: Whenever you see that you are craving something in the chat. Eat the food with that flavor profile to get random buffs!…"
+      "excerpt": "Farming Crossing Diet Mechanic: Summary: Whenever you see that you are craving something in the chat. Eat the food with that flavor profile to get random buffs!…",
+      "lc": 0,
+      "dc": 0
     },
     {
       "id": "modpacks/fc5-wiki",
@@ -3657,7 +2070,9 @@
       "downloads": [],
       "featured": false,
       "parent": "modpacks",
-      "excerpt": "Farming Crossing 5: Made to Order! v1.1.9 Core mechanics Collection quests for flora, animals, minerals, cooking, and fishing Building prompts with given block …"
+      "excerpt": "Farming Crossing 5: Made to Order! v1.1.9 Core mechanics Collection quests for flora, animals, minerals, cooking, and fishing Building prompts with given block …",
+      "lc": 0,
+      "dc": 0
     },
     {
       "id": "modpacks/fc5-wiki/features",
@@ -3676,7 +2091,9 @@
       "downloads": [],
       "featured": false,
       "parent": "modpacks/fc5-wiki",
-      "excerpt": "Receiving and fulfilling villager dining orders Fish Selling Mushroom as meat replacement Mushrooms can be crafted to mushroom patty, which then can be used as …"
+      "excerpt": "Receiving and fulfilling villager dining orders Fish Selling Mushroom as meat replacement Mushrooms can be crafted to mushroom patty, which then can be used as …",
+      "lc": 0,
+      "dc": 0
     },
     {
       "id": "modpacks/fc5-wiki/performance",
@@ -3695,7 +2112,9 @@
       "downloads": [],
       "featured": false,
       "parent": "modpacks/fc5-wiki",
-      "excerpt": "Structure generating mods Here are some structure mods that are not strictly necessary for the pack. Maybe by removing some/all of them will increase performanc…"
+      "excerpt": "Structure generating mods Here are some structure mods that are not strictly necessary for the pack. Maybe by removing some/all of them will increase performanc…",
+      "lc": 0,
+      "dc": 0
     },
     {
       "id": "modpacks/fc5-wiki/quest",
@@ -3714,7 +2133,9 @@
       "downloads": [],
       "featured": false,
       "parent": "modpacks/fc5-wiki",
-      "excerpt": "Quest Navigation Click on the book icon at the top left corner of your inventory screen. (You can also config the key bind for opening quests in the key binds m…"
+      "excerpt": "Quest Navigation Click on the book icon at the top left corner of your inventory screen. (You can also config the key bind for opening quests in the key binds m…",
+      "lc": 0,
+      "dc": 0
     },
     {
       "id": "modpacks/fc5-wiki/tickets",
@@ -3733,7 +2154,9 @@
       "downloads": [],
       "featured": false,
       "parent": "modpacks/fc5-wiki",
-      "excerpt": "Miles Ticket Item used to purchase various items for this modpack Stack size for this item is 100 Shift right-clicking this item in your hand will bundle every …"
+      "excerpt": "Miles Ticket Item used to purchase various items for this modpack Stack size for this item is 100 Shift right-clicking this item in your hand will bundle every …",
+      "lc": 0,
+      "dc": 0
     },
     {
       "id": "modpacks/fc5-wiki/translation",
@@ -3752,7 +2175,9 @@
       "downloads": [],
       "featured": false,
       "parent": "modpacks/fc5-wiki",
-      "excerpt": "Suggestion instructions Download the Farming Crossing 5 Translations Update the translation file Join the modpack discord Server ( Link ) Suggest the translatio…"
+      "excerpt": "Suggestion instructions Download the Farming Crossing 5 Translations Update the translation file Join the modpack discord Server ( Link ) Suggest the translatio…",
+      "lc": 0,
+      "dc": 0
     },
     {
       "id": "modpacks/fc5-wiki/tutorials",
@@ -3771,7 +2196,9 @@
       "downloads": [],
       "featured": false,
       "parent": "modpacks/fc5-wiki",
-      "excerpt": "Cooking Utensil Tutorials Farmer's Delight Cutting Board Place the cutting board down Right click the item you want to cut Right click the item on the cutting b…"
+      "excerpt": "Cooking Utensil Tutorials Farmer's Delight Cutting Board Place the cutting board down Right click the item you want to cut Right click the item on the cutting b…",
+      "lc": 0,
+      "dc": 0
     },
     {
       "id": "modpacks/fc5-wiki/tweaks",
@@ -3790,7 +2217,9 @@
       "downloads": [],
       "featured": false,
       "parent": "modpacks/fc5-wiki",
-      "excerpt": "Hostile mob spawns Hostile mob spawn is turned off for overworld under normal difficulty. Spawners should still work. To spawn hostile mobs, you can change your…"
+      "excerpt": "Hostile mob spawns Hostile mob spawn is turned off for overworld under normal difficulty. Spawners should still work. To spawn hostile mobs, you can change your…",
+      "lc": 0,
+      "dc": 0
     },
     {
       "id": "modpacks/fc5-wiki/villagers",
@@ -3809,879 +2238,10 @@
       "downloads": [],
       "featured": false,
       "parent": "modpacks/fc5-wiki",
-      "excerpt": "As you go through the quests, you will have opportunities to move in villagers. After you have completed enough quests to move in the villager, you will find tw…"
+      "excerpt": "As you go through the quests, you will have opportunities to move in villagers. After you have completed enough quests to move in the villager, you will find tw…",
+      "lc": 0,
+      "dc": 0
     }
   ],
-  "credits": [
-    {
-      "group": "站点开发",
-      "name": "TexTrue",
-      "title": "网站初版设计",
-      "uid": 367217038
-    },
-    {
-      "group": "站点开发",
-      "name": "Wulian233（捂脸）",
-      "title": "网站管理与开发",
-      "uid": 449728222
-    },
-    {
-      "group": "站点开发",
-      "name": "荔枝",
-      "title": "网站贡献者",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "cat酱_",
-      "title": "nageih",
-      "uid": 628493139
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Clark_TSC",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "茫氪跑来跑去",
-      "title": "mangke01",
-      "uid": 560349507
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "逸晨Sama",
-      "title": "YiChenSama",
-      "uid": 433787555
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "-PigeonFish-",
-      "title": "PigeonFish",
-      "uid": 175011580
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "自尊寺",
-      "title": "zisunsi",
-      "uid": 585255832
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "橡树树苗",
-      "title": "Oak Sapling",
-      "uid": 486675034
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "捂脸祖",
-      "title": "Wulian233",
-      "uid": 449728222
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "sine九二十七",
-      "title": "（已退出）",
-      "uid": 6506242
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "RCqaq_",
-      "title": "rcqaq",
-      "uid": 22932427
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "墨应青（贪婪）",
-      "title": "TANLAN13",
-      "uid": 18006959
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "X209_",
-      "title": "3093FengMing",
-      "uid": 3537106242636132
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Cactus_student（仙人掌）",
-      "title": "Cactusstudent",
-      "uid": 512835396
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "KlparetlR",
-      "title": "阿鹉",
-      "uid": 435039215
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "曲逸还在睡吗（已退出）",
-      "title": "yiqv",
-      "uid": 487397321
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "虚笠綫（虚空）",
-      "title": "Nothingness-Void",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "双梦official",
-      "title": "shuangmeng123",
-      "uid": 305855661
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "瓦卡咯",
-      "title": "Wwz152",
-      "uid": 700752526
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Crazylove丶jhin",
-      "title": "clear112Zzz",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "crazywang",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "酷热火君",
-      "title": "Huo-jun0531（已退出）",
-      "uid": 4290676
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "烦应该是吧",
-      "title": "有名氏",
-      "uid": 267612544
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "grade-2（杨乐多）",
-      "title": "Mr-Rabbit251325",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "精工炒蹄筋",
-      "title": "TiJin2426AC",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "卡卡尔er",
-      "title": "KaCarl19",
-      "uid": 38568173
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "梵叶",
-      "title": " yjf2301",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "乐杨子cc",
-      "title": "LLYXyolanda",
-      "uid": 220271077
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "琉璃月轩（星河）",
-      "title": "LLYXyolanda",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "翰隶镇长",
-      "title": "Hanlizz（已退出）",
-      "uid": 286901442
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "仿生电子回收物",
-      "title": "KulSeKeizaal",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "加菲龟Garfy",
-      "title": "Garfield10086",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "哗哩丿哗哩叶（迷叶）",
-      "title": "haijialiu",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "凛夜、雨月",
-      "title": "linyeyuyue",
-      "uid": 381721924
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "ODeannao",
-      "title": "Crimvael",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "NLG永不言弃",
-      "title": "NLGibson",
-      "uid": 288788863
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "离支i（荔枝）",
-      "title": "Litchiiiiii",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "基尘",
-      "title": "JiChenSSG",
-      "uid": 22747356
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "冰琳_iL2He",
-      "title": "DC10-10",
-      "uid": 26272424
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "TexTrue",
-      "title": "TexBlock",
-      "uid": 367217038
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "青岚orz（青岚）",
-      "title": "QingLanono",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "子格Z",
-      "title": "ZigerZZZ",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "CatcatPigeon",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "拱土贝老哥（望）",
-      "title": "fgt1t5y",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "choko_takey",
-      "title": "",
-      "uid": 6289027
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "醉冰茶",
-      "title": "DrIceTea123",
-      "uid": 406143070
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "yinzi",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "真是紫菜",
-      "title": "13584452567",
-      "uid": 87403760
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "terry_Leng",
-      "title": "terryaxe",
-      "uid": 675195388
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "安妮",
-      "title": "Annijang",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "胶水y",
-      "title": "502y",
-      "uid": 88466793
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Zack_Z",
-      "title": "kressety",
-      "uid": 178823527
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "luyixs",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "天宇_Tanrunn",
-      "title": "Skycos",
-      "uid": 55917405
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "纯洁的粉碎Mala矿石",
-      "title": "Malnormala",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "skyclimber",
-      "title": "Amatsukaze",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "眉花Seven",
-      "title": "MeiHua777",
-      "uid": 151406682
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "人形鹿头炮",
-      "title": "Rshyl1023",
-      "uid": 294628010
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "此乃一根葱",
-      "title": "Negisa233",
-      "uid": 288317948
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "黎羽in",
-      "title": "liyu-233",
-      "uid": 1451464467
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Bieq-Shrpred",
-      "title": "KileShepred",
-      "uid": 1387732131
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "GearTech",
-      "title": "JosephGear",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "WhiterHJ",
-      "title": "WhiterHJ",
-      "uid": 32350755
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "羊过yangguo",
-      "title": "Ocean-sixteen",
-      "uid": 3494362929432778
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Sophie_zhxi",
-      "title": "指星汉化组组长",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "WOW蜗牛_",
-      "title": "Jerry-Z3",
-      "uid": 3546563825634171
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "卷王有点摆",
-      "title": "leonybb",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "伊IpokA",
-      "title": "chris1380",
-      "uid": 8477732
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "_Arrowss_",
-      "title": "Arrowss544",
-      "uid": 206088235
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Mio_Lucky",
-      "title": "Miooowo",
-      "uid": 383889087
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "abloesen",
-      "title": "marechaussee",
-      "uid": 3494355375491126
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "duan123321",
-      "title": "duan2-2",
-      "uid": 277556911
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "AzCote",
-      "title": "AzCote",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "灼眼的nemepop",
-      "title": "hinanep",
-      "uid": 23251700
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "EpicSniper1",
-      "title": "Celestial017",
-      "uid": 698411010
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Darlic1224（墨凌）",
-      "title": "Darlic1224",
-      "uid": 1923037225
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "yakee_doodle",
-      "title": "yakeedoodle",
-      "uid": 1481229435
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "饭和版",
-      "title": "fanheban",
-      "uid": 1805736439
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "SuperMarioa",
-      "title": "whzree",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "默晴GAME",
-      "title": "moqyng",
-      "uid": 288298640
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "dav1sye",
-      "title": "DavisYe",
-      "uid": 407703331
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "ansonquu",
-      "title": "ansonquu",
-      "uid": 1468582841
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Crosnos",
-      "title": "Crosnos",
-      "uid": 363079450
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "充实的z",
-      "title": "z-oriz",
-      "uid": 32806259
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "七羽Kiyo",
-      "title": "SevenKiyo",
-      "uid": 178803018
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Maxing·long",
-      "title": "maxinglo",
-      "uid": 32998596
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "黑色的鸟awa",
-      "title": "ykmlndigo",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "我弱我自豪",
-      "title": "FrrrankZhou",
-      "uid": 386276940
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "望中烟水遥",
-      "title": "yaodangsang",
-      "uid": 406092736
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "豪俊契卡",
-      "title": "MachariusTacitus",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Kaleb Langley",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Ircno6",
-      "title": "Ircno6",
-      "uid": null
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Bamboo丶Gamom",
-      "title": "wifi_left",
-      "uid": 521673619
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "晨峦",
-      "title": "Chen-Luan",
-      "uid": 1509029371
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "baitangsl",
-      "title": "baitangsl",
-      "uid": 352983058
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "E2MA76",
-      "title": "E2MA76",
-      "uid": 4043504
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "鸢夏啊",
-      "title": "YuanXiaCN（已退出）",
-      "uid": 1408732260
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "-Xiao冻-",
-      "title": "XDON106",
-      "uid": 1052616371
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Knell_Inferno鬼烎",
-      "title": "KnellInferno",
-      "uid": 578496385
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Don Trueno",
-      "title": "Don Trueno",
-      "uid": 470431563
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Scalphax",
-      "title": "Scalphax",
-      "uid": 8608864
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "苯酸钠",
-      "title": "superboy-114514",
-      "uid": 500391365
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "さかさませかい",
-      "title": "XiaoYi57",
-      "uid": 644395541
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "Scrafty",
-      "title": "Raboot",
-      "uid": 109188954
-    },
-    {
-      "group": "VM 汉化组",
-      "name": "GTriXylitol",
-      "title": "GTriXy",
-      "uid": 388115572
-    },
-    {
-      "group": "社区贡献",
-      "name": "WsLhh",
-      "title": "Lims",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "Tu0Maaa",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "Kasualix",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "ChuijkYahus",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "cq9000",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "老本願",
-      "title": "",
-      "uid": 296088227
-    },
-    {
-      "group": "社区贡献",
-      "name": "wannima2077",
-      "title": "RainSuki",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "M-E-Rcy",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "Jh0v0",
-      "title": "麋鹿",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "MichaelSuper2528",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "Reset255",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "netizenxing",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "Feathamity",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "Mazarine28",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "Wenwen-lv",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "ink5897",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "OlderFox",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "_Le_Tian",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "梦桃123",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "xcby-jpg",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "PotatoChampion",
-      "title": "Potato986",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "祝明宇",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "清秋",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "Rain_G",
-      "title": "Rain156",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "MW_Zitie",
-      "title": "迷惘の子铁",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "yangbro",
-      "title": "勤奋的鸽子杨言轩",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "wandouWD",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "xhchi",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "FridayAnubis",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "McCutcheon10",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "TianxinGstar",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "Kzlw5qf",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "Vlcio",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "XIAN-DB",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "Tezzil",
-      "title": "",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "CartQwQ",
-      "title": "CarKuno",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "霜阳",
-      "title": "FrostYang",
-      "uid": null
-    },
-    {
-      "group": "社区贡献",
-      "name": "bakabaka-琪露诺",
-      "title": "cutecirno",
-      "uid": 248535958
-    }
-  ]
+  "credits": []
 }
