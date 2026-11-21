@@ -585,7 +585,14 @@ figure.img-slot.media-slot.is-ready { background-color: var(--bg); }
 .person { padding: 4px 8px; border: 1px solid var(--line-2); font: 400 11px var(--ui); color: var(--ink-2); }
 
 /* ---------- credits ---------------------------------------------------- */
-.credits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 24px 0 60px; }
+/* credits: two-column editorial directory. The three small groups stack in
+   the left column; each column hugs its own content instead of being
+   stretched to the tallest one (which used to leave two huge empty boxes). */
+.credits-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: start; gap: 16px; padding: 24px 0 60px; }
+.credit-col:nth-child(1) { grid-column: 1; grid-row: 1; }
+.credit-col:nth-child(2) { grid-column: 1; grid-row: 2; }
+.credit-col:nth-child(3) { grid-column: 2; grid-row: 1 / span 3; }
+.credit-col:nth-child(4) { grid-column: 1; grid-row: 3; }
 .credit-col { background: var(--panel); border: 1px solid var(--line); }
 .credit-col h3 { margin: 0; padding: 14px 16px; border-bottom: 1px solid var(--line-2); font: 700 13px var(--display); letter-spacing: .1em; text-transform: uppercase; display: flex; justify-content: space-between; }
 .credit-col h3 span { color: var(--accent); font: 400 11px var(--mono); }
@@ -689,6 +696,7 @@ a.credit-person:hover { color: var(--accent); border-color: var(--accent); }
 @media (max-width: 1100px) {
   .modules { grid-template-columns: repeat(2, 1fr); }
   .credits-grid { grid-template-columns: 1fr 1fr; }
+  .credit-col { grid-column: auto !important; grid-row: auto !important; }
   .sys-clock { display: none; }
 }
 @media (max-width: 860px) {
