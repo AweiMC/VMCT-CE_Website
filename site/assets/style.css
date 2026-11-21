@@ -397,6 +397,8 @@ figure.img-slot.media-slot.is-ready { background-color: var(--bg); }
 .doc-go .gi { width: 15px; height: 15px; }
 .doc-row:hover .doc-go { color: var(--accent); transform: translate(2px, -2px); }
 .doc-row:hover .card-title { color: var(--accent); }
+/* article payload is fetched on demand: this placeholder holds the slot */
+.body-loading { padding: 26px 0; font: 400 11px var(--mono); letter-spacing: .14em; color: var(--ink-3); }
 /* source card — chapters fold into the root as jump links */
 .doc-group { align-items: flex-start; }
 .doc-group .doc-num { padding-top: 3px; }

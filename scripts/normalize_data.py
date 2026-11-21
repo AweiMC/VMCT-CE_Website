@@ -12,6 +12,7 @@ no author/agent metadata of the machine running this script is ever emitted.
 from __future__ import annotations
 
 import argparse
+import html as html_mod
 import json
 import os
 import re
@@ -68,6 +69,23 @@ SKIP_RELS = {"modpacks/example.md"}
 
 def skip_rel(rel: str) -> bool:
     return rel in SKIP_RELS or rel.endswith("/secret.md")
+
+
+TAG_STRIP_RE = re.compile(r"<[^>]+>")
+# placeholder captions are chrome, not prose ("IMG // BODY-01", "NO SIGNAL")
+PLACEHOLDER_RE = re.compile(r"<span class=\"img-slot-mark\">.*?</span>", re.S)
+
+
+def plain_text(html_text: str) -> str:
+    """Searchable plain text of an article: tags out, entities decoded and
+    whitespace collapsed. Stored in the index so full-text search never needs
+    the (lazily loaded) article HTML."""
+    if not html_text:
+        return ""
+    text = PLACEHOLDER_RE.sub(" ", html_text)
+    text = TAG_STRIP_RE.sub(" ", text)
+    text = html_mod.unescape(text)
+    return re.sub(r"\s+", " ", text).strip()
 
 
 DOWNLOAD_SLOT = "\n\n<!--DOWNLOAD_SLOT-->\n\n"
@@ -497,6 +515,31 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool, do_
     if do_optimize:
         # shrink the cached bytes to what the UI actually paints
         optimize_images(items, site_root)
+
+    # Split the payload: lists and search need metadata, an excerpt and the
+    # searchable text; the full article HTML ships as one small file per entry
+    # and is fetched when its detail page opens. Nobody reads 100 pages, so
+    # there is no reason to hand the browser all of them up front.
+    bodies_dir = site_root / "data" / "bodies"
+    if bodies_dir.exists():
+        shutil.rmtree(bodies_dir)
+    bodies_dir.mkdir(parents=True, exist_ok=True)
+    body_bytes = 0
+    for item in items:
+        body_html = item.pop("bodyHtml", "")
+        item["media"] = [m for m in item.get("media", []) if m.get("role") == "cover"]
+        text = plain_text(body_html)
+        item["searchText"] = text
+        item["excerpt"] = item["description"] or (text[:160] + ("…" if len(text) > 160 else ""))
+        target = bodies_dir / (item["id"].replace("/", "__") + ".js")
+        target.write_text(
+            "window.VMCT_BODY=window.VMCT_BODY||{};window.VMCT_BODY[" +
+            json.dumps(item["id"], ensure_ascii=False) + "]=" +
+            json.dumps(body_html, ensure_ascii=False) + ";\n",
+            encoding="utf-8",
+        )
+        body_bytes += target.stat().st_size
+    print("bodies:", len(items), "files,", round(body_bytes / 1024, 1), "KB")
 
     nav = [
         {"id": "modpacks", "label": "整合包", "kind": "modpack"},

@@ -1,0 +1,1 @@
+window.VMCT_BODY=window.VMCT_BODY||{};window.VMCT_BODY["map/tunnelrats"]="<h2 id=\"_1\">地图信息</h2>\n<p>Tunnel Rats是一款完全在地下展开的多人起床战争地图！</p>\n<p>你可以运用关卡设计器和自己掌握的《我的世界》知识，打造专属于你的竞技场。</p>\n<p>地图内置了 13 座竞技场，其中还包括一座曾在隐者服中亮相的竞技场。</p>\n<p>你还可以自定义游戏规则，并自由选择队伍颜色。</p>\n<!--DOWNLOAD_SLOT-->";

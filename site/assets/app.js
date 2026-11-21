@@ -55,9 +55,12 @@
   };
 
   // Plain text of an item's body, cached. Used for search matches and for a
-  // real excerpt when an entry carries no frontmatter description.
+  // real excerpt when an entry carries no frontmatter description. The
+  // normalizer ships this text inside the index so full-text search does not
+  // need the (lazy) article HTML; the fallback covers stale cached data.
   var TEXT_CACHE = Object.create(null);
   function plainText(it) {
+    if (typeof it.searchText === 'string') return it.searchText;
     if (TEXT_CACHE[it.id] === undefined) {
       var d = document.createElement('div');
       d.innerHTML = it.bodyHtml || '';
@@ -70,6 +73,7 @@
   }
   function excerptOf(it, max) {
     if (it.description) return it.description;
+    if (it.excerpt) return it.excerpt;
     var t = plainText(it);
     if (!t) return '';
     return t.length > max ? t.slice(0, max) + '…' : t;
@@ -450,6 +454,38 @@
   }
 
   /* ---------- detail --------------------------------------------------- */
+  /* ---------- on-demand article payload -------------------------------
+     The index carries metadata, an excerpt and the searchable plain text
+     only; a detail page pulls its article HTML from data/bodies/<id>.js on
+     first open. Initial transfer stays at list size while every entry keeps
+     its full page. */
+  var bodyToken = 0;
+  function loadBody(id) {
+    var token = ++bodyToken;
+    var host = main.querySelector('[data-body-for]');
+    if (!host || !id) return;
+    var inject = function (html) {
+      if (token !== bodyToken || !document.body.contains(host)) return;
+      host.innerHTML = String(html).replace(/<!--DOWNLOAD_SLOT-->/g, '');
+      hydrateMedia();
+    };
+    var cache = window.VMCT_BODY;
+    if (cache && typeof cache[id] === 'string') { inject(cache[id]); return; }
+    var s = document.createElement('script');
+    s.src = 'data/bodies/' + id.replace(/\//g, '__') + '.js';
+    s.onload = function () {
+      if (token !== bodyToken || !document.body.contains(host)) return;
+      var body = (window.VMCT_BODY || {})[id];
+      if (typeof body === 'string') { inject(body); return; }
+      host.innerHTML = '<div class="body-loading">正文同步失败 // NO BODY</div>';
+    };
+    s.onerror = function () {
+      if (token !== bodyToken || !document.body.contains(host)) return;
+      host.innerHTML = '<div class="body-loading">正文同步失败 // NO BODY</div>';
+    };
+    document.head.appendChild(s);
+  }
+
   function viewDetail(id) {
     var it = byId(id);
     if (!it) return '<div class="wrap"><div class="empty"><h3>档案不存在</h3><p>' + esc(id) + '</p></div></div>';
@@ -513,7 +549,12 @@
             '<div><h1>' + esc(it.title) + '</h1>' + (it.originalName ? '<div class="detail-original">' + esc(it.originalName) + '</div>' : '') +
             (tags ? '<div class="detail-tags">' + tags + '</div>' : '') + '</div>' +
           '</div>' + (it.description ? '<p class="detail-desc">' + esc(it.description) + '</p>' : '') + '</div>' +
-          (it.bodyHtml ? '<article class="prose">' + it.bodyHtml.replace(/<!--DOWNLOAD_SLOT-->/g, '') + '</article>' : '') +
+          // article HTML is fetched on demand — see loadBody(). The empty
+          // host is what it patches once the payload arrives.
+          '<article class="prose" data-body-for="' + esc(it.id) + '">' +
+          (it.bodyHtml
+            ? it.bodyHtml.replace(/<!--DOWNLOAD_SLOT-->/g, '')
+            : '<div class="body-loading">正文按需加载 // SYNC BODY</div>') + '</article>' +
         '</div>' +
         '<aside class="detail-side">' +
           '<div class="side-card"><h3>档案参数 <span>DATA</span></h3><div class="side-body">' + kv + '</div></div>' +
@@ -575,6 +616,7 @@
     if (r.kind === 'detail') {
       var hero = main.querySelector('.detail-hero');
       M.detailIntro(hero);
+      loadBody(r.id);
     }
     renderTabs();
     bindView();
