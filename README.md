@@ -12,7 +12,7 @@
 
 ## 网页
 
-线上地址：<https://aweimc.github.io/VMCT-CE_Website/>
+线上地址：<https://aweimc.github.io/vmct-ce-site/>
 
 纯静态，无后端。数据写在 `site/data/catalog.js`（`window.VMCT_DATA`），因此可直接以静态文件托管，不暴露服务器本地文件。
 
