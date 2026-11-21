@@ -543,6 +543,15 @@ def build(repo_root: Path, site_root: Path, source_url: str, do_icons: bool, do_
         )
         search_bytes += target.stat().st_size
     print("search index:", len(search_by_kind), "files,", round(search_bytes / 1024, 1), "KB")
+    # Compatibility shim: a client that cached the pre-split app.js (10 minute
+    # max-age) may still request this URL. Their cached catalog.js still carries
+    # inline searchText, so search keeps working; the shim only avoids a 404.
+    (site_root / "data" / "search.js").write_text(
+        "/* compat shim: search now ships per view under data/search/ — this URL "
+        "only keeps stale clients from logging a 404. */\n"
+        "window.VMCT_SEARCH=window.VMCT_SEARCH||{};\n",
+        encoding="utf-8",
+    )
 
     nav = [
         {"id": "modpacks", "label": "整合包", "kind": "modpack"},
